@@ -21,6 +21,29 @@ namespace SportComplexApp.Data.Configuration
             builder.Property(c => c.LastName)
                 .IsRequired()
                 .HasMaxLength(LastNameMaxLength);
+
+            builder.HasData(SeedClients());
+        }
+        private List<Client> SeedClients()
+        {
+            List<Client> clients = new List<Client>()
+            {
+                new Client()
+                {
+                    Id = "1",
+                    FirstName = "John",
+                    LastName = "Doe"
+                },
+
+                new Client()
+                {
+                    Id = "2",
+                    FirstName = "Jane",
+                    LastName = "Smith"
+                }
+            };
+
+            return clients;
         }
     }
 }

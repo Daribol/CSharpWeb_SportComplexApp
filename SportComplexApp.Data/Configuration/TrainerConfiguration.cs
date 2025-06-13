@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SportComplexApp.Common;
 using SportComplexApp.Data.Models;
@@ -34,6 +35,33 @@ namespace SportComplexApp.Data.Configuration
                 .IsRequired(false)
                 .HasMaxLength(ImageUrlMaxLength)
                 .HasDefaultValue(null);
+
+            builder.HasData(SeedTrainers());
+        }
+
+        private List<Trainer> SeedTrainers()
+        {
+            List<Trainer> trainers = new List<Trainer>()
+            {
+                new Trainer
+                {
+                    Id = 1,
+                    Name = "John Doe",
+                    Specialization = "Fitness",
+                    Bio = "Experienced fitness trainer with a passion for helping clients achieve their goals.",
+                    ImageUrl = "https://example.com/images/john_doe.jpg"
+                },
+                new Trainer
+                {
+                    Id = 2,
+                    Name = "Jane Smith",
+                    Specialization = "Yoga",
+                    Bio = "Certified yoga instructor with over 5 years of experience.",
+                    ImageUrl = "https://example.com/images/jane_smith.jpg"
+                },
+            };
+
+            return trainers;
         }
     }
 }

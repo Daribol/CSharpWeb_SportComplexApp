@@ -32,6 +32,32 @@ namespace SportComplexApp.Data.Configuration
             builder.Property(ss => ss.ImageUrl)
                 .HasMaxLength(ImageUrlMaxLength);
 
+            builder.HasData(SeedSpaServices());
+        }
+
+        private List<SpaService> SeedSpaServices()
+        {
+            List<SpaService> spaServices = new List<SpaService>()
+            {
+                new SpaService
+                {
+                    Id = 1,
+                    Name = "Relaxing Massage",
+                    Description = "A soothing massage to relieve stress and tension.",
+                    Price = 50.00m,
+                    ImageUrl = "https://example.com/images/relaxing-massage.jpg"
+                },
+                new SpaService
+                {
+                    Id = 2,
+                    Name = "Facial Treatment",
+                    Description = "A rejuvenating facial to enhance your skin's glow.",
+                    Price = 70.00m,
+                    ImageUrl = "https://example.com/images/facial-treatment.jpg"
+                },
+            };
+
+            return spaServices;
         }
     }
 }

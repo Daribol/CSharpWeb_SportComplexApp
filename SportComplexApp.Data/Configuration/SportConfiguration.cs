@@ -37,6 +37,35 @@ namespace SportComplexApp.Data.Configuration
                 .WithMany(f => f.Sports)
                 .HasForeignKey(s => s.FacilityId)
                 .OnDelete(DeleteBehavior.Cascade);  
+
+            builder.HasData(SeedSports());
+        }
+
+        private List<Sport> SeedSports()
+        {
+            List<Sport> sports = new List<Sport>()
+            {
+                new Sport
+                {
+                    Id = 1,
+                    Name = "Tennis",
+                    FacilityId = 1,
+                    Price = 20.00m,
+                    ImageUrl = "https://example.com/tennis.jpg",
+                    Duration = 60
+                },
+                new Sport
+                {
+                    Id = 2,
+                    Name = "Swimming",
+                    FacilityId = 2,
+                    Price = 15.00m,
+                    ImageUrl = "https://example.com/swimming.jpg",
+                    Duration = 45
+                },
+            };
+
+            return sports;
         }
     }
 }

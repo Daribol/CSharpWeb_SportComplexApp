@@ -6,10 +6,11 @@ using System.Text;
 using System.Threading.Tasks;
 using SportComplexApp.Data.Models;
 using System.Reflection;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace SportComplexApp.Data
 {
-    public class SportComplexDbContext : DbContext
+    public class SportComplexDbContext : IdentityDbContext<Client>
     {
         public SportComplexDbContext()
         {
@@ -21,7 +22,6 @@ namespace SportComplexApp.Data
 
         }
        
-        public virtual DbSet<Client> Clients { get; set; } = null!;
         public virtual DbSet<Reservation> Reservations { get; set; } = null!;
         public virtual DbSet<Sport> Sports { get; set; } = null!;
         public virtual DbSet<Facility> Facilities { get; set; } = null!;
@@ -35,6 +35,7 @@ namespace SportComplexApp.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
     }

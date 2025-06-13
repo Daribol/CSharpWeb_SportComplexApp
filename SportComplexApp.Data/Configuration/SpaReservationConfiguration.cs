@@ -32,6 +32,33 @@ namespace SportComplexApp.Data.Configuration
                 .WithMany(ss => ss.SpaReservations)
                 .HasForeignKey(sr => sr.SpaServiceId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasData(SeedSpaReservations());
+        }
+
+        private List<SpaReservation> SeedSpaReservations()
+        {
+            List<SpaReservation> spaReservations = new List<SpaReservation>
+            {
+                new SpaReservation
+                {
+                    Id = 1,
+                    ClientId = "1",
+                    SpaServiceId = 1,
+                    ReservationDateTime = DateTime.Now.AddDays(1),
+                    NumberOfPeople = 2
+                },
+                new SpaReservation
+                {
+                    Id = 2,
+                    ClientId = "2",
+                    SpaServiceId = 2,
+                    ReservationDateTime = DateTime.Now.AddDays(2),
+                    NumberOfPeople = 3
+                }
+            };
+
+            return spaReservations;
         }
     }
 }

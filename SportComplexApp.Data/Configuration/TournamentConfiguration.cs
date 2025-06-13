@@ -26,6 +26,30 @@ namespace SportComplexApp.Data.Configuration
 
             builder.Property(t => t.StartDate)
                 .IsRequired();
+
+            builder.HasData(SeedTournaments());
+        }
+
+        private List<Tournament> SeedTournaments()
+        {
+            List<Tournament> tournaments = new List<Tournament>()
+            {
+                new Tournament
+                {
+                    Id = 1,
+                    Name = "Summer Cup",
+                    Description = "Annual summer tournament for all skill levels.",
+                    StartDate = DateTime.Now.AddMonths(1)
+                },
+                new Tournament
+                {
+                    Id = 2,
+                    Name = "Winter Championship",
+                    Description = "Competitive winter tournament with prizes.",
+                    StartDate = DateTime.Now.AddMonths(3)
+                }
+            };
+            return tournaments;
         }
     }
 }

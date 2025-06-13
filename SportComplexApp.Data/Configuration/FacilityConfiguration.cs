@@ -19,6 +19,34 @@ namespace SportComplexApp.Data.Configuration
             builder.Property(f => f.Name)
                 .IsRequired()
                 .HasMaxLength(NameMaxLength);
+
+            builder.HasData(SeedFacilities());
+        }
+
+        private List<Facility> SeedFacilities()
+        {
+            List<Facility> facilities = new List<Facility>()
+            {
+                new Facility()
+                {
+                    Id = 1,
+                    Name = "Main Hall"
+                },
+
+                new Facility()
+                {
+                    Id = 2,
+                    Name = "Swimming Pool"
+                },
+
+                new Facility()
+                {
+                    Id = 3,
+                    Name = "Tennis Court"
+                },
+            };
+
+            return facilities;
         }
     }
 }
