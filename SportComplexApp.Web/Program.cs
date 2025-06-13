@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SportComplexApp.Data;
+using SportComplexApp.Data.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 string connectionString = builder.Configuration.GetConnectionString("SQLServer");
@@ -9,7 +10,13 @@ builder.Services
     .AddDbContext<SportComplexDbContext>(options =>
     options.UseSqlServer(connectionString));
 
+builder.Services.AddRazorPages();
 builder.Services.AddControllersWithViews();
+
+builder.Services
+    .AddDefaultIdentity<Client>(option =>
+    option.SignIn.RequireConfirmedAccount = false)
+    .AddEntityFrameworkStores<SportComplexDbContext>();
 
 var app = builder.Build();
 
@@ -30,6 +37,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(

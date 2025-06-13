@@ -273,7 +273,7 @@ namespace SportComplexApp.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Facilities");
+                    b.ToTable("Facilities", (string)null);
 
                     b.HasData(
                         new
@@ -327,7 +327,7 @@ namespace SportComplexApp.Data.Migrations
 
                     b.HasIndex("TrainerId");
 
-                    b.ToTable("Reservations");
+                    b.ToTable("Reservations", (string)null);
 
                     b.HasData(
                         new
@@ -370,7 +370,7 @@ namespace SportComplexApp.Data.Migrations
 
                     b.HasIndex("SpaServiceId");
 
-                    b.ToTable("SpaReservations");
+                    b.ToTable("SpaReservations", (string)null);
 
                     b.HasData(
                         new
@@ -419,7 +419,7 @@ namespace SportComplexApp.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("SpaServices");
+                    b.ToTable("SpaServices", (string)null);
 
                     b.HasData(
                         new
@@ -471,7 +471,7 @@ namespace SportComplexApp.Data.Migrations
 
                     b.HasIndex("FacilityId");
 
-                    b.ToTable("Sports");
+                    b.ToTable("Sports", (string)null);
 
                     b.HasData(
                         new
@@ -506,7 +506,7 @@ namespace SportComplexApp.Data.Migrations
 
                     b.HasIndex("TrainerId");
 
-                    b.ToTable("SportTrainers");
+                    b.ToTable("SportTrainers", (string)null);
                 });
 
             modelBuilder.Entity("SportComplexApp.Data.Models.Tournament", b =>
@@ -532,7 +532,7 @@ namespace SportComplexApp.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Tournaments");
+                    b.ToTable("Tournaments", (string)null);
 
                     b.HasData(
                         new
@@ -572,7 +572,7 @@ namespace SportComplexApp.Data.Migrations
 
                     b.HasIndex("TournamentId");
 
-                    b.ToTable("TournamentRegistrations");
+                    b.ToTable("TournamentRegistrations", (string)null);
                 });
 
             modelBuilder.Entity("SportComplexApp.Data.Models.Trainer", b =>
@@ -603,7 +603,7 @@ namespace SportComplexApp.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Trainers");
+                    b.ToTable("Trainers", (string)null);
 
                     b.HasData(
                         new
@@ -645,7 +645,7 @@ namespace SportComplexApp.Data.Migrations
 
                     b.HasIndex("TrainerId");
 
-                    b.ToTable("TrainerSessions");
+                    b.ToTable("TrainerSessions", (string)null);
 
                     b.HasData(
                         new
