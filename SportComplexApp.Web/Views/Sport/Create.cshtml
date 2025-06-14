@@ -1,0 +1,34 @@
+﻿@model SportComplexApp.Web.ViewModels.Sport.AddSportViewModel
+
+@{
+    ViewData["Title"] = "Create Sport";
+}
+
+<h1>Create Sport</h1>
+
+<form asp-action="Create">
+    <div class="form-group">
+        <label asp-for="Name" class="control-label"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="FacilityId" class="control-label"></label>
+        <select asp-for="FacilityId" class="form-control" asp-items="@(ViewData["Facilities"] as SelectList)"></select>
+        <span asp-validation-for="FacilityId" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Price" class="control-label"></label>
+        <input asp-for="Price" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Duration" class="control-label"></label>
+        <input asp-for="Duration" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="ImageUrl" class="control-label"></label>
+        <input asp-for="ImageUrl" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-success">Create</button>
+</form>
+

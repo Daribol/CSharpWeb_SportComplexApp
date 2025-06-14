@@ -117,6 +117,13 @@ namespace SportComplexApp.Web.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
+            var existingUser = await _userManager.FindByEmailAsync(Input.Email);
+            if (existingUser != null)
+            {
+                ModelState.AddModelError("Input.Email", "Email is already registered.");
+                return Page();
+            }
+
             returnUrl ??= Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)

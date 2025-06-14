@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using SportComplexApp.Data;
 using SportComplexApp.Data.Models;
 
@@ -15,7 +16,15 @@ builder.Services.AddControllersWithViews();
 
 builder.Services
     .AddDefaultIdentity<Client>(option =>
-    option.SignIn.RequireConfirmedAccount = false)
+    {
+        option.SignIn.RequireConfirmedAccount = false;
+        option.Password.RequireDigit = true;
+        option.Password.RequiredLength = 6;
+        option.Password.RequireNonAlphanumeric = false;
+        option.Password.RequireUppercase = true;
+        option.Password.RequireLowercase = true;
+        option.User.RequireUniqueEmail = true;
+    })
     .AddEntityFrameworkStores<SportComplexDbContext>();
 
 var app = builder.Build();

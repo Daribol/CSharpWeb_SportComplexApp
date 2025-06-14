@@ -1,0 +1,35 @@
+﻿@model SportComplexApp.Web.ViewModels.Sport.SportsDetailsViewModel
+
+@{
+    ViewData["Title"] = "Sport Details";
+}
+
+<h2>@Model.Name</h2>
+
+<div class="row">
+    <div class="col-md-6">
+        <img src="@Model.ImageUrl" alt="@Model.Name" class="img-fluid rounded" />
+    </div>
+    <div class="col-md-6">
+        <dl class="row">
+            <dt class="col-sm-4">Name:</dt>
+            <dd class="col-sm-8">@Model.Name</dd>
+
+            <dt class="col-sm-4">Duration:</dt>
+            <dd class="col-sm-8">@Model.Duration minutes</dd>
+
+            <dt class="col-sm-4">Price:</dt>
+            <dd class="col-sm-8">$@Model.Price</dd>
+
+            <dt class="col-sm-4">Facility:</dt>
+            <dd class="col-sm-8">@Model.FacilityName</dd>
+        </dl>
+
+        <div class="mt-4">
+            <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+            <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">Delete</a>
+            <a asp-controller="Reservation" asp-action="Create" asp-route-sportId="@Model.Id" class="btn btn-primary">Make Reservation</a>
+        </div>
+    </div>
+ </div>
+
