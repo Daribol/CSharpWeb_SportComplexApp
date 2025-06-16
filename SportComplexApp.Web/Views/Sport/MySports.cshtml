@@ -1,0 +1,36 @@
+﻿@model IEnumerable<SportComplexApp.Web.ViewModels.Sport.AllSportsViewModel>
+
+@{
+    ViewData["Title"] = "My Sports";
+}
+
+<h2 class="mb-4">My Sports</h2>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">You have no reserved sports yet.</div>
+}
+else
+{
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        @foreach (var sport in Model)
+        {
+            <div class="col">
+                <div class="card h-100 shadow-sm">
+                    <img src="@sport.ImageUrl" class="card-img-top" alt="@sport.Name" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <h5 class="card-title">@sport.Name</h5>
+                        <p class="card-text"><strong>Facility:</strong> @sport.Facility</p>
+                        <p class="card-text"><strong>Duration:</strong> @sport.Duration min</p>
+                        <p class="card-text"><strong>Price:</strong> @sport.Price лв</p>
+                    </div>
+                    <div class="card-footer text-center">
+                        <a asp-action="Details" asp-route-id="@sport.Id" class="btn btn-outline-primary btn-sm">Details</a>
+                        <a asp-action="Delete" asp-route-id="@sport.Id" class="btn btn-outline-danger btn-sm ms-2">Cancel</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+

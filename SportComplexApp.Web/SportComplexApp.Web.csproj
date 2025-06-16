@@ -21,6 +21,8 @@
   <ItemGroup>
     <ProjectReference Include="..\SportComplexApp.Common\SportComplexApp.Common.csproj" />
     <ProjectReference Include="..\SportComplexApp.Data\SportComplexApp.Data.csproj" />
+    <ProjectReference Include="..\SportComplexApp.Services.Data\SportComplexApp.Services.Data.csproj" />
+    <ProjectReference Include="..\SportComplexApp.Services.Mapping\SportComplexApp.Services.Mapping.csproj" />
     <ProjectReference Include="..\SportComplexApp.Web.ViewModels\SportComplexApp.Web.ViewModels.csproj" />
   </ItemGroup>
 

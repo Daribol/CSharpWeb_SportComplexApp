@@ -3,6 +3,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using SportComplexApp.Data;
 using SportComplexApp.Data.Models;
+using SportComplexApp.Data.Repository.Interfaces;
+using SportComplexApp.Services.Data.Contracts;
+using SportComplexApp.Services;
+using SportComplexApp.Services.Mapping;
+using SportComplexApp.Web.ViewModels;
 
 var builder = WebApplication.CreateBuilder(args);
 string connectionString = builder.Configuration.GetConnectionString("SQLServer");
@@ -10,9 +15,6 @@ string connectionString = builder.Configuration.GetConnectionString("SQLServer")
 builder.Services
     .AddDbContext<SportComplexDbContext>(options =>
     options.UseSqlServer(connectionString));
-
-builder.Services.AddRazorPages();
-builder.Services.AddControllersWithViews();
 
 builder.Services
     .AddDefaultIdentity<Client>(option =>
@@ -27,7 +29,18 @@ builder.Services
     })
     .AddEntityFrameworkStores<SportComplexDbContext>();
 
+builder.Services.ConfigureApplicationCookie(cfg =>
+cfg.LoginPath = "/Identity/Account/Login");
+
+builder.Services.AddRazorPages();
+builder.Services.AddControllersWithViews();
+
+builder.Services.AddScoped<ISportService, SportService>();
+
+
 var app = builder.Build();
+
+AutoMapperConfig.RegisterMappings(typeof(ErrorViewModel).Assembly);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

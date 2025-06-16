@@ -1,157 +1,103 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using SportComplexApp.Data;
-using SportComplexApp.Data.Models;
-using SportComplexApp.Web.ViewModels.Sport;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using SportComplexApp.Services.Data.Contracts;
+using static SportComplexApp.Common.ErrorMessages.Sport;
+using static SportComplexApp.Common.SuccessfulValidationMessages.Sport;
 
 namespace SportComplexApp.Web.Controllers
 {
-    public class SportController : Controller
+    public class SportController : BaseController
     {
-        private readonly SportComplexDbContext context;
+        private readonly ISportService sportService;
 
-        public SportController(SportComplexDbContext context)
+        public SportController(ISportService sportService)
         {
-            this.context = context;
+            this.sportService = sportService;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Index()
+        [AllowAnonymous]
+        public async Task<IActionResult> Index(string? searchQuery = null, int? minDuration = null, int? maxDuration = null)
         {
-            var allSports = await context.Sports
-                .Include(s => s.Facility)
-                .ToListAsync();
+            var model = await sportService.GetAllSportsAsync(searchQuery, minDuration, maxDuration);
+            return View(model);
+        }
 
-            var viewModel = allSports.Select(s => new AllSportsViewModel
+        public async Task<IActionResult> MySports()
+        {
+            var userId = GetUserId();
+
+            var model = await sportService.GetMySportsAsync(userId);
+            return View(model);
+        }
+
+        [AllowAnonymous]
+        public async Task<IActionResult> Details(int id)
+        {
+            var model = await sportService.GetSportDetailsAsync(id);
+
+            if (model == null)
             {
-                Name = s.Name,
-                ImageUrl = s.ImageUrl ?? string.Empty,
-                Duration = s.Duration,
-                Price = s.Price,
-                FacilityId = s.FacilityId,
-                Facility = s.Facility.Name,
-            }).ToList();
-
-            return View(viewModel);
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null) return NotFound();
-
-            var sport = await this.context.Sports
-                .Include(s => s.Facility)
-                .FirstOrDefaultAsync(s => s.Id == id);
-            if (sport == null)
-            {
-                return NotFound();
-            }
-            return View(sport);
-        }
-
-        [HttpGet]
-        public IActionResult Create()
-        {
-            ViewData["Facilities"] = new SelectList(context.Facilities, "Id", "Name");
-            return View();
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Sport sport)
-        {
-            if (ModelState.IsValid)
-            {
-                context.Add(sport);
-                await context.SaveChangesAsync();
+                TempData["ErrorMessage"] = SportNotFound;
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["Facilities"] = new SelectList(context.Facilities, "Id", "Name");
-            return View(sport);
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null) return NotFound();
-
-            var sport = await this.context.Sports.FindAsync(id);
-            if (sport == null)
-            {
-                return NotFound();
-            }
-
-            ViewData["Facilities"] = new SelectList(context.Facilities, "Id", "Name", sport.FacilityId);
-            return View(sport);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, Sport sport)
-        {
-            if (id != sport.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    context.Update(sport);
-                    await context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!context.Sports.Any(e => e.Id == id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-
-            ViewData["Facilities"] = new SelectList(context.Facilities, "Id", "Name");
-            return View(sport);
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null) return NotFound();
-
-            var sport = await context.Sports.FindAsync(id);
-            if (sport == null)
-            {
-                return NotFound();
-            }
-
-            var model = new DeleteSportViewModel()
-            {
-                Id = sport.Id,
-                Name = sport.Name
-            };
 
             return View(model);
         }
 
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> AddToMySports(int id)
         {
-            var sport = await context.Sports.FindAsync(id);
-            if (sport != null)
+            var sport = await sportService.GetSportByIdAsync(id);
+
+            if (sport == null)
             {
-                context.Sports.Remove(sport);
-                await context.SaveChangesAsync();
+                TempData["ErrorMessage"] = SportNotFound;
+                return RedirectToAction(nameof(Details), new { id });
             }
-            return RedirectToAction(nameof(Index));
+
+            var userId = GetUserId();
+
+            try
+            {
+                await sportService.AddToMySportsAsync(userId, sport);
+                TempData["SuccessMessage"] = SportAddedToMyList;
+            }
+            catch (InvalidOperationException ex)
+            {
+                TempData["ErrorMessage"] = ex.Message;
+                return RedirectToAction(nameof(Details), new { id });
+            }
+
+            return RedirectToAction(nameof(MySports));
+        }
+
+        public async Task<IActionResult> RemoveFromMySports(int id)
+        {
+            var sport = await sportService.GetSportByIdAsync(id);
+
+            if (sport == null)
+            {
+                TempData["ErrorMessage"] = SportNotFound;
+                return RedirectToAction(nameof(MySports));
+            }
+
+            var userId = GetUserId();
+
+            try
+            {
+                await sportService.RemoveFromMySportsAsync(userId, sport);
+                TempData["SuccessMessage"] = SportRemovedFromMyList;
+            }
+            catch (InvalidOperationException ex)
+            {
+                TempData["ErrorMessage"] = ex.Message;
+            }
+
+            return RedirectToAction(nameof(MySports));
+        }
+
+        private string GetUserId()
+        {
+            return User?.Claims.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.NameIdentifier)?.Value!;
         }
     }
 }
