@@ -1,0 +1,50 @@
+﻿@model SportComplexApp.Web.ViewModels.Sport.SportReservationFormViewModel
+
+@{
+    ViewData["Title"] = "Reserve Sport";
+}
+
+<h2 class="mb-4">Reserve Sport: @Model.SportName</h2>
+
+<form asp-action="Reserve" method="post">
+    <input type="hidden" asp-for="SportId" />
+    <input type="hidden" asp-for="SportName" />
+    <input type="hidden" asp-for="FacilityName" />
+
+    <div class="mb-3">
+        <label class="form-label">Facility</label>
+        <input class="form-control" value="@Model.FacilityName" disabled />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="ReservationDateTime" class="form-label"></label>
+        <input asp-for="ReservationDateTime" class="form-control" type="datetime-local" />
+        <span asp-validation-for="ReservationDateTime" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Duration" class="form-label"></label>
+        <input asp-for="Duration" class="form-control" />
+        <span asp-validation-for="Duration" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="NumberOfPeople" class="form-label"></label>
+        <input asp-for="NumberOfPeople" class="form-control" />
+        <span asp-validation-for="NumberOfPeople" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="TrainerId" class="form-label"></label>
+        <select asp-for="TrainerId" class="form-select" asp-items="@(new SelectList(Model.Trainers, "Id", "FullName"))">
+            <option value="">-- Optional: Select Trainer --</option>
+        </select>
+        <span asp-validation-for="TrainerId" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-success">Submit Reservation</button>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

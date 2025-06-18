@@ -1,0 +1,44 @@
+﻿@model IEnumerable<SportComplexApp.Web.ViewModels.Spa.MySpaReservationViewModel>
+
+@{
+    ViewData["Title"] = "My Spa Reservations";
+}
+
+<h2 class="mb-4">My Spa Reservations</h2>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">You don't have any spa reservations yet.</div>
+}
+else
+{
+    <table class="table table-bordered table-striped align-middle">
+        <thead class="table-light">
+            <tr>
+                <th>Spa Service</th>
+                <th>Date & Time</th>
+                <th>Price</th>
+                <th>Notes</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var reservation in Model)
+            {
+                <tr>
+                    <td>@reservation.SpaServiceName</td>
+                    <td>@reservation.DateTime.ToString("f")</td>
+                    <td>@reservation.TotalPrice.ToString("F2") лв</td>
+                    <td>@reservation.People</td>
+                    <td>
+                        <form asp-action="Cancel" asp-route-id="@reservation.Id" method="post"
+                              onsubmit="return confirm('Are you sure you want to cancel this reservation?');">
+                            <button type="submit" class="btn btn-danger btn-sm">Cancel</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+

@@ -9,16 +9,11 @@ namespace SportComplexApp.Services.Data.Contracts
 {
     public interface ISportService
     {
-        Task<IEnumerable<AllSportsViewModel>> GetAllSportsAsync(string? searchQuery, int? minDuration, int? maxDuration);
-
-        Task<SportsDetailsViewModel?> GetSportDetailsAsync(int id);
-
-        Task<AllSportsViewModel?> GetSportByIdAsync(int id);
-
-        Task<IEnumerable<AllSportsViewModel>> GetMySportsAsync(string userId);
-
-        Task AddToMySportsAsync(string userId, AllSportsViewModel sport);
-
-        Task RemoveFromMySportsAsync(string userId, AllSportsViewModel sport);
+        Task<IEnumerable<AllSportsViewModel>> GetAllSportsAsync();
+        Task<SportReservationFormViewModel?> GetReservationFormAsync(int sportId);
+        Task<int> CreateReservationAsync(SportReservationFormViewModel model, string userId);
+        Task<IEnumerable<SportReservationViewModel>> GetUserReservationsAsync(string userId);
+        Task<bool> ReservationExistsAsync(int reservationId, string userId);
+        Task CancelReservationAsync(int reservationId, string userId);
     }
 }

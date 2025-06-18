@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace SportComplexApp.Web.ViewModels.Sport
 {
-    public class DeleteSportViewModel
+    public class TrainerDropdownViewModel
     {
         public int Id { get; set; }
-        public string Name { get; set; } = null!;
+
+        public string FullName { get; set; } = null!;
     }
 }

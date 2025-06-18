@@ -1,0 +1,24 @@
+﻿@model IEnumerable<SportComplexApp.Web.ViewModels.Sport.AllSportsViewModel>
+
+@{
+    ViewData["Title"] = "All Sports";
+}
+
+<h2 class="mb-4">All Sports</h2>
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    @foreach (var sport in Model)
+    {
+        <div class="col">
+            <div class="card h-100">
+                <img src="@sport.ImageUrl" class="card-img-top" alt="@sport.Name" style="height: 200px; object-fit: cover;" />
+                <div class="card-body">
+                    <h5 class="card-title">@sport.Name</h5>
+                    <p class="card-text"><strong>Facility:</strong> @sport.Facility</p>
+                    <p class="card-text"><strong>Price:</strong> $@sport.Price</p>
+                    <p class="card-text"><strong>Duration:</strong> @sport.Duration min</p>
+                    <a asp-action="Reserve" asp-route-id="@sport.Id" class="btn btn-primary mt-2">Reserve</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>

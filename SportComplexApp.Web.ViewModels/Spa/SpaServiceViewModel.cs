@@ -4,20 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SportComplexApp.Web.ViewModels.Sport
+namespace SportComplexApp.Web.ViewModels.Spa
 {
-    public class SportsDetailsViewModel
+    public class SpaServiceViewModel
     {
         public int Id { get; set; }
-
         public string Name { get; set; } = null!;
-
-        public int Duration { get; set; } // in minutes
-
+        public string Description { get; set; } = null!;
         public decimal Price { get; set; }
-
-        public string FacilityName { get; set; } = null!;
-
-        public string ImageUrl { get; set; } = null!;
+        public string? ImageUrl { get; set; }
     }
 }

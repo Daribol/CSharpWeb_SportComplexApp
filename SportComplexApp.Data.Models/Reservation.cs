@@ -21,6 +21,8 @@ namespace SportComplexApp.Data.Models
 
         public DateTime ReservationDateTime { get; set; }
 
+        public int Duration { get; set; }
+
         public int NumberOfPeople { get; set; }
     }
 }

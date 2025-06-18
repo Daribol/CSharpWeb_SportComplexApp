@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SportComplexApp.Data.Models
+namespace SportComplexApp.Web.ViewModels.Spa
 {
-    public class SpaService
+    public class SpaDetailsViewModel
     {
         public int Id { get; set; }
 
@@ -20,7 +19,5 @@ namespace SportComplexApp.Data.Models
         public decimal Price { get; set; }
 
         public string? ImageUrl { get; set; }
-
-        public virtual ICollection<SpaReservation> SpaReservations { get; set; } = new HashSet<SpaReservation>();
     }
 }

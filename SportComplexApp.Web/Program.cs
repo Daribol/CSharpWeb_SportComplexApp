@@ -8,9 +8,10 @@ using SportComplexApp.Services.Data.Contracts;
 using SportComplexApp.Services;
 using SportComplexApp.Services.Mapping;
 using SportComplexApp.Web.ViewModels;
+using SportComplexApp.Services.Data;
 
 var builder = WebApplication.CreateBuilder(args);
-string connectionString = builder.Configuration.GetConnectionString("SQLServer");
+string? connectionString = builder.Configuration.GetConnectionString("SQLServer");
 // Add services to the container.
 builder.Services
     .AddDbContext<SportComplexDbContext>(options =>
@@ -36,6 +37,7 @@ builder.Services.AddRazorPages();
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddScoped<ISportService, SportService>();
+builder.Services.AddScoped<ISpaService, SportComplexApp.Services.Data.SpaService>();
 
 
 var app = builder.Build();

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SportComplexApp.Services.Data.Contracts;
+using SportComplexApp.Web.ViewModels.Sport;
 using static SportComplexApp.Common.ErrorMessages.Sport;
 using static SportComplexApp.Common.SuccessfulValidationMessages.Sport;
 
@@ -15,89 +16,65 @@ namespace SportComplexApp.Web.Controllers
             this.sportService = sportService;
         }
 
-        [AllowAnonymous]
-        public async Task<IActionResult> Index(string? searchQuery = null, int? minDuration = null, int? maxDuration = null)
+        [HttpGet]
+        public async Task<IActionResult> All()
         {
-            var model = await sportService.GetAllSportsAsync(searchQuery, minDuration, maxDuration);
-            return View(model);
+            var sports = await this.sportService.GetAllSportsAsync();
+            return View(sports);
         }
 
-        public async Task<IActionResult> MySports()
+        [HttpGet]
+        public async Task<IActionResult> Reserve(int id)
         {
-            var userId = GetUserId();
-
-            var model = await sportService.GetMySportsAsync(userId);
-            return View(model);
-        }
-
-        [AllowAnonymous]
-        public async Task<IActionResult> Details(int id)
-        {
-            var model = await sportService.GetSportDetailsAsync(id);
-
+            var model = await sportService.GetReservationFormAsync(id);
             if (model == null)
             {
-                TempData["ErrorMessage"] = SportNotFound;
-                return RedirectToAction(nameof(Index));
+                return NotFound();
             }
 
             return View(model);
         }
 
-        public async Task<IActionResult> AddToMySports(int id)
+        [HttpPost]
+        public async Task<IActionResult> Reserve(SportReservationFormViewModel model)
         {
-            var sport = await sportService.GetSportByIdAsync(id);
-
-            if (sport == null)
+            if (!ModelState.IsValid)
             {
-                TempData["ErrorMessage"] = SportNotFound;
-                return RedirectToAction(nameof(Details), new { id });
+                var fallback = await sportService.GetReservationFormAsync(model.SportId);
+                if (fallback == null)
+                {
+                    model.SportName = fallback.SportName;
+                    model.FacilityName = fallback.FacilityName;
+                    model.Trainers = fallback.Trainers;
+                }
+                return View("Create", model);
             }
 
             var userId = GetUserId();
-
-            try
-            {
-                await sportService.AddToMySportsAsync(userId, sport);
-                TempData["SuccessMessage"] = SportAddedToMyList;
-            }
-            catch (InvalidOperationException ex)
-            {
-                TempData["ErrorMessage"] = ex.Message;
-                return RedirectToAction(nameof(Details), new { id });
-            }
-
-            return RedirectToAction(nameof(MySports));
+            await sportService.CreateReservationAsync(model, userId);
+            return RedirectToAction(nameof(MyReservations));
         }
 
-        public async Task<IActionResult> RemoveFromMySports(int id)
+        [HttpGet]
+        public async Task<IActionResult> MyReservations()
         {
-            var sport = await sportService.GetSportByIdAsync(id);
-
-            if (sport == null)
-            {
-                TempData["ErrorMessage"] = SportNotFound;
-                return RedirectToAction(nameof(MySports));
-            }
-
             var userId = GetUserId();
+            var reservations = await sportService.GetUserReservationsAsync(userId);
 
-            try
-            {
-                await sportService.RemoveFromMySportsAsync(userId, sport);
-                TempData["SuccessMessage"] = SportRemovedFromMyList;
-            }
-            catch (InvalidOperationException ex)
-            {
-                TempData["ErrorMessage"] = ex.Message;
-            }
-
-            return RedirectToAction(nameof(MySports));
+            return View(reservations);
         }
 
-        private string GetUserId()
+        [HttpPost]
+        public async Task<IActionResult> Cancel(int id)
         {
-            return User?.Claims.FirstOrDefault(c => c.Type == System.Security.Claims.ClaimTypes.NameIdentifier)?.Value!;
+            var userId = GetUserId();
+            if (!await sportService.ReservationExistsAsync(id, userId))
+            {
+                return NotFound();
+            }
+
+            await sportService.CancelReservationAsync(id, userId);
+            return RedirectToAction(nameof(MyReservations));
         }
     }
 }

@@ -1,0 +1,38 @@
+﻿@using SportComplexApp.Web.ViewModels.Spa
+@model SpaReservationFormViewModel
+
+@{
+    ViewData["Title"] = "Reserve Spa Service";
+}
+
+<h2 class="mb-4">Reserve: @Model.SpaServiceName</h2>
+
+<form asp-action="Reserve" method="post">
+    <input type="hidden" asp-for="SpaServiceId" />
+    <input type="hidden" asp-for="SpaServiceName" />
+
+    <div class="mb-3">
+        <label class="form-label">Service</label>
+        <input class="form-control" value="@Model.SpaServiceName" disabled />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="ReservationDate" class="form-label"></label>
+        <input asp-for="ReservationDate" type="datetime-local" class="form-control" />
+        <span asp-validation-for="ReservationDate" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="NumberOfPeople" class="form-label"></label>
+        <textarea asp-for="NumberOfPeople" class="form-control"></textarea>
+        <span asp-validation-for="NumberOfPeople" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Confirm Reservation</button>
+    <a asp-action="All" class="btn btn-secondary ms-2">Back</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+

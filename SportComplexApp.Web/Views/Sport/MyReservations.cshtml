@@ -1,0 +1,48 @@
+﻿@model IEnumerable<SportComplexApp.Web.ViewModels.Sport.SportReservationViewModel>
+
+@{
+    ViewData["Title"] = "My Sport Reservations";
+}
+
+<h2 class="mb-4">My Sport Reservations</h2>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">You have no sport reservations yet.</div>
+}
+else
+{
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Sport</th>
+                <th>Facility</th>
+                <th>Date</th>
+                <th>Duration</th>
+                <th>People</th>
+                <th>Trainer</th>
+                <th>Total Price</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var reservation in Model)
+            {
+                <tr>
+                    <td>@reservation.SportName</td>
+                    <td>@reservation.FacilityName</td>
+                    <td>@reservation.ReservationDateTime.ToString("f")</td>
+                    <td>@reservation.Duration</td>
+                    <td>@reservation.NumberOfPeople</td>
+                    <td>@reservation.TrainerName</td>
+                    <td>$@Math.Round(reservation.TotalPrice, 2)</td>
+                    <td>
+                        <form asp-action="Cancel" method="post" asp-route-id="@reservation.Id" onsubmit="return confirm('Cancel this reservation?');">
+                            <button type="submit" class="btn btn-sm btn-danger">Cancel</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

@@ -15,127 +15,98 @@ namespace SportComplexApp.Services
             this.context = db;
         }
 
-        public async Task<IEnumerable<AllSportsViewModel>> GetAllSportsAsync(string? searchQuery, int? minDuration, int? maxDuration)
-        {
-            var query = context.Sports
-                .Include(s => s.Facility)
-                .AsQueryable();
-
-            if (!string.IsNullOrWhiteSpace(searchQuery))
-            {
-                query = query.Where(s => s.Name.Contains(searchQuery));
-            }
-
-            if (minDuration.HasValue)
-            {
-                query = query.Where(s => s.Duration >= minDuration.Value);
-            }
-
-            if (maxDuration.HasValue)
-            {
-                query = query.Where(s => s.Duration <= maxDuration.Value);
-            }
-
-            return await query
-                .Select(s => new AllSportsViewModel
-                {
-                    Name = s.Name,
-                    ImageUrl = s.ImageUrl,
-                    Duration = s.Duration,
-                    Price = s.Price,
-                    Facility = s.Facility.Name,
-                    FacilityId = s.FacilityId
-                })
-                .ToListAsync();
-        }
-
-        public async Task<SportsDetailsViewModel?> GetSportDetailsAsync(int id)
+        public async Task<IEnumerable<AllSportsViewModel>> GetAllSportsAsync()
         {
             return await context.Sports
                 .Include(s => s.Facility)
-                .Where(s => s.Id == id)
-                .Select(s => new SportsDetailsViewModel
+                .Select(s => new AllSportsViewModel
                 {
                     Id = s.Id,
                     Name = s.Name,
                     Duration = s.Duration,
                     Price = s.Price,
-                    FacilityName = s.Facility.Name,
-                    ImageUrl = s.ImageUrl,
-                })
-                .FirstOrDefaultAsync();
-        }
-
-        public async Task<AllSportsViewModel?> GetSportByIdAsync(int id)
-        {
-            return await context.Sports
-                .Include(s => s.Facility)
-                .Where(s => s.Id == id)
-                .Select(s => new AllSportsViewModel
-                {
-                    Name = s.Name,
-                    ImageUrl = s.ImageUrl,
-                    Duration = s.Duration,
-                    Price = s.Price,
                     Facility = s.Facility.Name,
-                    FacilityId = s.FacilityId
-                })
-                .FirstOrDefaultAsync();
-        }
-
-        public async Task<IEnumerable<AllSportsViewModel>> GetMySportsAsync(string userId)
-        {
-            return await context.Reservations
-                .Include(r => r.Sport)
-                .ThenInclude(s => s.Facility)
-                .Where(r => r.ClientId == userId)
-                .Select(r => new AllSportsViewModel
-                {
-                    Name = r.Sport.Name,
-                    Duration = r.Sport.Duration,
-                    Price = r.Sport.Price,
-                    ImageUrl = r.Sport.ImageUrl,
-                    Facility = r.Sport.Facility.Name,
-                    FacilityId = r.Sport.FacilityId
+                    ImageUrl = s.ImageUrl
                 })
                 .ToListAsync();
         }
 
-        public async Task AddToMySportsAsync(string userId, AllSportsViewModel sport)
+        public async Task<SportReservationFormViewModel?> GetReservationFormAsync(int sportId)
         {
-            var sportEntity = await context.Sports.FirstOrDefaultAsync(s => s.Name == sport.Name);
+            var sport = await context.Sports
+                .Where(s => s.Id == sportId)
+                .Select(s => new SportReservationFormViewModel
+                {
+                    SportId = s.Id,
+                    SportName = s.Name,
+                    FacilityName = s.Facility.Name,
+                    ReservationDateTime = DateTime.Now.AddDays(1),
+                    Trainers = context.Trainers
+                        .Select(t => new TrainerDropdownViewModel
+                        {
+                            Id = t.Id,
+                            FullName = t.Name
+                        })
+                        .ToList()
+                })
+                .FirstOrDefaultAsync();
 
-            if (sportEntity == null)
-                throw new InvalidOperationException("Sport not found.");
-
-            bool alreadyReserved = await context.Reservations.AnyAsync(r => r.ClientId == userId && r.SportId == sportEntity.Id);
-            if (alreadyReserved)
-                throw new InvalidOperationException("You have already reserved this sport.");
-
-            context.Reservations.Add(new Reservation
-            {
-                ClientId = userId,
-                SportId = sportEntity.Id,
-                ReservationDateTime = DateTime.Now
-            });
-
-            await context.SaveChangesAsync();
+            return sport;
         }
 
-        public async Task RemoveFromMySportsAsync(string userId, AllSportsViewModel sport)
+        public async Task<int> CreateReservationAsync(SportReservationFormViewModel model, string userId)
         {
-            var sportEntity = await context.Sports.FirstOrDefaultAsync(s => s.Name == sport.Name);
-            if (sportEntity == null)
-                throw new InvalidOperationException("Sport not found.");
+            var reservation = new Reservation
+            {
+                ClientId = userId,
+                SportId = model.SportId,
+                TrainerId = model.TrainerId,
+                Duration = model.Duration,
+                NumberOfPeople = model.NumberOfPeople,
+                ReservationDateTime = model.ReservationDateTime
+            };
 
-            var reservation = await context.Reservations
-                .FirstOrDefaultAsync(r => r.ClientId == userId && r.SportId == sportEntity.Id);
-
-            if (reservation == null)
-                throw new InvalidOperationException("Reservation not found.");
-
-            context.Reservations.Remove(reservation);
+            await context.Reservations.AddAsync(reservation);
             await context.SaveChangesAsync();
+
+            return reservation.Id;
+        }
+
+        public async Task<IEnumerable<SportReservationViewModel>> GetUserReservationsAsync(string userId)
+        {
+            return await context.Reservations
+                .Where(r => r.ClientId == userId)
+                .Include(r => r.Sport).ThenInclude(s => s.Facility)
+                .Include(r => r.Trainer)
+                .Select(r => new SportReservationViewModel
+                {
+                    Id = r.Id,
+                    SportName = r.Sport.Name,
+                    FacilityName = r.Sport.Facility.Name,
+                    Duration = r.Duration,
+                    ReservationDateTime = r.ReservationDateTime,
+                    NumberOfPeople = r.NumberOfPeople,
+                    TrainerName = r.Trainer != null ? r.Trainer.Name : "No Trainer",
+                    TotalPrice = Math.Round(r.Sport.Price * (r.Duration/60m) * r.NumberOfPeople, 2)
+                })
+                .ToListAsync();
+        }
+
+        public async Task<bool> ReservationExistsAsync(int reservationId, string userId)
+        {
+            return await context.Reservations
+                .AnyAsync(r => r.Id == reservationId && r.ClientId == userId);
+        }
+
+        public async Task CancelReservationAsync(int reservationId, string userId)
+        {
+            var reservation = await context.Reservations
+                .FirstOrDefaultAsync(r => r.Id == reservationId && r.ClientId == userId);
+            if (reservation != null)
+            {
+                context.Reservations.Remove(reservation);
+                await context.SaveChangesAsync();
+            }
         }
     }
 }
