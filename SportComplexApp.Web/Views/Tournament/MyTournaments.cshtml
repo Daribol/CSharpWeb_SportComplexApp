@@ -1,0 +1,22 @@
+﻿@using SportComplexApp.Web.ViewModels.Tournament
+@model IEnumerable<TournamentViewModel>
+<h2 class="mb-4">My Registered Tournaments</h2>
+
+@if (!Model.Any())
+{
+    <p>You are not registered in any tournaments yet.</p>
+}
+else
+{
+    <ul class="list-group">
+        @foreach (var t in Model)
+        {
+            <li class="list-group-item">
+                <h5>@t.Name</h5>
+                <p><strong>Sport:</strong> @t.Sport</p>
+                <p><strong>Date:</strong> @t.StartDate.ToShortDateString()</p>
+                <p>@t.Description</p>
+            </li>
+        }
+    </ul>
+}

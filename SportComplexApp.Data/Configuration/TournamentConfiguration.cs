@@ -39,14 +39,16 @@ namespace SportComplexApp.Data.Configuration
                     Id = 1,
                     Name = "Summer Cup",
                     Description = "Annual summer tournament for all skill levels.",
-                    StartDate = DateTime.Now.AddMonths(1)
+                    StartDate = DateTime.Now.AddMonths(1),
+                    SportId = 1
                 },
                 new Tournament
                 {
                     Id = 2,
                     Name = "Winter Championship",
                     Description = "Competitive winter tournament with prizes.",
-                    StartDate = DateTime.Now.AddMonths(3)
+                    StartDate = DateTime.Now.AddMonths(3),
+                    SportId = 2
                 }
             };
             return tournaments;

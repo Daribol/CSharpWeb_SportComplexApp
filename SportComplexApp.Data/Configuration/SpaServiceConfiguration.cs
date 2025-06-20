@@ -48,7 +48,7 @@ namespace SportComplexApp.Data.Configuration
                     Description = "A soothing massage to relieve stress and tension.",
                     ProcedureDetails = "This massage focuses on relaxation and stress relief, using gentle techniques to soothe the body and mind.",
                     Price = 50.00m,
-                    ImageUrl = "https://example.com/images/relaxing-massage.jpg"
+                    ImageUrl = "/images/RelaxingMassage.jpg"
                 },
                 new SpaService
                 {
@@ -57,7 +57,7 @@ namespace SportComplexApp.Data.Configuration
                     Description = "A rejuvenating facial to enhance your skin's glow.",
                     ProcedureDetails = "This facial treatment includes cleansing, exfoliation, and moisturizing to improve skin texture and appearance.",
                     Price = 70.00m,
-                    ImageUrl = "https://example.com/images/facial-treatment.jpg"
+                    ImageUrl = "/images/FacialTreatment.jpg"
                 },
             };
 

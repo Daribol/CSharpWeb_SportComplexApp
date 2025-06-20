@@ -49,9 +49,9 @@ namespace SportComplexApp.Data.Configuration
                 {
                     Id = 1,
                     Name = "Tennis",
-                    FacilityId = 1,
+                    FacilityId = 3,
                     Price = 20.00m,
-                    ImageUrl = "https://example.com/tennis.jpg",
+                    ImageUrl = "/images/Tennis.jpg",
                     Duration = 60
                 },
                 new Sport
@@ -60,7 +60,16 @@ namespace SportComplexApp.Data.Configuration
                     Name = "Swimming",
                     FacilityId = 2,
                     Price = 15.00m,
-                    ImageUrl = "https://example.com/swimming.jpg",
+                    ImageUrl = "/images/swimming.jpg",
+                    Duration = 45
+                },
+                new Sport
+                {
+                    Id = 3,
+                    Name = "Football",
+                    FacilityId = 1,
+                    Price = 10.00m,
+                    ImageUrl = "/images/football.jpg",
                     Duration = 45
                 },
             };

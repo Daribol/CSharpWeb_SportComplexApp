@@ -47,7 +47,7 @@ namespace SportComplexApp.Web.Controllers
                     model.FacilityName = fallback.FacilityName;
                     model.Trainers = fallback.Trainers;
                 }
-                return View("Create", model);
+                return View(model);
             }
 
             var userId = GetUserId();

@@ -26,4 +26,12 @@
     <ProjectReference Include="..\SportComplexApp.Web.ViewModels\SportComplexApp.Web.ViewModels.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\images\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Views\Trainer\All.cshtml" />
+  </ItemGroup>
+
 </Project>

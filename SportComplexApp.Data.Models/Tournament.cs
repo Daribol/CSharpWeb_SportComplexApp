@@ -17,6 +17,9 @@ namespace SportComplexApp.Data.Models
 
         public string Description { get; set; } = null!;
 
+        public int SportId { get; set; }
+        public Sport Sport { get; set; } = null!;
+
         public virtual ICollection<TournamentRegistration> TournamentRegistrations { get; set; } = new HashSet<TournamentRegistration>();
     }
 }

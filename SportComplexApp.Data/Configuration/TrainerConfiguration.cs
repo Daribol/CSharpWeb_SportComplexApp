@@ -49,7 +49,7 @@ namespace SportComplexApp.Data.Configuration
                     Name = "John Doe",
                     Specialization = "Fitness",
                     Bio = "Experienced fitness trainer with a passion for helping clients achieve their goals.",
-                    ImageUrl = "https://example.com/images/john_doe.jpg"
+                    ImageUrl = "/images/JohnDoe.jpg"
                 },
                 new Trainer
                 {
@@ -57,7 +57,7 @@ namespace SportComplexApp.Data.Configuration
                     Name = "Jane Smith",
                     Specialization = "Yoga",
                     Bio = "Certified yoga instructor with over 5 years of experience.",
-                    ImageUrl = "https://example.com/images/jane_smith.jpg"
+                    ImageUrl = "/images/JaneSmith.jpg"
                 },
             };
 

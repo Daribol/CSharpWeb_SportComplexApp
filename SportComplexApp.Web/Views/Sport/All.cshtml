@@ -17,6 +17,7 @@
                     <p class="card-text"><strong>Price:</strong> $@sport.Price</p>
                     <p class="card-text"><strong>Duration:</strong> @sport.Duration min</p>
                     <a asp-action="Reserve" asp-route-id="@sport.Id" class="btn btn-primary mt-2">Reserve</a>
+                    <a asp-controller="Trainer" asp-action="All" asp-route-sportId="@sport.Id" class="btn btn-info btn-sm">Trainers</a>
                 </div>
             </div>
         </div>

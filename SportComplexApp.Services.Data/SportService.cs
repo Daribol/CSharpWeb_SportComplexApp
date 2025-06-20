@@ -41,15 +41,22 @@ namespace SportComplexApp.Services
                     SportName = s.Name,
                     FacilityName = s.Facility.Name,
                     ReservationDateTime = DateTime.Now.AddDays(1),
-                    Trainers = context.Trainers
-                        .Select(t => new TrainerDropdownViewModel
-                        {
-                            Id = t.Id,
-                            FullName = t.Name
-                        })
-                        .ToList()
                 })
                 .FirstOrDefaultAsync();
+
+            if (sport == null)
+            {
+                return null;
+            }
+
+            sport.Trainers = await context.SportTrainers
+                .Where(st => st.SportId == sportId)
+                .Select(st => new TrainerDropdownViewModel
+                {
+                    Id = st.TrainerId,
+                    FullName = st.Trainer.Name
+                })
+                .ToListAsync();
 
             return sport;
         }

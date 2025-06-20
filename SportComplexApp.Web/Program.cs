@@ -38,6 +38,8 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddScoped<ISportService, SportService>();
 builder.Services.AddScoped<ISpaService, SportComplexApp.Services.Data.SpaService>();
+builder.Services.AddScoped<ITournamentService, TournamentService>();
+builder.Services.AddScoped<ITrainerService, TrainerService>();
 
 
 var app = builder.Build();
