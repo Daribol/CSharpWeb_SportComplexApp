@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SportComplexApp.Data.Models;
 using SportComplexApp.Services.Data.Contracts;
 using SportComplexApp.Web.ViewModels.Tournament;
@@ -22,6 +23,7 @@ namespace SportComplexApp.Web.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> Register(int id)
         {
             var userId = GetUserId();
@@ -30,6 +32,7 @@ namespace SportComplexApp.Web.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> MyTournaments()
         {
             var userId = GetUserId();

@@ -24,6 +24,7 @@ namespace SportComplexApp.Web.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> Reserve(int id)
         {
             var model = await sportService.GetReservationFormAsync(id);
@@ -36,6 +37,7 @@ namespace SportComplexApp.Web.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> Reserve(SportReservationFormViewModel model)
         {
             if (!ModelState.IsValid)
@@ -56,6 +58,7 @@ namespace SportComplexApp.Web.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> MyReservations()
         {
             var userId = GetUserId();
@@ -65,6 +68,7 @@ namespace SportComplexApp.Web.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> Cancel(int id)
         {
             var userId = GetUserId();

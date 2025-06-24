@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static SportComplexApp.Common.EntityValidationConstants.Sport;
+using static SportComplexApp.Common.EntityValidationConstants.Reservation;
 
 namespace SportComplexApp.Web.ViewModels.Sport
 {
@@ -26,7 +26,7 @@ namespace SportComplexApp.Web.ViewModels.Sport
         public int Duration { get; set; }
 
         [Required]
-        [Range(1, 20)]
+        [Range(NumberOfPeopleMinValue, NumberOfPeopleMaxValue)]
         [Display(Name = "Number of People")]
         public int NumberOfPeople { get; set; }
 

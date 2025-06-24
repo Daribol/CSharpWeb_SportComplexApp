@@ -9,6 +9,7 @@ using SportComplexApp.Services;
 using SportComplexApp.Services.Mapping;
 using SportComplexApp.Web.ViewModels;
 using SportComplexApp.Services.Data;
+using SportComplexApp.Data.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 string? connectionString = builder.Configuration.GetConnectionString("SQLServer");
@@ -18,7 +19,7 @@ builder.Services
     options.UseSqlServer(connectionString));
 
 builder.Services
-    .AddDefaultIdentity<Client>(option =>
+    .AddIdentity<Client, IdentityRole>(option =>
     {
         option.SignIn.RequireConfirmedAccount = false;
         option.Password.RequireDigit = true;
@@ -28,7 +29,9 @@ builder.Services
         option.Password.RequireLowercase = true;
         option.User.RequireUniqueEmail = true;
     })
-    .AddEntityFrameworkStores<SportComplexDbContext>();
+    .AddEntityFrameworkStores<SportComplexDbContext>()
+    .AddDefaultTokenProviders()
+    .AddDefaultUI();
 
 builder.Services.ConfigureApplicationCookie(cfg =>
 cfg.LoginPath = "/Identity/Account/Login");
@@ -44,7 +47,14 @@ builder.Services.AddScoped<ITrainerService, TrainerService>();
 
 var app = builder.Build();
 
-AutoMapperConfig.RegisterMappings(typeof(ErrorViewModel).Assembly);
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    DatabaseSeeder.SeedRoles(services);
+    DatabaseSeeder.AssignAdminRole(services);
+}
+
+    AutoMapperConfig.RegisterMappings(typeof(ErrorViewModel).Assembly);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -65,6 +75,10 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.MapControllerRoute(
+    name: "areas",
+    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
 app.MapControllerRoute(
     name: "default",

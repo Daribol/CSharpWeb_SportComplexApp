@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SportComplexApp.Services.Data.Contracts;
 using SportComplexApp.Web.ViewModels.Spa;
 
@@ -21,6 +22,7 @@ namespace SportComplexApp.Web.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> Reserve(int id)
         {
             var model = await spaService.GetSpaServiceByIdAsync(id);
@@ -33,6 +35,7 @@ namespace SportComplexApp.Web.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> Reserve(SpaReservationFormViewModel model)
         {
             if (!ModelState.IsValid)
@@ -47,6 +50,7 @@ namespace SportComplexApp.Web.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> MyReservations()
         {
             var userId = GetUserId();
@@ -66,6 +70,7 @@ namespace SportComplexApp.Web.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> Cancel(int id)
         {
             var userId = GetUserId();
