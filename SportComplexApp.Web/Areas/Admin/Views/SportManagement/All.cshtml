@@ -1,0 +1,31 @@
+﻿@model IEnumerable<SportComplexApp.Web.ViewModels.Sport.AllSportsViewModel>
+
+<h2>All Sports</h2>
+<a asp-action="Add" class="btn btn-primary mb-3">Add New Sport</a>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Duration</th>
+            <th>Facility</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var sport in Model)
+        {
+            <tr>
+                <td>@sport.Name</td>
+                <td>@sport.Price</td>
+                <td>@sport.Duration</td>
+                <td>@sport.Facility</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@sport.Id" class="btn btn-warning btn-sm">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@sport.Id" class="btn btn-danger btn-sm">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

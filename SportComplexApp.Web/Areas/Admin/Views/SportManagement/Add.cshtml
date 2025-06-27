@@ -1,0 +1,43 @@
+﻿@model SportComplexApp.Web.ViewModels.Sport.AddSportViewModel
+
+@{
+    ViewData["Title"] = "Add Sport";
+}
+
+<h2>Add New Sport</h2>
+
+<form asp-action="Add" method="post">
+    <div class="mb-3">
+        <label asp-for="Name" class="form-label"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Price" class="form-label"></label>
+        <input asp-for="Price" class="form-control" />
+        <span asp-validation-for="Price" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Duration" class="form-label"></label>
+        <input asp-for="Duration" class="form-control" />
+        <span asp-validation-for="Duration" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="ImageUrl" class="form-label"></label>
+        <input asp-for="ImageUrl" class="form-control" />
+        <span asp-validation-for="ImageUrl" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="FacilityId" class="form-label"></label>
+        <select asp-for="FacilityId" class="form-select" asp-items="Model.Facilities">
+            <option value="">-- Select Facility --</option>
+        </select>
+        <span asp-validation-for="FacilityId" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Add Sport</button>
+</form>

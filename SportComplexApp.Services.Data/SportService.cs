@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using SportComplexApp.Data;
 using SportComplexApp.Data.Models;
 using SportComplexApp.Services.Data.Contracts;
@@ -114,6 +115,105 @@ namespace SportComplexApp.Services
                 context.Reservations.Remove(reservation);
                 await context.SaveChangesAsync();
             }
+        }
+
+        //CRUD operations for sports
+        public async Task<AddSportViewModel> GetAddFormModelAsync()
+        {
+            var facilities = await GetFacilitiesSelectListAsync();
+
+            return new AddSportViewModel
+            {
+                Facilities = facilities
+            };
+        }
+
+        public async Task AddAsync(AddSportViewModel model)
+        {
+            var sport = new Sport
+            {
+                Name = model.Name,
+                Price = model.Price,
+                Duration = model.Duration,
+                ImageUrl = model.ImageUrl,
+                FacilityId = model.FacilityId
+            };
+
+            await context.Sports.AddAsync(sport);
+            await context.SaveChangesAsync();
+        }
+
+        public async Task<AddSportViewModel?> GetSportForEditAsync(int id)
+        {
+            var sport = await context.Sports.FindAsync(id);
+            if (sport == null)
+                return null;
+
+            var facilities = await GetFacilitiesSelectListAsync();
+
+            return new AddSportViewModel
+            {
+                Id = sport.Id,
+                Name = sport.Name,
+                Price = sport.Price,
+                Duration = sport.Duration,
+                ImageUrl = sport.ImageUrl,
+                FacilityId = sport.FacilityId,
+                Facilities = facilities
+            };
+        }
+
+        public async Task EditAsync(int id, AddSportViewModel model)
+        {
+            var sport = await context.Sports.FindAsync(id);
+            if (sport == null)
+                return;
+
+            sport.Name = model.Name;
+            sport.Price = model.Price;
+            sport.Duration = model.Duration;
+            sport.ImageUrl = model.ImageUrl;
+            sport.FacilityId = model.FacilityId;
+
+            await context.SaveChangesAsync();
+        }
+
+        public async Task<DeleteSportViewModel?> GetSportForDeleteAsync(int id)
+        {
+            var sport = await context.Sports
+                .Include(s => s.Facility)
+                .FirstOrDefaultAsync(s => s.Id == id);
+
+            if (sport == null)
+                return null;
+
+            return new DeleteSportViewModel
+            {
+                Id = sport.Id,
+                Name = sport.Name,
+                Facility = sport.Facility.Name
+            };
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            var sport = await context.Sports.FindAsync(id);
+            if (sport != null)
+            {
+                context.Sports.Remove(sport);
+                await context.SaveChangesAsync();
+            }
+        }
+
+        public async Task<IEnumerable<SelectListItem>> GetFacilitiesSelectListAsync()
+        {
+            return await context.Facilities
+                .Select(f => new SelectListItem
+                {
+                    Value = f.Id.ToString(),
+                    Text = f.Name
+                })
+                .ToListAsync();
         }
     }
 }

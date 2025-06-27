@@ -43,6 +43,7 @@ builder.Services.AddScoped<ISportService, SportService>();
 builder.Services.AddScoped<ISpaService, SportComplexApp.Services.Data.SpaService>();
 builder.Services.AddScoped<ITournamentService, TournamentService>();
 builder.Services.AddScoped<ITrainerService, TrainerService>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 
 var app = builder.Build();
