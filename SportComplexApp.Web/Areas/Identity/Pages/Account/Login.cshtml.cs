@@ -136,6 +136,7 @@ namespace SportComplexApp.Web.Areas.Identity.Pages.Account
                 //}
 
                 var user = await _userManager.FindByEmailAsync(Input.Email);
+
                 if (user == null)
                 {
                     ModelState.AddModelError(string.Empty, "Invalid login attempt.");
@@ -143,11 +144,17 @@ namespace SportComplexApp.Web.Areas.Identity.Pages.Account
                 }
 
                 var result = await _signInManager.PasswordSignInAsync(user.UserName, Input.Password, Input.RememberMe, lockoutOnFailure: false);
+
                 if (result.Succeeded)
                 {
-                    _logger.LogInformation("User logged in.");
-                    return LocalRedirect(returnUrl);
+                    var roles = await _userManager.GetRolesAsync(user);
+
+                    if (roles.Contains("Admin"))
+                    {
+                        return RedirectToAction("Index", "Home", new { area = "Admin" });
+                    }
                 }
+
                 if (result.RequiresTwoFactor)
                 {
                     return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, Input.RememberMe });

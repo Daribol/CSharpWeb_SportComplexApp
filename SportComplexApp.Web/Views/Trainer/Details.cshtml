@@ -1,18 +1,21 @@
-﻿@model SportComplexApp.Web.ViewModels.Trainer.TrainerViewModel
+﻿@model SportComplexApp.Web.ViewModels.Trainer.TrainerDetailsViewModel
+
 @{
     ViewData["Title"] = "Trainer Details";
 }
 
-<div class="card mb-3">
+<div class="card shadow-lg">
     <div class="row g-0">
         <div class="col-md-4">
-            <img src="@Model.ImageUrl" class="img-fluid rounded-start" alt="@Model.FullName">
+            <img src="@Model.ImageUrl" class="img-fluid rounded-start" alt="@Model.Name @Model.LastName" />
         </div>
         <div class="col-md-8">
             <div class="card-body">
-                <h5 class="card-title">@Model.FullName</h5>
-                <p class="card-text">@Model.Specialization</p>
-                <p class="card-text">@Model.Bio</p>
+                <h2 class="card-title">@Model.Name @Model.LastName</h2>
+                @if (!string.IsNullOrWhiteSpace(Model.Bio))
+                {
+                    <p class="card-text"><strong>Bio:</strong> @Model.Bio</p>
+                }
             </div>
         </div>
     </div>

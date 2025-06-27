@@ -25,8 +25,14 @@ namespace SportComplexApp.Common
         public static class Trainer
         {
             public const int NameMaxLength = 100;
+            public const int NameMinLength = 2;
+
             public const int SpezializationMaxLength = 100;
+            public const int SpezializationMinLength = 5;
+
             public const int BioMaxLenght = 500;
+            public const int BioMinLength = 10;
+
             public const int ImageUrlMaxLength = 500;
         }
 

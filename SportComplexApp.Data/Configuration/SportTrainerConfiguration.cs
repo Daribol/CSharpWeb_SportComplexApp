@@ -18,12 +18,17 @@ namespace SportComplexApp.Data.Configuration
             builder.HasOne(st => st.Sport)
                 .WithMany(s => s.SportTrainers)
                 .HasForeignKey(st => st.SportId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(st => st.Trainer)
                 .WithMany(t => t.SportTrainers)
                 .HasForeignKey(st => st.TrainerId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasData(
+                new SportTrainer { SportId = 1, TrainerId = 1 },
+                new SportTrainer { SportId = 2, TrainerId = 2 }
+            );
         }
     }
 }

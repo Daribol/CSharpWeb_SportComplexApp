@@ -1,26 +1,41 @@
-﻿@model IEnumerable<SportComplexApp.Web.ViewModels.Trainer.TrainerViewModel>
+﻿@model IEnumerable<SportComplexApp.Web.ViewModels.Trainer.AllTrainersViewModel>
+
 @{
     ViewData["Title"] = "Trainers";
 }
 
-<h2 class="mb-4">Trainers for the Sport</h2>
+<h2 class="mb-4 text-center">Trainers for This Sport</h2>
 
 @if (!Model.Any())
 {
-    <p>No trainers available for this sport.</p>
+    <div class="alert alert-info text-center">
+        No trainers are available for this sport.
+    </div>
 }
 else
 {
-    <div class="row row-cols-1 row-cols-md-3 g-4">
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
         @foreach (var trainer in Model)
         {
             <div class="col">
-                <div class="card h-100">
-                    <img src="@trainer.ImageUrl" class="card-img-top" alt="@trainer.FullName" style="height: 200px; object-fit: cover;">
-                    <div class="card-body">
-                        <h5 class="card-title">@trainer.FullName</h5>
-                        <p class="card-text">@trainer.Specialization</p>
-                        <a asp-action="Details" asp-route-id="@trainer.Id" class="btn btn-outline-primary btn-sm">Details</a>
+                <div class="card h-100 shadow-sm border-0">
+                    <img src="@trainer.ImageUrl" class="card-img-top" alt="@trainer.Name @trainer.LastName" style="height: 250px; object-fit: cover;" />
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">@trainer.Name @trainer.LastName</h5>
+                        <p>
+                            <strong>Sports:</strong>
+                            @if (trainer.Sports.Any())
+                            {
+                                @string.Join(", ", trainer.Sports)
+                            }
+                            else
+                            {
+                                <span>None</span>
+                            }
+                        </p>
+                        <div class="mt-auto">
+                            <a asp-controller="Trainer" asp-action="Details" asp-route-id="@trainer.Id" class="btn btn-outline-primary btn-sm w-100">View Details</a>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -13,10 +13,22 @@ namespace SportComplexApp.Web.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> Index()
+        {
+            var trainers = await trainerService.GetAllAsync();
+            return View(trainers);
+        }
+
+        [HttpGet]
         public async Task<IActionResult> All(int sportId)
         {
             var trainers = await trainerService.GetTrainersBySportIdAsync(sportId);
-            ViewBag.SportId = sportId;
+
+            if (trainers == null || !trainers.Any())
+            {
+                return View("Empty");
+            }
+
             return View(trainers);
         }
 

@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SportComplexApp.Common\SportComplexApp.Common.csproj" />
+    <ProjectReference Include="..\SportComplexApp.Data.Models\SportComplexApp.Data.Models.csproj" />
   </ItemGroup>
 
 </Project>

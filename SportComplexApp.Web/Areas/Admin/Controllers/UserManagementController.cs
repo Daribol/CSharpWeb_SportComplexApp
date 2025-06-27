@@ -1,9 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SportComplexApp.Services.Data.Contracts;
 using SportComplexApp.Web.Controllers;
 
 namespace SportComplexApp.Web.Areas.Admin.Controllers
 {
+    [Area("Admin")]
+    [Authorize(Roles = "Admin")]
     public class UserManagementController : BaseController
     {
         private readonly IUserService userService;

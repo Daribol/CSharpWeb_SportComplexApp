@@ -1,0 +1,19 @@
+﻿@model SportComplexApp.Web.ViewModels.Trainer.DeleteTrainerViewModel
+
+<h2>Delete Trainer</h2>
+
+<div class="alert alert-warning">
+    Are you sure you want to delete the trainer <strong>@Model.Name @Model.LastName</strong>?
+</div>
+
+<form asp-action="Delete" method="post">
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger">Delete</button>
+    <a asp-action="All" class="btn btn-secondary">Cancel</a>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

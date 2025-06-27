@@ -22,9 +22,9 @@ namespace SportComplexApp.Data.Configuration
                 .IsRequired()
                 .HasMaxLength(NameMaxLength);
 
-            builder.Property(t => t.Specialization)
+            builder.Property(t => t.LastName)
                 .IsRequired()
-                .HasMaxLength(SpezializationMaxLength);
+                .HasMaxLength(NameMaxLength);
 
             builder.Property(t => t.Bio)
                 .IsRequired(false)
@@ -46,16 +46,16 @@ namespace SportComplexApp.Data.Configuration
                 new Trainer
                 {
                     Id = 1,
-                    Name = "John Doe",
-                    Specialization = "Fitness",
+                    Name = "John",
+                    LastName = "Doe",
                     Bio = "Experienced fitness trainer with a passion for helping clients achieve their goals.",
                     ImageUrl = "/images/JohnDoe.jpg"
                 },
                 new Trainer
                 {
                     Id = 2,
-                    Name = "Jane Smith",
-                    Specialization = "Yoga",
+                    Name = "Jane",
+                    LastName = "Smith",
                     Bio = "Certified yoga instructor with over 5 years of experience.",
                     ImageUrl = "/images/JaneSmith.jpg"
                 },
