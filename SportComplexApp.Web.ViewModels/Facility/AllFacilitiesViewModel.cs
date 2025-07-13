@@ -4,15 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SportComplexApp.Data.Models
+namespace SportComplexApp.Web.ViewModels.Facility
 {
-    public class Facility
+    public class AllFacilitiesViewModel
     {
         public int Id { get; set; }
-
         public string Name { get; set; } = null!;
-        public bool IsDeleted { get; set; } = false;
-
-        public virtual ICollection<Sport> Sports { get; set; } = new HashSet<Sport>();
+        public int SportCount { get; set; }
     }
+
 }

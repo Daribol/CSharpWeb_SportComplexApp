@@ -1,0 +1,29 @@
+﻿@using SportComplexApp.Web.ViewModels.Facility
+@model IEnumerable<AllFacilitiesViewModel>
+
+<h2 class="mb-3">Facilities</h2>
+
+<a asp-action="Add" class="btn btn-primary mb-3">Add Facility</a>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Sports</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var facility in Model)
+        {
+            <tr>
+                <td>@facility.Name</td>
+                <td>@facility.SportCount</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@facility.Id" class="btn btn-sm btn-warning">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@facility.Id" class="btn btn-sm btn-danger">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

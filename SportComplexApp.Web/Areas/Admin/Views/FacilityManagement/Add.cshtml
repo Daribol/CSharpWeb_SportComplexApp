@@ -1,0 +1,15 @@
+﻿@using SportComplexApp.Web.ViewModels.Facility
+@model AddFacilityViewModel
+
+<h2>Add Facility</h2>
+
+<form asp-action="Add" method="post">
+    <div class="form-group">
+        <label asp-for="Name"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <br />
+    <button type="submit" class="btn btn-success">Create</button>
+    <a asp-action="All" class="btn btn-secondary">Back</a>
+</form>

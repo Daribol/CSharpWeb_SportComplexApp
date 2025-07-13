@@ -1,0 +1,20 @@
+﻿using SportComplexApp.Web.ViewModels.Facility;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace SportComplexApp.Services.Data.Contracts
+{
+    public interface IFacilityService
+    {
+        Task<IEnumerable<AllFacilitiesViewModel>> GetAllAsync();
+        Task AddAsync(AddFacilityViewModel model);
+        Task<AddFacilityViewModel?> GetFacilityForEditAsync(int id);
+        Task EditAsync(int id, AddFacilityViewModel model);
+        Task<DeleteFacilityViewModel?> GetFacilityForDeleteAsync(int id);
+        Task DeleteAsync(int id);
+    }
+
+}
