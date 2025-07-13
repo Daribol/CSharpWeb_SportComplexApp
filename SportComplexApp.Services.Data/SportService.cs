@@ -19,6 +19,7 @@ namespace SportComplexApp.Services
         public async Task<IEnumerable<AllSportsViewModel>> GetAllSportsAsync()
         {
             return await context.Sports
+                .Where(s => !s.IsDeleted)
                 .Include(s => s.Facility)
                 .Select(s => new AllSportsViewModel
                 {
@@ -136,7 +137,8 @@ namespace SportComplexApp.Services
                 Price = model.Price,
                 Duration = model.Duration,
                 ImageUrl = model.ImageUrl,
-                FacilityId = model.FacilityId
+                FacilityId = model.FacilityId,
+                IsDeleted = false
             };
 
             await context.Sports.AddAsync(sport);
@@ -145,7 +147,9 @@ namespace SportComplexApp.Services
 
         public async Task<AddSportViewModel?> GetSportForEditAsync(int id)
         {
-            var sport = await context.Sports.FindAsync(id);
+            var sport = await context.Sports
+                .Where(s => s.Id == id && !s.IsDeleted)
+                .FirstOrDefaultAsync();
             if (sport == null)
                 return null;
 
@@ -181,6 +185,7 @@ namespace SportComplexApp.Services
         public async Task<DeleteSportViewModel?> GetSportForDeleteAsync(int id)
         {
             var sport = await context.Sports
+                .Where(s => s.Id == id && !s.IsDeleted)
                 .Include(s => s.Facility)
                 .FirstOrDefaultAsync(s => s.Id == id);
 
@@ -197,10 +202,11 @@ namespace SportComplexApp.Services
 
         public async Task DeleteAsync(int id)
         {
-            var sport = await context.Sports.FindAsync(id);
+            var sport = await context.Sports
+                .FirstOrDefaultAsync(s => s.Id == id && !s.IsDeleted);
             if (sport != null)
             {
-                context.Sports.Remove(sport);
+                sport.IsDeleted = true;
                 await context.SaveChangesAsync();
             }
         }

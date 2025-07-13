@@ -22,6 +22,8 @@ namespace SportComplexApp.Data.Models
 
         public int Duration { get; set; }
 
+        public bool IsDeleted { get; set; } = false;
+
         public virtual ICollection<Reservation> Reservations { get; set; } = new HashSet<Reservation>();
         public virtual ICollection<SportTrainer> SportTrainers { get; set; } = new HashSet<SportTrainer>();
     }
