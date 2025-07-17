@@ -3,11 +3,6 @@ using SportComplexApp.Data;
 using SportComplexApp.Data.Models;
 using SportComplexApp.Services.Data.Contracts;
 using SportComplexApp.Web.ViewModels.Spa;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SportComplexApp.Services.Data
 {
@@ -23,6 +18,7 @@ namespace SportComplexApp.Services.Data
         public async Task<IEnumerable<SpaServiceViewModel>> GetAllSpaServicesAsync()
         {
             return await context.SpaServices
+                .Where(s => !s.IsDeleted)
                 .Select(s => new SpaServiceViewModel
                 {
                     Id = s.Id,
@@ -116,6 +112,75 @@ namespace SportComplexApp.Services.Data
         {
             return await context.SpaReservations
                 .AnyAsync(r => r.Id == reservationId && r.ClientId == userId);
+        }
+
+        public async Task AddAsync(AddSpaServiceViewModel model)
+        {
+            var spaService = new SportComplexApp.Data.Models.SpaService
+            {
+                Name = model.Name,
+                Description = model.Description,
+                Price = model.Price,
+                ImageUrl = model.ImageUrl,
+                ProcedureDetails = model.ProcedureDetails
+            };
+
+            await context.SpaServices.AddAsync(spaService);
+            await context.SaveChangesAsync();
+        }
+
+        public async Task<AddSpaServiceViewModel?> GetForEditAsync(int id)
+        {
+            var service = await context.SpaServices.FindAsync(id);
+            if (service == null || service.IsDeleted)
+                return null;
+
+            return new AddSpaServiceViewModel
+            {
+                Name = service.Name,
+                Description = service.Description,
+                ProcedureDetails = service.ProcedureDetails,
+                Price = service.Price,
+                ImageUrl = service.ImageUrl
+            };
+        }
+
+        public async Task EditAsync(int id, AddSpaServiceViewModel model)
+        {
+            var service = await context.SpaServices.FindAsync(id);
+            if (service == null || service.IsDeleted)
+                return;
+
+            service.Name = model.Name;
+            service.Description = model.Description;
+            service.ProcedureDetails = model.ProcedureDetails;
+            service.Price = model.Price;
+            service.ImageUrl = model.ImageUrl;
+
+            await context.SaveChangesAsync();
+        }
+
+        public async Task<DeleteSpaServiceViewModel?> GetForDeleteAsync(int id)
+        {
+            var service = await context.SpaServices.FindAsync(id);
+            if (service == null || service.IsDeleted)
+                return null;
+
+            return new DeleteSpaServiceViewModel
+            {
+                Id = service.Id,
+                Name = service.Name
+            };
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            var service = await context.SpaServices.FindAsync(id);
+            if (service != null)
+            {
+                service.IsDeleted = true;
+                await context.SaveChangesAsync();
+            }
         }
     }
 }

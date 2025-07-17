@@ -16,5 +16,11 @@ namespace SportComplexApp.Services.Data.Contracts
         Task<SpaDetailsViewModel?> GetSpaDetailsByIdAsync(int id);
         Task CancelReservationAsync(int reservationId, string userId);
         Task<bool> ReservationExistsAsync(int reservationId, string userId);
+
+        Task AddAsync(AddSpaServiceViewModel model);
+        Task<AddSpaServiceViewModel?> GetForEditAsync(int id);
+        Task EditAsync(int id, AddSpaServiceViewModel model);
+        Task<DeleteSpaServiceViewModel?> GetForDeleteAsync(int id);
+        Task DeleteAsync(int id);
     }
 }

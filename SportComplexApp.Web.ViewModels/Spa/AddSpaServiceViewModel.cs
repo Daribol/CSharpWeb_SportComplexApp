@@ -5,24 +5,24 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SportComplexApp.Data.Models
+namespace SportComplexApp.Web.ViewModels.Spa
 {
-    public class SpaService
+    public class AddSpaServiceViewModel
     {
         public int Id { get; set; }
 
+        [Required]
         public string Name { get; set; } = null!;
 
+        [Required]
         public string Description { get; set; } = null!;
 
+        [Required]
         public string ProcedureDetails { get; set; } = null!;
 
+        [Required]
         public decimal Price { get; set; }
 
-        public string? ImageUrl { get; set; }
-
-        public bool IsDeleted { get; set; } = false;
-
-        public virtual ICollection<SpaReservation> SpaReservations { get; set; } = new HashSet<SpaReservation>();
+        public string ImageUrl { get; set; } = null!;
     }
 }
