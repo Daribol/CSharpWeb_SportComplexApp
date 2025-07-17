@@ -24,12 +24,12 @@ namespace SportComplexApp.Services.Data
         {
             return await context.Facilities
                 .Where(f => !f.IsDeleted)
-                .Include(f => f.Sports)
+                .Include(f => f.Sports.Where(s => !s.IsDeleted))
                 .Select(f => new AllFacilitiesViewModel
                 {
                     Id = f.Id,
                     Name = f.Name,
-                    SportCount = f.Sports.Count //(s => !s.IsDeleted) - да го добавя когато имам логика за изтриване на спортове
+                    SportCount = f.Sports.Count(s => !s.IsDeleted)
                 })
                 .ToListAsync();
         }

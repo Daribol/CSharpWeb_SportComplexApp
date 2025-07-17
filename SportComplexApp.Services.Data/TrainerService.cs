@@ -25,6 +25,7 @@ namespace SportComplexApp.Services.Data
         public async Task<IEnumerable<AllTrainersViewModel>> GetAllAsync()
         {
             return await context.Trainers
+                .Where(t => !t.IsDeleted)
                 .Include(t => t.SportTrainers)
                 .ThenInclude(st => st.Sport)
                 .Select(t => new AllTrainersViewModel
@@ -33,6 +34,7 @@ namespace SportComplexApp.Services.Data
                     Name = t.Name,
                     LastName = t.LastName,
                     Sports = t.SportTrainers
+                        .Where(st => !st.Sport.IsDeleted)
                         .Select(st => st.Sport.Name)
                         .ToList(),
                     ImageUrl = t.ImageUrl
@@ -43,9 +45,9 @@ namespace SportComplexApp.Services.Data
         public async Task<TrainerDetailsViewModel?> GetTrainerDetailsAsync(int trainerId)
         {
             return await context.Trainers
+                .Where(t => !t.IsDeleted && t.Id == trainerId)
                 .Include(t => t.SportTrainers)
                 .ThenInclude(st => st.Sport)
-                .Where(t => t.Id == trainerId)
                 .Select(t => new TrainerDetailsViewModel
                 {
                     Id = t.Id,
@@ -63,9 +65,9 @@ namespace SportComplexApp.Services.Data
         public async Task<IEnumerable<AllTrainersViewModel>> GetTrainersBySportIdAsync(int sportId)
         {
             return await context.Trainers
+                .Where(t => !t.IsDeleted && t.SportTrainers.Any(st => st.SportId == sportId))
                 .Include(t => t.SportTrainers)
                 .ThenInclude(st => st.Sport)
-                .Where(t => t.SportTrainers.Any(st => st.SportId == sportId))
                 .Select(t => new AllTrainersViewModel
                 {
                     Id = t.Id,
@@ -82,16 +84,17 @@ namespace SportComplexApp.Services.Data
         // Admin CRUD operations
 
         public async Task<IEnumerable<SelectListItem>> GetSportsAsSelectListAsync()
-{
-    return await context.Sports
-        .OrderBy(s => s.Name)
-        .Select(s => new SelectListItem
         {
-            Value = s.Id.ToString(),
-            Text = s.Name
-        })
-        .ToListAsync();
-}
+            return await context.Sports
+                .Where(s => !s.IsDeleted)
+                .OrderBy(s => s.Name)
+                .Select(s => new SelectListItem
+                {
+                    Value = s.Id.ToString(),
+                    Text = s.Name
+                })
+                .ToListAsync();
+        }
         public async Task AddAsync(AddTrainerViewModel model)
         {
             var trainer = new Trainer
@@ -100,10 +103,12 @@ namespace SportComplexApp.Services.Data
                 LastName = model.LastName,
                 Bio = model.Bio,
                 ImageUrl = model.ImageUrl,
-                SportTrainers = model.SelectedSportIds.Select(sportId => new SportTrainer
+                SportTrainers = model.SelectedSportIds
+                .Select(sportId => new SportTrainer
                 {
                     SportId = sportId
-                }).ToList()
+                })
+                .ToList()
             };
 
             await context.Trainers.AddAsync(trainer);
@@ -112,13 +117,7 @@ namespace SportComplexApp.Services.Data
 
         public async Task<AddTrainerViewModel> GetAddTrainerFormModelAsync()
         {
-            var sports = await context.Sports
-                .Select(s => new SelectListItem
-                {
-                    Value = s.Id.ToString(),
-                    Text = s.Name
-                })
-                .ToListAsync();
+            var sports = await GetSportsAsSelectListAsync();
 
             return new AddTrainerViewModel
             {
@@ -129,20 +128,14 @@ namespace SportComplexApp.Services.Data
         {
             var trainer = await context.Trainers
                 .Include(t => t.SportTrainers)
-                .FirstOrDefaultAsync(t => t.Id == id);
+                .FirstOrDefaultAsync(t => t.Id == id && !t.IsDeleted);
 
             if (trainer == null)
             {
                 return null;
             }
 
-            var allSports = await context.Sports
-                .Select(s => new SelectListItem
-                {
-                    Value = s.Id.ToString(),
-                    Text = s.Name
-                })
-                .ToListAsync();
+            var allSports = await GetSportsAsSelectListAsync();
 
             return new AddTrainerViewModel
             {
@@ -159,7 +152,7 @@ namespace SportComplexApp.Services.Data
         {
             var trainer = await context.Trainers
                 .Include(t => t.SportTrainers)
-                .FirstOrDefaultAsync(t => t.Id == id);
+                .FirstOrDefaultAsync(t => t.Id == id && !t.IsDeleted);
 
             if (trainer != null)
             {
@@ -185,7 +178,8 @@ namespace SportComplexApp.Services.Data
 
         public async Task<DeleteTrainerViewModel?> GetTrainerForDeleteAsync(int id)
         {
-            var trainer = await context.Trainers.FindAsync(id);
+            var trainer = await context.Trainers
+                .FirstOrDefaultAsync(t => t.Id == id && !t.IsDeleted);
 
             if (trainer == null)
             {
@@ -202,11 +196,12 @@ namespace SportComplexApp.Services.Data
 
         public async Task DeleteAsync(int id)
         {
-            var trainer = await context.Trainers.FindAsync(id);
+            var trainer = await context.Trainers
+                .FirstOrDefaultAsync(t => t.Id == id && !t.IsDeleted);
 
             if (trainer != null)
             {
-                context.Trainers.Remove(trainer);
+                trainer.IsDeleted = true;
                 await context.SaveChangesAsync();
             }
         }

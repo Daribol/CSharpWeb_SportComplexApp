@@ -19,7 +19,7 @@ namespace SportComplexApp.Services
         public async Task<IEnumerable<AllSportsViewModel>> GetAllSportsAsync()
         {
             return await context.Sports
-                .Where(s => !s.IsDeleted)
+                .Where(s => !s.IsDeleted && !s.Facility.IsDeleted)
                 .Include(s => s.Facility)
                 .Select(s => new AllSportsViewModel
                 {
