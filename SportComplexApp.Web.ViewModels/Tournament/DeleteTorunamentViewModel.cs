@@ -6,14 +6,12 @@ using System.Threading.Tasks;
 
 namespace SportComplexApp.Web.ViewModels.Tournament
 {
-    public class TournamentViewModel
+    public class DeleteTournamentViewModel
     {
         public int Id { get; set; }
-        public string Name { get; set; } = null!;
-        public string Sport { get; set; } = null!;
-        public DateTime StartDate { get; set; }
-        public string Description { get; set; } = null!;
 
-        public bool IsDeleted { get; set; } = false;
+        public string Name { get; set; } = null!;
+
+        public string Sport { get; set; } = null!;
     }
 }

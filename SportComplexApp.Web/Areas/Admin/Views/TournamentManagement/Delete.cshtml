@@ -1,0 +1,22 @@
+﻿@model SportComplexApp.Web.ViewModels.Tournament.DeleteTournamentViewModel
+
+@{
+    ViewData["Title"] = "Delete Tournament";
+}
+
+<h2>Confirm Delete</h2>
+
+<div class="alert alert-danger">
+    Are you sure you want to delete the tournament: <strong>@Model.Name</strong>?
+</div>
+
+<dl class="row">
+    <dt class="col-sm-2">Sport:</dt>
+    <dd class="col-sm-10">@Model.Sport</dd>
+</dl>
+
+<form asp-action="DeleteConfirmed" method="post">
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger">Delete</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>

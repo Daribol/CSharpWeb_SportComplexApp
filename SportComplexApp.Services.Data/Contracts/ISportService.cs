@@ -24,5 +24,7 @@ namespace SportComplexApp.Services.Data.Contracts
         Task EditAsync(int id, AddSportViewModel model);
         Task<DeleteSportViewModel?> GetSportForDeleteAsync(int id);
         Task DeleteAsync(int id);
+        Task<IEnumerable<SelectListItem>> GetAllAsSelectListAsync();
+
     }
 }

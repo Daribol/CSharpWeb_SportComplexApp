@@ -23,6 +23,7 @@ namespace SportComplexApp.Services.Data
         public async Task<IEnumerable<TournamentViewModel>> GetAllAsync()
         {
             return await context.Tournaments
+                .Where(t => !t.IsDeleted)
                 .Include(t => t.Sport)
                 .Select(t => new TournamentViewModel
                 {
@@ -74,6 +75,81 @@ namespace SportComplexApp.Services.Data
         {
             return await context.TournamentRegistrations
                 .AnyAsync(tr => tr.TournamentId == tournamentId && tr.ClientId == userId);
+        }
+
+        public async Task AddAsync(AddTournamentViewModel model)
+        {
+            var tournament = new Tournament
+            {
+                Name = model.Name,
+                Description = model.Description,
+                StartDate = model.StartDate,
+                SportId = model.SportId,
+                IsDeleted = false,
+            };
+
+            await context.Tournaments.AddAsync(tournament);
+            await context.SaveChangesAsync();
+        }
+
+        public async Task<AddTournamentViewModel?> GetForEditAsync(int id)
+        {
+            var tournament = await context.Tournaments.FindAsync(id);
+
+            if (tournament == null || tournament.IsDeleted)
+                return null;
+
+            return new AddTournamentViewModel
+            {
+                Id = tournament.Id,
+                Name = tournament.Name,
+                Description = tournament.Description,
+                StartDate = tournament.StartDate,
+                SportId = tournament.SportId
+            };
+        }
+
+        public async Task EditAsync(int id, AddTournamentViewModel model)
+        {
+            var tournament = await context.Tournaments.FindAsync(id);
+
+            if (tournament == null || tournament.IsDeleted)
+                return;
+
+            tournament.Name = model.Name;
+            tournament.Description = model.Description;
+            tournament.StartDate = model.StartDate;
+            tournament.SportId = model.SportId;
+
+            await context.SaveChangesAsync();
+        }
+
+        public async Task<DeleteTournamentViewModel?> GetForDeleteAsync(int id)
+        {
+            var tournament = await context.Tournaments
+                .Include(t => t.Sport)
+                .FirstOrDefaultAsync(t => t.Id == id && !t.IsDeleted);
+
+            if (tournament == null)
+                return null;
+
+            return new DeleteTournamentViewModel
+            {
+                Id = tournament.Id,
+                Name = tournament.Name,
+                Sport = tournament.Sport.Name
+            };
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            var tournament = await context.Tournaments.FindAsync(id);
+
+            if (tournament != null && !tournament.IsDeleted)
+            {
+                tournament.IsDeleted = true;
+                await context.SaveChangesAsync();
+            }
         }
     }
 }

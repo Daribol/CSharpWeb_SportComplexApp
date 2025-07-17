@@ -221,6 +221,20 @@ namespace SportComplexApp.Services
                 })
                 .ToListAsync();
         }
+
+        public async Task<IEnumerable<SelectListItem>> GetAllAsSelectListAsync()
+        {
+            return await context.Sports
+                .Where(s => !s.IsDeleted)
+                .OrderBy(s => s.Name)
+                .Select(s => new SelectListItem
+                {
+                    Value = s.Id.ToString(),
+                    Text = s.Name
+                })
+                .ToListAsync();
+        }
+
     }
 }
 

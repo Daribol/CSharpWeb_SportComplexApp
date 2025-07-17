@@ -13,5 +13,11 @@ namespace SportComplexApp.Services.Data.Contracts
         Task RegisterAsync(int tournamentId, string userId);
         Task<IEnumerable<TournamentViewModel>> GetUserTournamentsAsync(string userId);
         Task<bool> IsUserRegisteredAsync(int tournamentId, string userId);
+
+        Task AddAsync(AddTournamentViewModel model);
+        Task<AddTournamentViewModel?> GetForEditAsync(int id);
+        Task EditAsync(int id, AddTournamentViewModel model);
+        Task<DeleteTournamentViewModel?> GetForDeleteAsync(int id);
+        Task DeleteAsync(int id);
     }
 }

@@ -1,0 +1,33 @@
+﻿@model SportComplexApp.Web.ViewModels.Tournament.AddTournamentViewModel
+
+@{
+    ViewData["Title"] = "Add Tournament";
+}
+
+<h2>Add Tournament</h2>
+
+<form asp-action="Add" method="post">
+    <div class="form-group">
+        <label asp-for="Name"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="SportId">Sport</label>
+        <select asp-for="SportId" asp-items="Model.Sports" class="form-control"></select>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="StartDate"></label>
+        <input asp-for="StartDate" type="date" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Description"></label>
+        <textarea asp-for="Description" class="form-control"></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>

@@ -20,6 +20,8 @@ namespace SportComplexApp.Data.Models
         public int SportId { get; set; }
         public Sport Sport { get; set; } = null!;
 
+        public bool IsDeleted { get; set; } = false;
+
         public virtual ICollection<TournamentRegistration> TournamentRegistrations { get; set; } = new HashSet<TournamentRegistration>();
     }
 }
