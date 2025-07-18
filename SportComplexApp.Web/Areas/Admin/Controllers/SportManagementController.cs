@@ -34,6 +34,21 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> Add(AddSportViewModel model)
         {
+            if (model.MinPeople <= 0)
+            {
+                ModelState.AddModelError(nameof(model.MinPeople), "The minimum number of people must be at least 1.");
+            }
+
+            if (model.MaxPeople <= 0)
+            {
+                ModelState.AddModelError(nameof(model.MaxPeople), "The maximum number of people must be at least 1.");
+            }
+
+            if (model.MinPeople > model.MaxPeople)
+            {
+                ModelState.AddModelError(nameof(model.MaxPeople), "The maximum number of people must be greater than or equal to the minimum number of people.");
+            }
+
             if (!ModelState.IsValid)
             {
                 model.Facilities = await sportService.GetFacilitiesSelectListAsync();
@@ -57,6 +72,21 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(int id, AddSportViewModel model)
         {
+            if (model.MinPeople <= 0)
+            {
+                ModelState.AddModelError(nameof(model.MinPeople), "The minimum number of people must be at least 1.");
+            }
+
+            if (model.MaxPeople <= 0)
+            {
+                ModelState.AddModelError(nameof(model.MaxPeople), "The maximum number of people must be at least 1.");
+            }
+
+            if (model.MinPeople > model.MaxPeople)
+            {
+                ModelState.AddModelError(nameof(model.MaxPeople), "The maximum number of people must be greater than or equal to the minimum number of people.");
+            }
+
             if (!ModelState.IsValid)
             {
                 model.Facilities = await sportService.GetFacilitiesSelectListAsync();

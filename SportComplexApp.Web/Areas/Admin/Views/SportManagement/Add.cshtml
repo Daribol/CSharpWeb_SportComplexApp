@@ -26,6 +26,18 @@
     </div>
 
     <div class="mb-3">
+        <label asp-for="MinPeople" class="form-label"></label>
+        <input asp-for="MinPeople" class="form-control" />
+        <span asp-validation-for="MinPeople" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="MaxPeople" class="form-label"></label>
+        <input asp-for="MaxPeople" class="form-control" />
+        <span asp-validation-for="MaxPeople" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
         <label asp-for="ImageUrl" class="form-label"></label>
         <input asp-for="ImageUrl" class="form-control" />
         <span asp-validation-for="ImageUrl" class="text-danger"></span>

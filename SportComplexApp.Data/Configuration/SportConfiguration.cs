@@ -33,6 +33,12 @@ namespace SportComplexApp.Data.Configuration
             builder.Property(s => s.Duration)
                 .IsRequired();
 
+            builder.Property(s => s.MinPeople)
+                .IsRequired();
+
+            builder.Property(s => s.MaxPeople)
+                .IsRequired();
+
             builder.HasOne(s => s.Facility)
                 .WithMany(f => f.Sports)
                 .HasForeignKey(s => s.FacilityId)

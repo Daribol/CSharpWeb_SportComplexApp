@@ -43,6 +43,11 @@ namespace SportComplexApp.Services
                     SportName = s.Name,
                     FacilityName = s.Facility.Name,
                     ReservationDateTime = DateTime.Now.AddDays(1),
+                    Duration = s.Duration,
+                    MinDuration = s.Duration,
+                    MaxDuration = s.Duration * 2,
+                    MinPeople = s.MinPeople,
+                    MaxPeople = s.MaxPeople
                 })
                 .FirstOrDefaultAsync();
 
@@ -138,6 +143,8 @@ namespace SportComplexApp.Services
                 Duration = model.Duration,
                 ImageUrl = model.ImageUrl,
                 FacilityId = model.FacilityId,
+                MinPeople = model.MinPeople,
+                MaxPeople = model.MaxPeople,
                 IsDeleted = false
             };
 
@@ -163,7 +170,9 @@ namespace SportComplexApp.Services
                 Duration = sport.Duration,
                 ImageUrl = sport.ImageUrl,
                 FacilityId = sport.FacilityId,
-                Facilities = facilities
+                MinPeople = sport.MinPeople,
+                MaxPeople = sport.MaxPeople,
+                Facilities = facilities,
             };
         }
 
@@ -178,6 +187,8 @@ namespace SportComplexApp.Services
             sport.Duration = model.Duration;
             sport.ImageUrl = model.ImageUrl;
             sport.FacilityId = model.FacilityId;
+            sport.MinPeople = model.MinPeople;
+            sport.MaxPeople = model.MaxPeople;
 
             await context.SaveChangesAsync();
         }

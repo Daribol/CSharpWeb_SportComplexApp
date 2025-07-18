@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace SportComplexApp.Web.ViewModels.Sport
@@ -20,6 +21,12 @@ namespace SportComplexApp.Web.ViewModels.Sport
         [Required]
         [Range(15, 300)]
         public int Duration { get; set; }
+
+        [Range(1, int.MaxValue, ErrorMessage = "The minimum number of people must be at least 1.")]
+        public int MinPeople { get; set; }
+
+        [Range(1, int.MaxValue, ErrorMessage = "The maximum number of people must be at least 1.")]
+        public int MaxPeople { get; set; }
 
         [Required]
         [Display(Name = "Facility")]

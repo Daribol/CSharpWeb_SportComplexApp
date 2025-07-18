@@ -24,13 +24,13 @@
 
     <div class="mb-3">
         <label asp-for="Duration" class="form-label"></label>
-        <input asp-for="Duration" class="form-control" />
+        <input asp-for="Duration" min="@Model.MinDuration" max="@Model.MaxDuration" class="form-control" />
         <span asp-validation-for="Duration" class="text-danger"></span>
     </div>
 
     <div class="mb-3">
         <label asp-for="NumberOfPeople" class="form-label"></label>
-        <input asp-for="NumberOfPeople" class="form-control" />
+        <input asp-for="NumberOfPeople" min="@Model.MinPeople" max="@Model.MaxPeople" class="form-control" />
         <span asp-validation-for="NumberOfPeople" class="text-danger"></span>
     </div>
 

@@ -2,8 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using SportComplexApp.Services.Data.Contracts;
 using SportComplexApp.Web.ViewModels.Sport;
-using static SportComplexApp.Common.ErrorMessages.Sport;
-using static SportComplexApp.Common.SuccessfulValidationMessages.Sport;
 
 namespace SportComplexApp.Web.Controllers
 {
@@ -38,6 +36,7 @@ namespace SportComplexApp.Web.Controllers
 
         [HttpPost]
         [Authorize]
+
         public async Task<IActionResult> Reserve(SportReservationFormViewModel model)
         {
             if (!ModelState.IsValid)
@@ -48,6 +47,8 @@ namespace SportComplexApp.Web.Controllers
                     model.SportName = fallback.SportName;
                     model.FacilityName = fallback.FacilityName;
                     model.Trainers = fallback.Trainers;
+                    model.MinDuration = fallback.MinDuration;
+                    model.MaxDuration = fallback.MaxDuration;
                 }
                 return View(model);
             }

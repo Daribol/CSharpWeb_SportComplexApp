@@ -22,6 +22,9 @@ namespace SportComplexApp.Data.Models
 
         public int Duration { get; set; }
 
+        public int MinPeople { get; set; }
+        public int MaxPeople { get; set; }
+
         public bool IsDeleted { get; set; } = false;
 
         public virtual ICollection<Reservation> Reservations { get; set; } = new HashSet<Reservation>();
