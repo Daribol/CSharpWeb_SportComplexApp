@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SportComplexApp.Common;
 using SportComplexApp.Services.Data.Contracts;
 using SportComplexApp.Web.ViewModels.Sport;
 
@@ -39,22 +40,58 @@ namespace SportComplexApp.Web.Controllers
 
         public async Task<IActionResult> Reserve(SportReservationFormViewModel model)
         {
+            if (model.ReservationDateTime < DateTime.Now)
+            {
+                ModelState.AddModelError(nameof(model.ReservationDateTime), ErrorMessages.Reservation.ReservationInPast);
+            }
+
+            else if (model.ReservationDateTime < DateTime.Now.AddHours(1))
+            {
+                ModelState.AddModelError(nameof(model.ReservationDateTime), ErrorMessages.Reservation.ReservationTooSoon);
+            }
+
             if (!ModelState.IsValid)
             {
                 var fallback = await sportService.GetReservationFormAsync(model.SportId);
-                if (fallback == null)
+                if (fallback != null)
                 {
                     model.SportName = fallback.SportName;
                     model.FacilityName = fallback.FacilityName;
                     model.Trainers = fallback.Trainers;
                     model.MinDuration = fallback.MinDuration;
                     model.MaxDuration = fallback.MaxDuration;
+                    model.MinPeople = fallback.MinPeople;
+                    model.MaxPeople = fallback.MaxPeople;
                 }
                 return View(model);
             }
 
             var userId = GetUserId();
-            await sportService.CreateReservationAsync(model, userId);
+
+            try
+            {
+                await sportService.CreateReservationAsync(model, userId);
+            }
+            catch (InvalidOperationException)
+            {
+                ModelState.AddModelError(string.Empty, ErrorMessages.Reservation.ReservationConflict);
+
+                var fallback = await sportService.GetReservationFormAsync(model.SportId);
+                if (fallback != null)
+                {
+                    model.SportName = fallback.SportName;
+                    model.FacilityName = fallback.FacilityName;
+                    model.Trainers = fallback.Trainers;
+                    model.MinDuration = fallback.MinDuration;
+                    model.MaxDuration = fallback.MaxDuration;
+                    model.MinPeople = fallback.MinPeople;
+                    model.MaxPeople = fallback.MaxPeople;
+                }
+
+                return View(model);
+            }
+
+            TempData["SuccessMessage"] = SuccessfulValidationMessages.Reservation.ReservationCreated;
             return RedirectToAction(nameof(MyReservations));
         }
 
@@ -79,6 +116,8 @@ namespace SportComplexApp.Web.Controllers
             }
 
             await sportService.CancelReservationAsync(id, userId);
+
+            TempData["SuccessMessage"] = SuccessfulValidationMessages.Reservation.ReservationDeleted;
             return RedirectToAction(nameof(MyReservations));
         }
     }

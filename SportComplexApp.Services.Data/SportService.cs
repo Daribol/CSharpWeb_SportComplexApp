@@ -70,6 +70,20 @@ namespace SportComplexApp.Services
 
         public async Task<int> CreateReservationAsync(SportReservationFormViewModel model, string userId)
         {
+            var startTime = model.ReservationDateTime;
+            var endTime = startTime.AddMinutes(model.Duration);
+
+            bool isHired = await context.Reservations
+                .AnyAsync(r =>
+                    r.ClientId == userId &&
+                    r.ReservationDateTime < endTime &&
+                    r.ReservationDateTime.AddMinutes(r.Duration) > startTime);
+
+            if (isHired)
+            {
+                throw new InvalidOperationException("You already have a reservation during this time.");
+            }
+
             var reservation = new Reservation
             {
                 ClientId = userId,
