@@ -4,6 +4,14 @@
     ViewData["Title"] = "My Spa Reservations";
 }
 
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
 <h2 class="mb-4">My Spa Reservations</h2>
 
 @if (!Model.Any())
@@ -17,8 +25,9 @@ else
             <tr>
                 <th>Spa Service</th>
                 <th>Date & Time</th>
+                <th>Duration</th>
                 <th>Price</th>
-                <th>Notes</th>
+                <th>People</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -28,6 +37,7 @@ else
                 <tr>
                     <td>@reservation.SpaServiceName</td>
                     <td>@reservation.DateTime.ToString("f")</td>
+                    <td>@reservation.Duration minutes</td>
                     <td>@reservation.TotalPrice.ToString("F2") лв</td>
                     <td>@reservation.People</td>
                     <td>

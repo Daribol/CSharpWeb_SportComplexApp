@@ -21,6 +21,8 @@ namespace SportComplexApp.Data.Models
 
         public string? ImageUrl { get; set; }
 
+        public int Duration { get; set; }
+
         public bool IsDeleted { get; set; } = false;
 
         public virtual ICollection<SpaReservation> SpaReservations { get; set; } = new HashSet<SpaReservation>();

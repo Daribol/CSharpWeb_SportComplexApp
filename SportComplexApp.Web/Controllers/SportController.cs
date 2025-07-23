@@ -40,16 +40,6 @@ namespace SportComplexApp.Web.Controllers
 
         public async Task<IActionResult> Reserve(SportReservationFormViewModel model)
         {
-            if (model.ReservationDateTime < DateTime.Now)
-            {
-                ModelState.AddModelError(nameof(model.ReservationDateTime), ErrorMessages.Reservation.ReservationInPast);
-            }
-
-            else if (model.ReservationDateTime < DateTime.Now.AddHours(1))
-            {
-                ModelState.AddModelError(nameof(model.ReservationDateTime), ErrorMessages.Reservation.ReservationTooSoon);
-            }
-
             if (!ModelState.IsValid)
             {
                 var fallback = await sportService.GetReservationFormAsync(model.SportId);
@@ -71,10 +61,12 @@ namespace SportComplexApp.Web.Controllers
             try
             {
                 await sportService.CreateReservationAsync(model, userId);
+                TempData["SuccessMessage"] = SuccessfulValidationMessages.Reservation.ReservationCreated;
+                return RedirectToAction(nameof(MyReservations));
             }
-            catch (InvalidOperationException)
+            catch (InvalidOperationException ex)
             {
-                ModelState.AddModelError(string.Empty, ErrorMessages.Reservation.ReservationConflict);
+                ModelState.AddModelError(string.Empty, ex.Message);
 
                 var fallback = await sportService.GetReservationFormAsync(model.SportId);
                 if (fallback != null)
@@ -90,9 +82,6 @@ namespace SportComplexApp.Web.Controllers
 
                 return View(model);
             }
-
-            TempData["SuccessMessage"] = SuccessfulValidationMessages.Reservation.ReservationCreated;
-            return RedirectToAction(nameof(MyReservations));
         }
 
         [HttpGet]
@@ -100,6 +89,8 @@ namespace SportComplexApp.Web.Controllers
         public async Task<IActionResult> MyReservations()
         {
             var userId = GetUserId();
+            await sportService.DeleteExpiredReservationsAsync(userId);
+
             var reservations = await sportService.GetUserReservationsAsync(userId);
 
             return View(reservations);

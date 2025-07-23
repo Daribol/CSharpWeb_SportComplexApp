@@ -3,6 +3,7 @@ using SportComplexApp.Data;
 using SportComplexApp.Data.Models;
 using SportComplexApp.Services.Data.Contracts;
 using SportComplexApp.Web.ViewModels.Spa;
+using static SportComplexApp.Common.ErrorMessages.SpaReservation;
 
 namespace SportComplexApp.Services.Data
 {
@@ -25,6 +26,7 @@ namespace SportComplexApp.Services.Data
                     Name = s.Name,
                     Description = s.Description,
                     Price = s.Price,
+                    Duration = s.Duration,
                     ImageUrl = s.ImageUrl
                 })
                 .ToListAsync();
@@ -50,6 +52,35 @@ namespace SportComplexApp.Services.Data
 
         public async Task<int> CreateReservationAsync(SpaReservationFormViewModel model, string userId)
         {
+            var spaService = await context.SpaServices
+                .FirstOrDefaultAsync(s => s.Id == model.SpaServiceId && !s.IsDeleted);
+
+            var now = DateTime.Now;
+
+            if (model.ReservationDate < now)
+            {
+                throw new InvalidOperationException(ReservationInPast);
+            }
+
+            if (model.ReservationDate < now.AddHours(1))
+            {
+                throw new InvalidOperationException(ReservationTooSoon);
+            }
+
+            var startTime = model.ReservationDate;
+            var endTime = startTime.AddMinutes(spaService.Duration);
+
+            var isHired = await context.SpaReservations
+                .AnyAsync(r =>
+                    r.ClientId == userId &&
+                    r.ReservationDateTime < endTime &&
+                    r.ReservationDateTime.AddMinutes(spaService.Duration) > startTime);
+
+            if (isHired)
+            {
+                throw new InvalidOperationException(ReservationConflict);
+            }
+
             var reservation = new SpaReservation()
             {
                 SpaServiceId = model.SpaServiceId,
@@ -75,6 +106,7 @@ namespace SportComplexApp.Services.Data
                     SpaServiceName = r.SpaService.Name,
                     DateTime = r.ReservationDateTime,
                     People = r.NumberOfPeople,
+                    Duration = r.SpaService.Duration,
                     TotalPrice = r.SpaService.Price * r.NumberOfPeople
                 })
                 .ToListAsync();
@@ -91,6 +123,7 @@ namespace SportComplexApp.Services.Data
                     Description = s.Description,
                     ProcedureDetails = s.ProcedureDetails,
                     Price = s.Price,
+                    Duration = s.Duration,
                     ImageUrl = s.ImageUrl
                 })
                 .FirstOrDefaultAsync();
@@ -114,6 +147,23 @@ namespace SportComplexApp.Services.Data
                 .AnyAsync(r => r.Id == reservationId && r.ClientId == userId);
         }
 
+        public async Task DeleteExpiredSpaReservationsAsync(string userId)
+        {
+            var now = DateTime.Now;
+
+            var expiredSpaReservations = await context.SpaReservations
+                .Where(r => r.ClientId == userId &&
+                            r.ReservationDateTime <= now)
+                .ToListAsync();
+
+            if (expiredSpaReservations.Any())
+            {
+                context.SpaReservations.RemoveRange(expiredSpaReservations);
+                await context.SaveChangesAsync();
+            }
+        }
+
+
         public async Task AddAsync(AddSpaServiceViewModel model)
         {
             var spaService = new SportComplexApp.Data.Models.SpaService
@@ -122,6 +172,7 @@ namespace SportComplexApp.Services.Data
                 Description = model.Description,
                 Price = model.Price,
                 ImageUrl = model.ImageUrl,
+                Duration = model.Duration,
                 ProcedureDetails = model.ProcedureDetails
             };
 
@@ -141,6 +192,7 @@ namespace SportComplexApp.Services.Data
                 Description = service.Description,
                 ProcedureDetails = service.ProcedureDetails,
                 Price = service.Price,
+                Duration = service.Duration,
                 ImageUrl = service.ImageUrl
             };
         }
@@ -155,6 +207,7 @@ namespace SportComplexApp.Services.Data
             service.Description = model.Description;
             service.ProcedureDetails = model.ProcedureDetails;
             service.Price = model.Price;
+            service.Duration = model.Duration;
             service.ImageUrl = model.ImageUrl;
 
             await context.SaveChangesAsync();

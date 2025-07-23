@@ -23,6 +23,7 @@ namespace SportComplexApp.Data.Configuration
             builder.Property(ss => ss.Description)
                 .IsRequired()
                 .HasMaxLength(DescriptionMaxLength);
+
             builder.Property(ss => ss.ProcedureDetails)
                 .IsRequired();
 
@@ -33,6 +34,10 @@ namespace SportComplexApp.Data.Configuration
 
             builder.Property(ss => ss.ImageUrl)
                 .HasMaxLength(ImageUrlMaxLength);
+
+            builder.Property(ss => ss.Duration)
+                .IsRequired()
+                .HasDefaultValue(60);
 
             builder.HasData(SeedSpaServices());
         }

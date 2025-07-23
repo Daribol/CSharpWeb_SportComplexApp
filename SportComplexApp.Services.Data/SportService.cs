@@ -4,6 +4,7 @@ using SportComplexApp.Data;
 using SportComplexApp.Data.Models;
 using SportComplexApp.Services.Data.Contracts;
 using SportComplexApp.Web.ViewModels.Sport;
+using static SportComplexApp.Common.ErrorMessages.Reservation;
 
 namespace SportComplexApp.Services
 {
@@ -70,6 +71,21 @@ namespace SportComplexApp.Services
 
         public async Task<int> CreateReservationAsync(SportReservationFormViewModel model, string userId)
         {
+            var sport = await context.Sports
+                .FirstOrDefaultAsync(s => s.Id == model.SportId && !s.IsDeleted);
+
+            var now = DateTime.Now;
+
+            if (model.ReservationDateTime < now)
+            {
+                throw new InvalidOperationException(ReservationInPast);
+            }
+
+            if (model.ReservationDateTime < now.AddHours(1))
+            {
+                throw new InvalidOperationException(ReservationTooSoon);
+            }
+
             var startTime = model.ReservationDateTime;
             var endTime = startTime.AddMinutes(model.Duration);
 
@@ -81,7 +97,7 @@ namespace SportComplexApp.Services
 
             if (isHired)
             {
-                throw new InvalidOperationException("You already have a reservation during this time.");
+                throw new InvalidOperationException(ReservationConflict);
             }
 
             var reservation = new Reservation
@@ -136,6 +152,23 @@ namespace SportComplexApp.Services
                 await context.SaveChangesAsync();
             }
         }
+
+        public async Task DeleteExpiredReservationsAsync(string userId)
+        {
+            var now = DateTime.Now;
+
+            var expired = await context.Reservations
+                .Where(r => r.ClientId == userId &&
+                            r.ReservationDateTime.AddMinutes(r.Duration) <= now)
+                .ToListAsync();
+
+            if (expired.Any())
+            {
+                context.Reservations.RemoveRange(expired);
+                await context.SaveChangesAsync();
+            }
+        }
+
 
         //CRUD operations for sports
         public async Task<AddSportViewModel> GetAddFormModelAsync()

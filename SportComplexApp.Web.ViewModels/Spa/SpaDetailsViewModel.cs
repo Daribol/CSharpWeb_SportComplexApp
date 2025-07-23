@@ -18,6 +18,8 @@ namespace SportComplexApp.Web.ViewModels.Spa
 
         public decimal Price { get; set; }
 
+        public int Duration { get; set; }
+
         public string? ImageUrl { get; set; }
     }
 }

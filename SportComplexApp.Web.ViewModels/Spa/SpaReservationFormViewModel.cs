@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
@@ -21,6 +22,7 @@ namespace SportComplexApp.Web.ViewModels.Spa
         public DateTime ReservationDate { get; set; }
 
         [Required]
+        [DisplayName("Number of People")]
         [Range(1, 10, ErrorMessage = "Number of people must be between 1 and 10.")]
         public int NumberOfPeople { get; set; }
     }

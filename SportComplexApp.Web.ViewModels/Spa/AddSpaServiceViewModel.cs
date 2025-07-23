@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static SportComplexApp.Common.ErrorMessages.SpaReservation;
 
 namespace SportComplexApp.Web.ViewModels.Spa
 {
@@ -21,7 +22,12 @@ namespace SportComplexApp.Web.ViewModels.Spa
         public string ProcedureDetails { get; set; } = null!;
 
         [Required]
+        [Range(5.00, 1000.00, ErrorMessage = PriceTooLow)]
         public decimal Price { get; set; }
+
+        [Required]
+        [Range(20, 120)]
+        public int Duration { get; set; }
 
         public string ImageUrl { get; set; } = null!;
     }

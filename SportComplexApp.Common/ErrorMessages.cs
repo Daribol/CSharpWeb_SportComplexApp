@@ -21,5 +21,13 @@ namespace SportComplexApp.Common
             public const string ReservationInPast = "Reservation date cannot be in the past.";
             public const string ReservationConflict = "You already have a reservation during this time.";
         }
+
+        public static class  SpaReservation
+        {
+            public const string PriceTooLow = "The price must be at least 5.00.";
+            public const string ReservationInPast = "You cannot reserve a spa procedure in the past.";
+            public const string ReservationTooSoon = "You must reserve at least 1 hour in advance.";
+            public const string ReservationConflict = "You already have a reservation during this time.";
+        }
     }
 }

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SportComplexApp.Services.Data.Contracts;
 using SportComplexApp.Web.ViewModels.Spa;
+using static SportComplexApp.Common.SuccessfulValidationMessages.SpaReservation;
 
 namespace SportComplexApp.Web.Controllers
 {
@@ -44,9 +45,18 @@ namespace SportComplexApp.Web.Controllers
             }
 
             var userId = GetUserId();
-            await spaService.CreateReservationAsync(model, userId);
 
-            return RedirectToAction(nameof(MyReservations));
+            try
+            {
+                await spaService.CreateReservationAsync(model, userId);
+                TempData["SuccessMessage"] = SpaReservationCreated;
+                return RedirectToAction(nameof(MyReservations));
+            }
+            catch (InvalidOperationException ex)
+            {
+                ModelState.AddModelError(string.Empty, ex.Message);
+                return View(model);
+            }
         }
 
         [HttpGet]
@@ -54,6 +64,8 @@ namespace SportComplexApp.Web.Controllers
         public async Task<IActionResult> MyReservations()
         {
             var userId = GetUserId();
+            await spaService.DeleteExpiredSpaReservationsAsync(userId);
+
             var reservations = await spaService.GetUserReservationsAsync(userId);
             return View(reservations);
         }
@@ -81,6 +93,7 @@ namespace SportComplexApp.Web.Controllers
 
             await spaService.CancelReservationAsync(id, userId);
 
+            TempData["SuccessMessage"] = SpaReservationDeleted;
             return RedirectToAction(nameof(MyReservations));
         }
     }

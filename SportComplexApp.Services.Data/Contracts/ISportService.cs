@@ -16,6 +16,7 @@ namespace SportComplexApp.Services.Data.Contracts
         Task<IEnumerable<SportReservationViewModel>> GetUserReservationsAsync(string userId);
         Task<bool> ReservationExistsAsync(int reservationId, string userId);
         Task CancelReservationAsync(int reservationId, string userId);
+        Task DeleteExpiredReservationsAsync(string userId);
 
         Task<AddSportViewModel> GetAddFormModelAsync();
         Task<IEnumerable<SelectListItem>> GetFacilitiesSelectListAsync();

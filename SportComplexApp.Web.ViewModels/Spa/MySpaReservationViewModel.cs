@@ -14,6 +14,8 @@ namespace SportComplexApp.Web.ViewModels.Spa
 
         public DateTime DateTime { get; set; }
 
+        public int Duration { get; set; }
+
         public int People { get; set; }
 
         public decimal TotalPrice { get; set; }

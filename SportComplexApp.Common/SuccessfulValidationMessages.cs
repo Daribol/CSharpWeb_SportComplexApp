@@ -21,5 +21,11 @@ namespace SportComplexApp.Common
             public const string ReservationCreated = "Reservation successfully created.";
             public const string ReservationDeleted = "Reservation successfully deleted.";
         }
+
+        public static class SpaReservation
+        {
+            public const string SpaReservationCreated = "Spa reservation successfully created.";
+            public const string SpaReservationDeleted = "Spa reservation successfully deleted.";
+        }
     }
 }
