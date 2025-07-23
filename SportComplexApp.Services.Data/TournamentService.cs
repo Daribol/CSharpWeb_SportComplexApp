@@ -54,21 +54,53 @@ namespace SportComplexApp.Services.Data
             }
         }
 
+        public async Task<bool> UnregisterAsync(int tournamentId, string userId)
+        {
+            var registration = await context.TournamentRegistrations
+                .Include(r => r.Tournament)
+                .FirstOrDefaultAsync(r => r.TournamentId == tournamentId && r.ClientId == userId);
+
+            if (registration == null || registration.Tournament.StartDate <= DateTime.Now)
+            {
+                return false;
+            }
+
+            context.TournamentRegistrations.Remove(registration);
+            await context.SaveChangesAsync();
+            return true;
+        }
+
+
         public async Task<IEnumerable<TournamentViewModel>> GetUserTournamentsAsync(string userId)
         {
-            return await context.TournamentRegistrations
+            var registrations = await context.TournamentRegistrations
                 .Where(tr => tr.ClientId == userId)
                 .Include(tr => tr.Tournament)
                 .ThenInclude(t => t.Sport)
-                .Select(tr => new TournamentViewModel
-                {
-                    Id = tr.Tournament.Id,
-                    Name = tr.Tournament.Name,
-                    Sport = tr.Tournament.Sport.Name,
-                    StartDate = tr.Tournament.StartDate,
-                    Description = tr.Tournament.Description
-                })
+                .Where(tr => !tr.Tournament.IsDeleted)
                 .ToListAsync();
+
+            var pastRegistrations = registrations
+                .Where(r => r.Tournament.StartDate < DateTime.Now) 
+                .ToList();
+
+            if (pastRegistrations.Any())
+            {
+                context.TournamentRegistrations.RemoveRange(pastRegistrations);
+                await context.SaveChangesAsync();
+            }
+
+            return registrations
+                .Where(r => r.Tournament.StartDate >= DateTime.Now)
+                .Select(r => new TournamentViewModel
+                {
+                    Id = r.Tournament.Id,
+                    Name = r.Tournament.Name,
+                    Sport = r.Tournament.Sport.Name,
+                    StartDate = r.Tournament.StartDate,
+                    Description = r.Tournament.Description,
+                })
+                .ToList();
         }
 
         public async Task<bool> IsUserRegisteredAsync(int tournamentId, string userId)

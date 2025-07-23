@@ -27,5 +27,14 @@ namespace SportComplexApp.Common
             public const string SpaReservationCreated = "Spa reservation successfully created.";
             public const string SpaReservationDeleted = "Spa reservation successfully deleted.";
         }
+
+        public static class Tournament
+        {
+            public const string TournamentRegistered = "You have successfully registered for the tournament.";
+            public const string TournamentUnregistered = "You have successfully unregistered from the tournament.";
+            public const string TournamentCreated = "Tournament successfully created.";
+            public const string TournamentUpdated = "Tournament successfully updated.";
+            public const string TournamentDeleted = "Tournament successfully deleted.";
+        }
     }
 }

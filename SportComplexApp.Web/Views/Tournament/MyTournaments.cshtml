@@ -8,15 +8,38 @@
 }
 else
 {
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["SuccessMessage"]
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["ErrorMessage"]
+        </div>
+    }
     <ul class="list-group">
-        @foreach (var t in Model)
+        @foreach (var tournament in Model)
         {
-            <li class="list-group-item">
-                <h5>@t.Name</h5>
-                <p><strong>Sport:</strong> @t.Sport</p>
-                <p><strong>Date:</strong> @t.StartDate.ToShortDateString()</p>
-                <p>@t.Description</p>
-            </li>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">@tournament.Name</h5>
+                    <p class="card-text"><strong>Спорт:</strong> @tournament.Sport</p>
+                    <p class="card-text"><strong>Начало:</strong> @tournament.StartDate</p>
+                    <p class="card-text">@tournament.Description</p>
+
+                    @if (tournament.StartDate > DateTime.Now)
+                    {
+                        <form asp-action="Unregister" method="post" class="d-inline">
+                            <input type="hidden" name="id" value="@tournament.Id" />
+                            <button type="submit" class="btn btn-danger btn-sm">Unregister</button>
+                        </form>
+                    }
+                </div>
+            </div>
         }
     </ul>
 }

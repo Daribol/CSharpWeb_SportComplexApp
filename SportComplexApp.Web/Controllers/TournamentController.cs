@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SportComplexApp.Data.Models;
 using SportComplexApp.Services.Data.Contracts;
-using SportComplexApp.Web.ViewModels.Tournament;
+using static SportComplexApp.Common.ErrorMessages.Tournament;
+using static SportComplexApp.Common.SuccessfulValidationMessages.Tournament;
 
 namespace SportComplexApp.Web.Controllers
 {
@@ -27,9 +27,41 @@ namespace SportComplexApp.Web.Controllers
         public async Task<IActionResult> Register(int id)
         {
             var userId = GetUserId();
-            await tournamentService.RegisterAsync(id, userId);
+
+            var isRegistered = await tournamentService.IsUserRegisteredAsync(id, userId);
+
+            if (isRegistered)
+            {
+                TempData["ErrorMessage"] = TournamentAlreadyRegistered;
+            }
+            else
+            {
+                await tournamentService.RegisterAsync(id, userId);
+                TempData["SuccessMessage"] = TournamentRegistered;
+            }
+            
             return RedirectToAction(nameof(MyTournaments));
         }
+
+        [HttpPost]
+        public async Task<IActionResult> Unregister(int id)
+        {
+            var userId = GetUserId();
+
+            bool success = await tournamentService.UnregisterAsync(id, userId);
+
+            if (success)
+            {
+                TempData["SuccessMessage"] = TournamentUnregistered;
+            }
+            else
+            {
+                TempData["ErrorMessage"] = CannotUnregister;
+            }
+
+            return RedirectToAction(nameof(MyTournaments));
+        }
+
 
         [HttpGet]
         [Authorize]
