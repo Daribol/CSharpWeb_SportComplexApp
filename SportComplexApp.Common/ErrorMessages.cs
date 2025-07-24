@@ -11,9 +11,7 @@ namespace SportComplexApp.Common
     {
         public static class Sport
         {
-            public const string SportNotFound = "Sport not found.";
-            public const string SportAlreadyExists = "Sport already exists in your list.";
-            public const string SportNotInList = "Sport is not in your list.";
+            public const string MaxPeopleLessThanMin = "The maximum number of people must be greater than or equal to the minimum number of people.";
         }
 
         public static class Reservation

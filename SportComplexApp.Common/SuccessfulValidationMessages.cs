@@ -12,6 +12,8 @@ namespace SportComplexApp.Common
         {
             public const string SportAddedToMyList = "Sport successfully added to your list.";
             public const string SportRemovedFromMyList = "Sport successfully removed from your list.";
+
+            public const string SportCreated = "Sport successfully created.";
             public const string SportUpdated = "Sport successfully updated.";
             public const string SportDeleted = "Sport successfully deleted.";
         }

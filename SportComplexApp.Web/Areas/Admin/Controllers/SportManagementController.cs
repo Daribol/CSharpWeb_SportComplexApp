@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using SportComplexApp.Services.Data.Contracts;
 using SportComplexApp.Web.Controllers;
 using SportComplexApp.Web.ViewModels.Sport;
+using static SportComplexApp.Common.ErrorMessages.Sport;
+using static SportComplexApp.Common.SuccessfulValidationMessages.Sport;
 
 namespace SportComplexApp.Web.Areas.Admin.Controllers
 {
@@ -36,7 +38,7 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
         {
             if (model.MinPeople > model.MaxPeople)
             {
-                ModelState.AddModelError(nameof(model.MaxPeople), "The maximum number of people must be greater than or equal to the minimum number of people.");
+                ModelState.AddModelError(nameof(model.MaxPeople), MaxPeopleLessThanMin);
             }
 
             if (!ModelState.IsValid)
@@ -46,6 +48,7 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
             }
 
             await sportService.AddAsync(model);
+            TempData["SuccessMessage"] = SportCreated;
             return RedirectToAction(nameof(All));
         }
 
@@ -64,7 +67,7 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
         {
             if (model.MinPeople > model.MaxPeople)
             {
-                ModelState.AddModelError(nameof(model.MaxPeople), "The maximum number of people must be greater than or equal to the minimum number of people.");
+                ModelState.AddModelError(nameof(model.MaxPeople), MaxPeopleLessThanMin);
             }
 
             if (!ModelState.IsValid)
@@ -74,6 +77,7 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
             }
 
             await sportService.EditAsync(id, model);
+            TempData["SuccessMessage"] = SportUpdated;
             return RedirectToAction(nameof(All));
         }
 
@@ -91,6 +95,7 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
         public async Task<IActionResult> ConfirmDelete(int id)
         {
             await sportService.DeleteAsync(id);
+            TempData["SuccessMessage"] = SportDeleted;
             return RedirectToAction(nameof(All));
         }
     }
