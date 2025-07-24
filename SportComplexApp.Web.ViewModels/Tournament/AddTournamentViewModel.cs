@@ -22,6 +22,10 @@ namespace SportComplexApp.Web.ViewModels.Tournament
         [DataType(DataType.Date)]
         public DateTime StartDate { get; set; }
 
+        [Display(Name = "End Date")]
+        [DataType(DataType.Date)]
+        public DateTime EndDate { get; set; }
+
         [Display(Name = "Sport")]
         public int SportId { get; set; }
 

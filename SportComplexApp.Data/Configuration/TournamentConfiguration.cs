@@ -27,6 +27,9 @@ namespace SportComplexApp.Data.Configuration
             builder.Property(t => t.StartDate)
                 .IsRequired();
 
+            builder.Property(t => t.EndDate)
+                .IsRequired();
+
             builder.HasData(SeedTournaments());
         }
 

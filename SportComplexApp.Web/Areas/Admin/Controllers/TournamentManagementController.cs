@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using SportComplexApp.Services.Data.Contracts;
 using SportComplexApp.Web.Controllers;
 using SportComplexApp.Web.ViewModels.Tournament;
+using static SportComplexApp.Common.ErrorMessages.Tournament;
+using static SportComplexApp.Common.SuccessfulValidationMessages.Tournament;
 
 namespace SportComplexApp.Web.Areas.Admin.Controllers
 {
@@ -30,6 +32,8 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
         {
             var model = new AddTournamentViewModel
             {
+                StartDate = DateTime.Now,
+                EndDate = DateTime.Now.AddDays(1),
                 Sports = await sportService.GetAllAsSelectListAsync()
             };
 
@@ -39,6 +43,15 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> Add(AddTournamentViewModel model)
         {
+            if (model.StartDate <= DateTime.Now)
+            {
+                ModelState.AddModelError(nameof(model.StartDate), TournamentStartInPast);
+            }
+            if (model.EndDate <= model.StartDate)
+            {
+                ModelState.AddModelError(nameof(model.EndDate), TournamentEndBeforeStart);
+            }
+
             if (!ModelState.IsValid)
             {
                 model.Sports = await sportService.GetAllAsSelectListAsync();
@@ -46,6 +59,7 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
             }
 
             await tournamentService.AddAsync(model);
+            TempData["SuccessMessage"] = TournamentCreated;
             return RedirectToAction(nameof(All));
         }
 
@@ -62,6 +76,11 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(int id, AddTournamentViewModel model)
         {
+            if (model.EndDate <= model.StartDate)
+            {
+                ModelState.AddModelError(nameof(model.EndDate), TournamentEndBeforeStart);
+            }
+
             if (!ModelState.IsValid)
             {
                 model.Sports = await sportService.GetAllAsSelectListAsync();
@@ -69,6 +88,7 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
             }
 
             await tournamentService.EditAsync(id, model);
+            TempData["SuccessMessage"] = TournamentUpdated;
             return RedirectToAction(nameof(All));
         }
 
@@ -85,6 +105,7 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             await tournamentService.DeleteAsync(id);
+            TempData["SuccessMessage"] = TournamentDeleted;
             return RedirectToAction(nameof(All));
         }
     }

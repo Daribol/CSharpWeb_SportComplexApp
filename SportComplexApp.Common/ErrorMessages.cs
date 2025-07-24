@@ -33,8 +33,12 @@ namespace SportComplexApp.Common
         {
             public const string TournamentAlreadyRegistered = "You are already registered for this tournament.";
             public const string TournamentRegistrationClosed = "Registration for this tournament is closed.";
+
             public const string TournamentFull = "This tournament is already full.";
             public const string CannotUnregister = "You cannot unregister from this tournament.";
+
+            public const string TournamentStartInPast = "The start date of the tournament cannot be in the past.";
+            public const string TournamentEndBeforeStart = "The end of the tournament cannot be before the start date.";
         }
     }
 }

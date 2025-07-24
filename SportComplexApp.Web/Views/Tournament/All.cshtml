@@ -9,6 +9,7 @@
             <h5>@tournament.Name</h5>
             <p><strong>Sport:</strong> @tournament.Sport</p>
             <p><strong>Start Date:</strong> @tournament.StartDate.ToShortDateString()</p>
+            <p><strong>End Date:</strong> @tournament.EndDate.ToShortDateString()</p>
             <p>@tournament.Description</p>
             <form asp-action="Register" asp-route-id="@tournament.Id" method="post">
                 <button type="submit" class="btn btn-success btn-sm">Register</button>

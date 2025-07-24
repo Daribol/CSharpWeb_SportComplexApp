@@ -31,6 +31,7 @@ namespace SportComplexApp.Services.Data
                     Name = t.Name,
                     Sport = t.Sport.Name,
                     StartDate = t.StartDate,
+                    EndDate = t.EndDate,
                     Description = t.Description
                 })
                 .ToListAsync();
@@ -39,7 +40,7 @@ namespace SportComplexApp.Services.Data
         public async Task RegisterAsync(int tournamentId, string userId)
         {
             bool alreadyRegistered = await context.TournamentRegistrations
-        .AnyAsync(tr => tr.TournamentId == tournamentId && tr.ClientId == userId);
+                .AnyAsync(tr => tr.TournamentId == tournamentId && tr.ClientId == userId);
 
             if (!alreadyRegistered)
             {
@@ -98,6 +99,7 @@ namespace SportComplexApp.Services.Data
                     Name = r.Tournament.Name,
                     Sport = r.Tournament.Sport.Name,
                     StartDate = r.Tournament.StartDate,
+                    EndDate = r.Tournament.EndDate,
                     Description = r.Tournament.Description,
                 })
                 .ToList();
@@ -116,6 +118,7 @@ namespace SportComplexApp.Services.Data
                 Name = model.Name,
                 Description = model.Description,
                 StartDate = model.StartDate,
+                EndDate = model.EndDate,
                 SportId = model.SportId,
                 IsDeleted = false,
             };
@@ -137,6 +140,7 @@ namespace SportComplexApp.Services.Data
                 Name = tournament.Name,
                 Description = tournament.Description,
                 StartDate = tournament.StartDate,
+                EndDate = tournament.EndDate,
                 SportId = tournament.SportId
             };
         }
@@ -151,6 +155,7 @@ namespace SportComplexApp.Services.Data
             tournament.Name = model.Name;
             tournament.Description = model.Description;
             tournament.StartDate = model.StartDate;
+            tournament.EndDate = model.EndDate;
             tournament.SportId = model.SportId;
 
             await context.SaveChangesAsync();

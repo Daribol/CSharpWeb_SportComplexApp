@@ -22,9 +22,11 @@ namespace SportComplexApp.Web.ViewModels.Sport
         [Range(15, 300)]
         public int Duration { get; set; }
 
+        [Required]
         [Range(1, int.MaxValue, ErrorMessage = "The minimum number of people must be at least 1.")]
         public int MinPeople { get; set; }
 
+        [Required]
         [Range(1, int.MaxValue, ErrorMessage = "The maximum number of people must be at least 1.")]
         public int MaxPeople { get; set; }
 
