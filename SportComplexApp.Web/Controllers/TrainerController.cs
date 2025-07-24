@@ -29,11 +29,12 @@ namespace SportComplexApp.Web.Controllers
                 return View("Empty");
             }
 
+            ViewBag.SportId = sportId;
             return View(trainers);
         }
 
         [HttpGet]
-        public async Task<IActionResult> Details(int id)
+        public async Task<IActionResult> Details(int id, int sportId)
         {
             var trainer = await trainerService.GetTrainerDetailsAsync(id);
             if (trainer == null)
@@ -41,6 +42,7 @@ namespace SportComplexApp.Web.Controllers
                 return NotFound();
             }
 
+            ViewBag.SportId = sportId;
             return View(trainer);
         }
     }

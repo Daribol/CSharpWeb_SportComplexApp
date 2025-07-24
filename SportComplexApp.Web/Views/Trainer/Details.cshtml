@@ -17,6 +17,11 @@
                     <p class="card-text"><strong>Bio:</strong> @Model.Bio</p>
                 }
             </div>
+            <a asp-action="All" asp-route-sportId="@ViewBag.SportId" class="btn btn-secondary">Back</a>
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

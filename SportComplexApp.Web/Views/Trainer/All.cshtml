@@ -34,11 +34,15 @@ else
                             }
                         </p>
                         <div class="mt-auto">
-                            <a asp-controller="Trainer" asp-action="Details" asp-route-id="@trainer.Id" class="btn btn-outline-primary btn-sm w-100">View Details</a>
+                            <a asp-controller="Trainer" asp-action="Details" asp-route-id="@trainer.Id" asp-route-sportId="@ViewBag.SportId" class="btn btn-outline-primary btn-sm w-100">View Details</a>
                         </div>
                     </div>
                 </div>
             </div>
         }
     </div>
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
 }

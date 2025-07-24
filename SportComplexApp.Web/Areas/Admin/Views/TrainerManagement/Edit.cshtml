@@ -28,9 +28,24 @@
     </div>
 
     <div class="form-group">
-        <label for="SelectedSportIds">Select Sports</label>
-        <select asp-for="SelectedSportIds" asp-items="Model.AvailableSports" class="form-control" multiple></select>
-        <span asp-validation-for="SelectedSportIds" class="text-danger"></span>
+        <label>Избери спортове</label>
+        <div class="row">
+            @foreach (var sport in Model.AvailableSports)
+            {
+                <div class="col-md-4">
+                    <div class="form-check">
+                        <input class="form-check-input"
+                               type="checkbox"
+                               name="SelectedSportIds"
+                               value="@sport.Value"
+                               id="sport_@sport.Value" />
+                        <label class="form-check-label" for="sport_@sport.Value">
+                            @sport.Text
+                        </label>
+                    </div>
+                </div>
+            }
+        </div>
     </div>
     <button type="submit" class="btn btn-primary">Save Changes</button>
     <a asp-action="All" class="btn btn-secondary">Cancel</a>
