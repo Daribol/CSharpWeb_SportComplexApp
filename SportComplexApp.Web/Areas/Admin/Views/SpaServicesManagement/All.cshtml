@@ -6,31 +6,49 @@
 
 <h2 class="mb-4">Manage Spa Services</h2>
 
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
 <a asp-action="Add" class="btn btn-success mb-3">Add New Spa Service</a>
 
-<table class="table table-bordered table-hover">
-    <thead class="table-light">
-        <tr>
-            <th>Image</th>
-            <th>Name</th>
-            <th>Description</th>
-            <th>Price</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var spa in Model)
-        {
+@if
+  (!Model.Any())
+{
+    <div class="alert alert-info">No sports available.</div>
+}
+else
+{
+    <table class="table table-bordered table-hover">
+        <thead class="table-light">
             <tr>
-                <td><img src="@spa.ImageUrl" alt="@spa.Name" style="width: 100px; height: auto;" /></td>
-                <td>@spa.Name</td>
-                <td>@spa.Description</td>
-                <td>@spa.Price лв.</td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@spa.Id" class="btn btn-warning btn-sm">Edit</a>
-                    <a asp-action="Delete" asp-route-id="@spa.Id" class="btn btn-danger btn-sm">Delete</a>
-                </td>
+                <th>Image</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Price</th>
+                <th>Duration</th>
+                <th>Actions</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var spa in Model)
+            {
+                <tr>
+                    <td><img src="@spa.ImageUrl" alt="@spa.Name" style="width: 100px; height: auto;" /></td>
+                    <td>@spa.Name</td>
+                    <td>@spa.Description</td>
+                    <td>@spa.Price лв.</td>
+                    <td>@spa.Duration мин.</td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@spa.Id" class="btn btn-warning btn-sm">Edit</a>
+                        <a asp-action="Delete" asp-route-id="@spa.Id" class="btn btn-danger btn-sm">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

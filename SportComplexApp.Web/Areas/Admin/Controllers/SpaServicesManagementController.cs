@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using SportComplexApp.Services.Data.Contracts;
 using SportComplexApp.Web.Controllers;
 using SportComplexApp.Web.ViewModels.Spa;
+using static SportComplexApp.Common.SuccessfulValidationMessages.SpaService;
 
 namespace SportComplexApp.Web.Areas.Admin.Controllers
 {
@@ -36,6 +37,7 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
                 return View(model);
 
             await spaService.AddAsync(model);
+            TempData["SuccessMessage"] = SpaServiceCreated;
             return RedirectToAction(nameof(All));
         }
 
@@ -55,6 +57,7 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
                 return View(model);
 
             await spaService.EditAsync(id, model);
+            TempData["SuccessMessage"] = SpaServiceUpdated;
             return RedirectToAction(nameof(All));
         }
 
@@ -71,6 +74,7 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             await spaService.DeleteAsync(id);
+            TempData["SuccessMessage"] = SpaServiceDeleted;
             return RedirectToAction(nameof(All));
         }
     }
