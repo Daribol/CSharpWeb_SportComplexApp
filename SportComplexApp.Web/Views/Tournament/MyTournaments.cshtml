@@ -2,25 +2,26 @@
 @model IEnumerable<TournamentViewModel>
 <h2 class="mb-4">My Registered Tournaments</h2>
 
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
 @if (!Model.Any())
 {
-    <p>You are not registered in any tournaments yet.</p>
+    <div class="alert alert-info">You are not registered in any tournaments yet.</div>
 }
 else
 {
-    @if (TempData["SuccessMessage"] != null)
-    {
-        <div class="alert alert-success">
-            @TempData["SuccessMessage"]
-        </div>
-    }
-
-    @if (TempData["ErrorMessage"] != null)
-    {
-        <div class="alert alert-danger">
-            @TempData["ErrorMessage"]
-        </div>
-    }
     <ul class="list-group">
         @foreach (var tournament in Model)
         {
