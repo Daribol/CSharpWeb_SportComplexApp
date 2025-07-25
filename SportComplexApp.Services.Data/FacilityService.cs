@@ -3,11 +3,7 @@ using SportComplexApp.Data;
 using SportComplexApp.Data.Models;
 using SportComplexApp.Services.Data.Contracts;
 using SportComplexApp.Web.ViewModels.Facility;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using static SportComplexApp.Common.ErrorMessages.Facility;
 
 namespace SportComplexApp.Services.Data
 {
@@ -44,6 +40,12 @@ namespace SportComplexApp.Services.Data
 
             await context.Facilities.AddAsync(facility);
             await context.SaveChangesAsync();
+        }
+
+        public async Task<bool> ExistsAsync(string name)
+        {
+            return await context.Facilities
+                .AnyAsync(f => f.Name == name && !f.IsDeleted);
         }
 
         public async Task<AddFacilityViewModel?> GetFacilityForEditAsync(int id)
@@ -93,6 +95,11 @@ namespace SportComplexApp.Services.Data
             var facility = await context.Facilities
                 .Include(f => f.Sports)
                 .FirstOrDefaultAsync(f => f.Id == id && !f.IsDeleted);
+
+            if (facility.Sports.Any())
+            {
+                throw new InvalidOperationException(FacilityHasSports);
+            }
 
             if (facility != null && facility.Sports.Count == 0)
             {

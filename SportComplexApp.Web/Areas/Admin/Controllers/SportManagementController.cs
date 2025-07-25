@@ -47,6 +47,13 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
                 return View(model);
             }
 
+            if (await sportService.ExistsAsync(model.Name))
+            {
+                TempData["ErrorMessage"] = SportAlreadyExists;
+                model.Facilities = await sportService.GetFacilitiesSelectListAsync();
+                return View(model);
+            }
+
             await sportService.AddAsync(model);
             TempData["SuccessMessage"] = SportCreated;
             return RedirectToAction(nameof(All));

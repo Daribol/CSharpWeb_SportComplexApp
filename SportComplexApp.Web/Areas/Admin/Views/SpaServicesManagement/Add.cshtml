@@ -6,6 +6,13 @@
 
 <h2>Add Spa Service</h2>
 
+@if (TempData["errorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["errorMessage"]
+    </div>
+}
+
 <form asp-action="Add" method="post">
     <div class="mb-3">
         <label asp-for="Name" class="form-label"></label>

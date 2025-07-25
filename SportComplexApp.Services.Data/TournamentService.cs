@@ -127,6 +127,12 @@ namespace SportComplexApp.Services.Data
             await context.SaveChangesAsync();
         }
 
+        public async Task<bool> ExistsAsync(string name)
+        {
+            return await context.Tournaments
+                .AnyAsync(t => t.Name == name && !t.IsDeleted);
+        }
+
         public async Task<AddTournamentViewModel?> GetForEditAsync(int id)
         {
             var tournament = await context.Tournaments.FindAsync(id);

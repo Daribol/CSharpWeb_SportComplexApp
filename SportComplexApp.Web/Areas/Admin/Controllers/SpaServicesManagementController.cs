@@ -4,6 +4,7 @@ using SportComplexApp.Services.Data.Contracts;
 using SportComplexApp.Web.Controllers;
 using SportComplexApp.Web.ViewModels.Spa;
 using static SportComplexApp.Common.SuccessfulValidationMessages.SpaService;
+using static SportComplexApp.Common.ErrorMessages.SpaReservation;
 
 namespace SportComplexApp.Web.Areas.Admin.Controllers
 {
@@ -34,8 +35,15 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
         public async Task<IActionResult> Add(AddSpaServiceViewModel model)
         {
             if (!ModelState.IsValid)
+            {
                 return View(model);
+            }
 
+            if (await spaService.ExistsAsync(model.Name))
+            {
+                TempData["ErrorMessage"] = SpaServiceAlreadyExists;
+                return View(model);
+            }
             await spaService.AddAsync(model);
             TempData["SuccessMessage"] = SpaServiceCreated;
             return RedirectToAction(nameof(All));

@@ -28,7 +28,7 @@
     </div>
 
     <div class="form-group">
-        <label>Избери спортове</label>
+        <label>Select Sports</label>
         <div class="row">
             @foreach (var sport in Model.AvailableSports)
             {
@@ -38,13 +38,14 @@
                                type="checkbox"
                                name="SelectedSportIds"
                                value="@sport.Value"
-                               id="sport_@sport.Value" />
+                               @(Model.SelectedSportIds.Contains(int.Parse(sport.Value)) ? "checked" : "") />
                         <label class="form-check-label" for="sport_@sport.Value">
                             @sport.Text
                         </label>
                     </div>
                 </div>
             }
+            <span asp-validation-for="SelectedSportIds" class="text-danger"></span>
         </div>
     </div>
     <button type="submit" class="btn btn-primary">Save Changes</button>

@@ -58,6 +58,13 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
                 return View(model);
             }
 
+            if (await tournamentService.ExistsAsync(model.Name))
+            {
+                TempData["ErrorMessage"] = TournamentAlreadyExists;
+                model.Sports = await sportService.GetAllAsSelectListAsync();
+                return View(model);
+            }
+
             await tournamentService.AddAsync(model);
             TempData["SuccessMessage"] = TournamentCreated;
             return RedirectToAction(nameof(All));
@@ -76,6 +83,10 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(int id, AddTournamentViewModel model)
         {
+            if (model.StartDate <= DateTime.Now)
+            {
+                ModelState.AddModelError(nameof(model.StartDate), TournamentStartInPast);
+            }
             if (model.EndDate <= model.StartDate)
             {
                 ModelState.AddModelError(nameof(model.EndDate), TournamentEndBeforeStart);

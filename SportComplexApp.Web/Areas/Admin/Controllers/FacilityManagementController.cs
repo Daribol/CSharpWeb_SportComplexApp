@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using SportComplexApp.Services.Data.Contracts;
 using SportComplexApp.Web.Controllers;
 using SportComplexApp.Web.ViewModels.Facility;
+using static SportComplexApp.Common.SuccessfulValidationMessages.Facility;
+using static SportComplexApp.Common.ErrorMessages.Facility;
 
 namespace SportComplexApp.Web.Areas.Admin.Controllers
 {
@@ -37,7 +39,14 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
                 return View(model);
             }
 
+            if (await facilityService.ExistsAsync(model.Name))
+            {
+                TempData["ErrorMessage"] = FacilityAlreadyExists;
+                return View(model);
+            }
+
             await facilityService.AddAsync(model);
+            TempData["SuccessMessage"] = FacilityAdded;
             return RedirectToAction(nameof(All));
         }
 
@@ -62,6 +71,7 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
             }
 
             await facilityService.EditAsync(id, model);
+            TempData["SuccessMessage"] = FacilityUpdated;
             return RedirectToAction(nameof(All));
         }
 
@@ -80,7 +90,16 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            await facilityService.DeleteAsync(id);
+            try
+            {
+                await facilityService.DeleteAsync(id);
+                TempData["SuccessMessage"] = FacilityDeleted;
+            }
+            catch (InvalidOperationException ex)
+            {
+                TempData["ErrorMessage"] = ex.Message;
+            }
+
             return RedirectToAction(nameof(All));
         }
     }

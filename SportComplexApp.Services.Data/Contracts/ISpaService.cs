@@ -19,6 +19,7 @@ namespace SportComplexApp.Services.Data.Contracts
         Task DeleteExpiredSpaReservationsAsync(string userId);
 
         Task AddAsync(AddSpaServiceViewModel model);
+        Task<bool> ExistsAsync(string name);
         Task<AddSpaServiceViewModel?> GetForEditAsync(int id);
         Task EditAsync(int id, AddSpaServiceViewModel model);
         Task<DeleteSpaServiceViewModel?> GetForDeleteAsync(int id);

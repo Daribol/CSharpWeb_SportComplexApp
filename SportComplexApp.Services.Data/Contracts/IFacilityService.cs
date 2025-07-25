@@ -11,10 +11,10 @@ namespace SportComplexApp.Services.Data.Contracts
     {
         Task<IEnumerable<AllFacilitiesViewModel>> GetAllAsync();
         Task AddAsync(AddFacilityViewModel model);
+        Task<bool> ExistsAsync(string name);
         Task<AddFacilityViewModel?> GetFacilityForEditAsync(int id);
         Task EditAsync(int id, AddFacilityViewModel model);
         Task<DeleteFacilityViewModel?> GetFacilityForDeleteAsync(int id);
         Task DeleteAsync(int id);
     }
-
 }

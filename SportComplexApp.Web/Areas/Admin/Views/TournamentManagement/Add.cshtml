@@ -6,6 +6,13 @@
 
 <h2>Add Tournament</h2>
 
+@if (TempData["errorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["errorMessage"]
+    </div>
+}
+
 <form asp-action="Add" method="post">
     <div class="form-group">
         <label asp-for="Name"></label>

@@ -25,7 +25,7 @@ namespace SportComplexApp.Web.ViewModels.Trainer
 
         [MaxLength(BioMaxLenght)]
         [MinLength(BioMinLength)]
-        public string? Bio { get; set; }
+        public string Bio { get; set; } = null!;
 
         public string? ImageUrl { get; set; }
 

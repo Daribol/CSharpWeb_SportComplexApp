@@ -180,6 +180,12 @@ namespace SportComplexApp.Services.Data
             await context.SaveChangesAsync();
         }
 
+        public async Task<bool> ExistsAsync(string name)
+        {
+            return await context.SpaServices
+                .AnyAsync(s => s.Name.ToLower() == name.ToLower().Trim() && !s.IsDeleted);
+        }
+
         public async Task<AddSpaServiceViewModel?> GetForEditAsync(int id)
         {
             var service = await context.SpaServices.FindAsync(id);

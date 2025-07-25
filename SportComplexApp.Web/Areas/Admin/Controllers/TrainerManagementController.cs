@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using SportComplexApp.Services.Data.Contracts;
 using SportComplexApp.Web.Controllers;
 using SportComplexApp.Web.ViewModels.Trainer;
+using static SportComplexApp.Common.ErrorMessages.Trainer;
+using static SportComplexApp.Common.SuccessfulValidationMessages.Trainer;
 
 namespace SportComplexApp.Web.Areas.Admin.Controllers
 {
@@ -38,6 +40,11 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> Add(AddTrainerViewModel model)
         {
+            if(model.SelectedSportIds == null || !model.SelectedSportIds.Any())
+            {
+                ModelState.AddModelError(nameof(model.SelectedSportIds), MustSelectAtLeastOneSport);
+            }
+
             if (!ModelState.IsValid)
             {
                 model.AvailableSports = await trainerService.GetSportsAsSelectListAsync();
@@ -45,6 +52,7 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
             }
 
             await trainerService.AddAsync(model);
+            TempData["SuccessMessage"] = TrainerAdded;
             return RedirectToAction(nameof(All));
         }
 
@@ -64,6 +72,11 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(int id, AddTrainerViewModel model)
         {
+            if (model.SelectedSportIds == null || !model.SelectedSportIds.Any())
+            {
+                ModelState.AddModelError(nameof(model.SelectedSportIds), MustSelectAtLeastOneSport);
+            }
+
             if (!ModelState.IsValid)
             {
                 model.AvailableSports = await trainerService.GetSportsAsSelectListAsync();
@@ -71,6 +84,7 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
             }
 
             await trainerService.EditAsync(id, model);
+            TempData["SuccessMessage"] = TrainerUpdated;
             return RedirectToAction(nameof(All));
         }
 
@@ -90,6 +104,7 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
         public async Task<IActionResult> ConfirmDelete(int id)
         {
             await trainerService.DeleteAsync(id);
+            TempData["SuccessMessage"] = TrainerDeleted;
             return RedirectToAction(nameof(All));
         }
     }

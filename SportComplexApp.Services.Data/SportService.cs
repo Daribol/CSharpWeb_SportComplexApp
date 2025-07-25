@@ -5,6 +5,7 @@ using SportComplexApp.Data.Models;
 using SportComplexApp.Services.Data.Contracts;
 using SportComplexApp.Web.ViewModels.Sport;
 using static SportComplexApp.Common.ErrorMessages.Reservation;
+using static SportComplexApp.Common.ErrorMessages.Sport;
 
 namespace SportComplexApp.Services
 {
@@ -197,6 +198,12 @@ namespace SportComplexApp.Services
 
             await context.Sports.AddAsync(sport);
             await context.SaveChangesAsync();
+        }
+
+        public async Task<bool> ExistsAsync(string name)
+        {
+            return await context.Sports
+                .AnyAsync(s => s.Name == name && !s.IsDeleted);
         }
 
         public async Task<AddSportViewModel?> GetSportForEditAsync(int id)

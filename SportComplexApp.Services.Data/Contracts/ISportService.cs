@@ -21,6 +21,7 @@ namespace SportComplexApp.Services.Data.Contracts
         Task<AddSportViewModel> GetAddFormModelAsync();
         Task<IEnumerable<SelectListItem>> GetFacilitiesSelectListAsync();
         Task AddAsync(AddSportViewModel model);
+        Task<bool> ExistsAsync(string name);
         Task<AddSportViewModel?> GetSportForEditAsync(int id);
         Task EditAsync(int id, AddSportViewModel model);
         Task<DeleteSportViewModel?> GetSportForDeleteAsync(int id);

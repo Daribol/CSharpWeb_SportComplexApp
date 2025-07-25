@@ -44,5 +44,19 @@ namespace SportComplexApp.Common
             public const string TournamentUpdated = "Tournament successfully updated.";
             public const string TournamentDeleted = "Tournament successfully deleted.";
         }
+
+        public static class Trainer
+        {
+            public const string TrainerAdded = "Trainer successfully added.";
+            public const string TrainerUpdated = "Trainer successfully updated.";
+            public const string TrainerDeleted = "Trainer successfully deleted.";
+        }
+
+        public static class Facility
+        {
+            public const string FacilityAdded = "Facility successfully added.";
+            public const string FacilityUpdated = "Facility successfully updated.";
+            public const string FacilityDeleted = "Facility successfully deleted.";
+        }
     }
 }
