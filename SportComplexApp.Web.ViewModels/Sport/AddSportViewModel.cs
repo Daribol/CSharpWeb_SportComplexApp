@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using static SportComplexApp.Common.ErrorMessages.Sport;
 
 namespace SportComplexApp.Web.ViewModels.Sport
 {
@@ -13,7 +14,7 @@ namespace SportComplexApp.Web.ViewModels.Sport
         public string Name { get; set; } = null!;
 
         [Required]
-        [Range(0.01, 1000)]
+        [Range(5.00, 1000)]
         public decimal Price { get; set; }
 
         public string? ImageUrl { get; set; }
@@ -23,11 +24,11 @@ namespace SportComplexApp.Web.ViewModels.Sport
         public int Duration { get; set; }
 
         [Required]
-        [Range(1, int.MaxValue, ErrorMessage = "The minimum number of people must be at least 1.")]
+        [Range(1, int.MaxValue, ErrorMessage = MinNumberOfPeople)]
         public int MinPeople { get; set; }
 
         [Required]
-        [Range(1, int.MaxValue, ErrorMessage = "The maximum number of people must be at least 1.")]
+        [Range(1, int.MaxValue, ErrorMessage = MaxNumberOfPeople)]
         public int MaxPeople { get; set; }
 
         [Required]

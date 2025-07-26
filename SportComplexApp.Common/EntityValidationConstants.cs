@@ -52,19 +52,26 @@ namespace SportComplexApp.Common
         {
             public const int NumberOfPeopleMinValue = 1;
             public const int NumberOfPeopleMaxValue = 30;
+            public const int DurationMinValue = 15;
+            public const int DurationMaxValue = 300;
+            public const string ReservationDateTimeFormat = "{0:yyyy-MM-ddTHH:mm}";
+
         }
 
         public static class  SpaReservation
         {
             public const int MinPeopleValue = 1;
             public const int MaxPeopleValue = 50;
+            public const string ReservationDateTimeFormat = "{0:yyyy-MM-ddTHH:mm}";
         }
 
         public static class SpaService
         {
             public const int NameMaxLength = 100;
+            public const int NameMinLength = 3;
             public const int DescriptionMaxLength = 1000;
-            public const decimal PriceMinValue = 0.00m; // in currency
+            public const int DescriptionMinLength = 10;
+            public const decimal PriceMinValue = 5.00m; // in currency
             public const decimal PriceMaxValue = 1000.00m; // in currency
             public const int ImageUrlMaxLength = 500;
         }

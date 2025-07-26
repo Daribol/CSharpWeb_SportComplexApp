@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static SportComplexApp.Common.EntityValidationConstants.Facility;
 
 namespace SportComplexApp.Web.ViewModels.Facility
 {
@@ -11,7 +12,7 @@ namespace SportComplexApp.Web.ViewModels.Facility
     public class AddFacilityViewModel
     {
         [Required]
-        [StringLength(100, MinimumLength = 2)]
+        [StringLength(NameMaxLength, MinimumLength = NameMinLength)]
         public string Name { get; set; } = null!;
     }
 }

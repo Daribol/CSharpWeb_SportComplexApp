@@ -18,11 +18,11 @@ namespace SportComplexApp.Web.ViewModels.Sport
 
         [Required]
         [Display(Name = "Reservation Date and Time")]
-        [DisplayFormat(DataFormatString = "{0:yyyy-MM-ddTHH:mm}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = ReservationDateTimeFormat, ApplyFormatInEditMode = true)]
         public DateTime ReservationDateTime { get; set; }
 
         [Required]
-        [Range(15, 300)]
+        [Range(DurationMinValue, DurationMaxValue)]
         public int Duration { get; set; }
 
         public int MinDuration { get; set; }

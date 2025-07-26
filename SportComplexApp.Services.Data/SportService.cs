@@ -101,6 +101,20 @@ namespace SportComplexApp.Services
                 throw new InvalidOperationException(ReservationConflict);
             }
 
+            if (model.TrainerId.HasValue)
+            {
+                bool trainerBusy = await context.Reservations
+                    .AnyAsync(r =>
+                        r.TrainerId == model.TrainerId &&
+                        r.ReservationDateTime < endTime &&
+                        r.ReservationDateTime.AddMinutes(r.Duration) > startTime);
+
+                if (trainerBusy)
+                {
+                    throw new InvalidOperationException(TrainerBusy);
+                }
+            }
+
             var reservation = new Reservation
             {
                 ClientId = userId,

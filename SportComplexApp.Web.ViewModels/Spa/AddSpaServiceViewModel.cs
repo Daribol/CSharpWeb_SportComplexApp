@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static SportComplexApp.Common.ErrorMessages.SpaReservation;
+﻿using System.ComponentModel.DataAnnotations;
+using static SportComplexApp.Common.ErrorMessages.SpaService;
+using static SportComplexApp.Common.EntityValidationConstants.SpaService;
 
 namespace SportComplexApp.Web.ViewModels.Spa
 {
@@ -13,9 +9,11 @@ namespace SportComplexApp.Web.ViewModels.Spa
         public int Id { get; set; }
 
         [Required]
+        [StringLength(NameMaxLength, MinimumLength = NameMinLength, ErrorMessage = NameRequirenments)]
         public string Name { get; set; } = null!;
 
         [Required]
+        [StringLength(DescriptionMaxLength, MinimumLength = DescriptionMinLength, ErrorMessage = DescriptionRequirenments)]
         public string Description { get; set; } = null!;
 
         [Required]

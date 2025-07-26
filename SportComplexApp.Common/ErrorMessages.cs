@@ -11,6 +11,8 @@ namespace SportComplexApp.Common
     {
         public static class Sport
         {
+            public const string MinNumberOfPeople = "The minimum number of people must be at least 1.";
+            public const string MaxNumberOfPeople = "The maximum number of people must be at least 1.";
             public const string MaxPeopleLessThanMin = "The maximum number of people must be greater than or equal to the minimum number of people.";
             public const string SportAlreadyExists = "A sport with this name already exists.";
         }
@@ -20,15 +22,16 @@ namespace SportComplexApp.Common
             public const string ReservationTooSoon = "You can only make a reservation at least 1 hour in advance.";
             public const string ReservationInPast = "Reservation date cannot be in the past.";
             public const string ReservationConflict = "You already have a reservation during this time.";
+            public const string TrainerBusy = "The selected trainer is not available at this time.";
         }
 
         public static class  SpaReservation
         {
-            public const string PriceTooLow = "The price must be at least 5.00.";
             public const string ReservationInPast = "You cannot reserve a spa procedure in the past.";
             public const string ReservationTooSoon = "You must reserve at least 1 hour in advance.";
             public const string ReservationConflict = "You already have a reservation during this time.";
             public const string SpaServiceAlreadyExists = "A spa service with this name already exists.";
+            public const string NumberOfPeopleOutOfRange = "The number of people must be between 1 and 10.";
         }
 
         public static class Tournament
@@ -54,6 +57,13 @@ namespace SportComplexApp.Common
         {
             public const string FacilityAlreadyExists = "A facility with this name already exists.";
             public const string FacilityHasSports = "Cannot delete a facility that has associated sports.";
+        }
+
+        public static class SpaService
+        {
+            public const string NameRequirenments = "The name must be between 3 and 100 symbols.";
+            public const string DescriptionRequirenments = "The description must be between 10 and 1000 symbols.";
+            public const string PriceTooLow = "The price must be at least 5.00.";
         }
     }
 }
