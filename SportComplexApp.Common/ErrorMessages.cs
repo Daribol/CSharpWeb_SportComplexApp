@@ -23,6 +23,8 @@ namespace SportComplexApp.Common
             public const string ReservationInPast = "Reservation date cannot be in the past.";
             public const string ReservationConflict = "You already have a reservation during this time.";
             public const string TrainerBusy = "The selected trainer is not available at this time.";
+            public const string ReservationOutsideWorkingHours = "Reservations are allowed only between 08:00 and 20:00.";
+            public const string ReservationTooFarInFuture = "You can only make reservations up to 2 weeks in advance.";
         }
 
         public static class  SpaReservation
@@ -32,6 +34,8 @@ namespace SportComplexApp.Common
             public const string ReservationConflict = "You already have a reservation during this time.";
             public const string SpaServiceAlreadyExists = "A spa service with this name already exists.";
             public const string NumberOfPeopleOutOfRange = "The number of people must be between 1 and 10.";
+            public const string ReservationOutsideWorkingHours = "Reservations are allowed only between 08:00 and 20:00.";
+            public const string ReservationTooFarInFuture = "You can only make reservations up to 2 weeks in advance.";
         }
 
         public static class Tournament

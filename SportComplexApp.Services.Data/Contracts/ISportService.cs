@@ -11,7 +11,7 @@ namespace SportComplexApp.Services.Data.Contracts
     public interface ISportService
     {
         Task<IEnumerable<AllSportsViewModel>> GetAllSportsAsync();
-        Task<SportReservationFormViewModel?> GetReservationFormAsync(int sportId);
+        Task<SportReservationFormViewModel?> GetReservationFormAsync(int sportId, string? userId);
         Task<int> CreateReservationAsync(SportReservationFormViewModel model, string userId);
         Task<IEnumerable<SportReservationViewModel>> GetUserReservationsAsync(string userId);
         Task<bool> ReservationExistsAsync(int reservationId, string userId);

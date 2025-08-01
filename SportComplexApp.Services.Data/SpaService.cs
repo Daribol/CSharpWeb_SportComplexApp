@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SportComplexApp.Common;
 using SportComplexApp.Data;
 using SportComplexApp.Data.Models;
 using SportComplexApp.Services.Data.Contracts;
@@ -54,6 +55,19 @@ namespace SportComplexApp.Services.Data
         {
             var spaService = await context.SpaServices
                 .FirstOrDefaultAsync(s => s.Id == model.SpaServiceId && !s.IsDeleted);
+
+            var reservationTime = model.ReservationDate;
+
+            if (reservationTime.TimeOfDay < ApplicationConstants.OpeningTime
+                || reservationTime.TimeOfDay >= ApplicationConstants.ClosingTime)
+            {
+                throw new InvalidOperationException(ReservationOutsideWorkingHours);
+            }
+
+            if (reservationTime > DateTime.Now.AddDays(ApplicationConstants.MaxReservationDaysInAdvance))
+            {
+                throw new InvalidOperationException(ReservationTooFarInFuture);
+            }
 
             var now = DateTime.Now;
 

@@ -26,7 +26,8 @@ namespace SportComplexApp.Web.Controllers
         [Authorize]
         public async Task<IActionResult> Reserve(int id)
         {
-            var model = await sportService.GetReservationFormAsync(id);
+            var userId = GetUserId();
+            var model = await sportService.GetReservationFormAsync(id, userId);
             if (model == null)
             {
                 return NotFound();
@@ -42,7 +43,7 @@ namespace SportComplexApp.Web.Controllers
         {
             if (!ModelState.IsValid)
             {
-                var fallback = await sportService.GetReservationFormAsync(model.SportId);
+                var fallback = await sportService.GetReservationFormAsync(model.SportId, GetUserId());
                 if (fallback != null)
                 {
                     model.SportName = fallback.SportName;
@@ -68,7 +69,7 @@ namespace SportComplexApp.Web.Controllers
             {
                 ModelState.AddModelError(string.Empty, ex.Message);
 
-                var fallback = await sportService.GetReservationFormAsync(model.SportId);
+                var fallback = await sportService.GetReservationFormAsync(model.SportId, GetUserId());
                 if (fallback != null)
                 {
                     model.SportName = fallback.SportName;

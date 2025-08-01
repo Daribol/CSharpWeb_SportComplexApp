@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using SportComplexApp.Common;
 using SportComplexApp.Data;
 using SportComplexApp.Data.Models;
 using SportComplexApp.Services.Data.Contracts;
@@ -35,54 +36,77 @@ namespace SportComplexApp.Services
                 .ToListAsync();
         }
 
-        public async Task<SportReservationFormViewModel?> GetReservationFormAsync(int sportId)
+        public async Task<SportReservationFormViewModel?> GetReservationFormAsync(int sportId, string? currentUserId = null)
         {
             var sport = await context.Sports
-                .Where(s => s.Id == sportId)
-                .Select(s => new SportReservationFormViewModel
-                {
-                    SportId = s.Id,
-                    SportName = s.Name,
-                    FacilityName = s.Facility.Name,
-                    ReservationDateTime = DateTime.Now.AddDays(1),
-                    Duration = s.Duration,
-                    MinDuration = s.Duration,
-                    MaxDuration = s.Duration * 2,
-                    MinPeople = s.MinPeople,
-                    MaxPeople = s.MaxPeople,
-                })
-                .FirstOrDefaultAsync();
+                .Include(s => s.Facility)
+                .FirstOrDefaultAsync(s => s.Id == sportId);
 
             if (sport == null)
             {
                 return null;
             }
 
-            sport.Trainers = await context.SportTrainers
-                .Where(st => st.SportId == sportId)
-                .Select(st => new TrainerDropdownViewModel
-                {
-                    Id = st.TrainerId,
-                    FullName = st.Trainer.Name
-                })
-                .ToListAsync();
+            int? currentTrainerId = null;
 
-            return sport;
+            if (!string.IsNullOrEmpty(currentUserId))
+            {
+                currentTrainerId = await context.Trainers
+                    .Where(t => t.ClientId == currentUserId && !t.IsDeleted)
+                    .Select(t => (int?)t.Id)
+                    .FirstOrDefaultAsync();
+            }
+
+            var model = new SportReservationFormViewModel
+            {
+                SportId = sport.Id,
+                SportName = sport.Name,
+                FacilityName = sport.Facility.Name,
+                ReservationDateTime = DateTime.Now.AddDays(1),
+                Duration = sport.Duration,
+                MinDuration = sport.Duration,
+                MaxDuration = sport.Duration * 2,
+                MinPeople = sport.MinPeople,
+                MaxPeople = sport.MaxPeople,
+                Trainers = await context.SportTrainers
+                    .Where(st => st.SportId == sportId && (currentTrainerId == null || st.TrainerId != currentTrainerId))
+                    .Select(st => new TrainerDropdownViewModel
+                    {
+                        Id = st.TrainerId,
+                        FullName = st.Trainer.Name + " " + st.Trainer.LastName
+                    })
+                    .ToListAsync()
+            };
+
+            return model;
         }
+
 
         public async Task<int> CreateReservationAsync(SportReservationFormViewModel model, string userId)
         {
             var sport = await context.Sports
                 .FirstOrDefaultAsync(s => s.Id == model.SportId && !s.IsDeleted);
 
-            var now = DateTime.Now;
+            var reservationTime = model.ReservationDateTime;
 
-            if (model.ReservationDateTime < now)
+            if (reservationTime.TimeOfDay < ApplicationConstants.OpeningTime
+                || reservationTime.TimeOfDay >= ApplicationConstants.ClosingTime)
+            {
+                throw new InvalidOperationException(ReservationOutsideWorkingHours);
+            }
+
+            if(reservationTime > DateTime.Now.AddDays(ApplicationConstants.MaxReservationDaysInAdvance))
+            {
+                throw new InvalidOperationException(ReservationTooFarInFuture);
+            }
+
+
+            if (model.ReservationDateTime < DateTime.Now)
             {
                 throw new InvalidOperationException(ReservationInPast);
             }
 
-            if (model.ReservationDateTime < now.AddHours(1))
+            if (model.ReservationDateTime < DateTime.Now.AddHours(1))
             {
                 throw new InvalidOperationException(ReservationTooSoon);
             }
