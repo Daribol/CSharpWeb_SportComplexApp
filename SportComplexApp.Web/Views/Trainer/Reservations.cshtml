@@ -1,0 +1,58 @@
+﻿@using SportComplexApp.Web.ViewModels.Trainer
+@model IEnumerable<TrainerReservationViewModel>
+@{
+    ViewData["Title"] = "My Reservations";
+}
+
+<h2 class="mb-3">Your Reservations</h2>
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+}
+
+
+@if (!Model.Any())
+{
+    <p>No upcoming reservations.</p>
+}
+else
+{
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Client</th>
+                <th>Sport</th>
+                <th>Start Time</th>
+                <th>Duration (min)</th>
+                <th>People</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var res in Model)
+            {
+                <tr>
+                    <td>@res.ClientName</td>
+                    <td>@res.SportName</td>
+                    <td>@res.ReservationDate.ToString("g")</td>
+                    <td>@res.Duration</td>
+                    <td>@res.NumberOfPeople</td>
+                    <td>
+                        <form asp-action="CancelReservation" method="post" asp-controller="Trainer">
+                            <input type="hidden" name="reservationId" value="@res.Id" />
+                            <button type="submit" class="btn btn-danger btn-sm"
+                                    onclick="return confirm('Are you sure you want to cancel this reservation?');">
+                                Cancel
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+

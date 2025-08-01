@@ -36,6 +36,21 @@ namespace SportComplexApp.Data.Configuration
                 .HasMaxLength(ImageUrlMaxLength)
                 .HasDefaultValue(null);
 
+            builder.HasMany(t => t.TrainerSessions)
+                .WithOne(ts => ts.Trainer)
+                .HasForeignKey(ts => ts.TrainerId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasMany(t => t.SportTrainers)
+                .WithOne(st => st.Trainer)
+                .HasForeignKey(st => st.TrainerId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasMany(t => t.Reservations)
+                .WithOne(r => r.Trainer)
+                .HasForeignKey(r => r.TrainerId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             builder.HasData(SeedTrainers());
         }
 
@@ -49,7 +64,8 @@ namespace SportComplexApp.Data.Configuration
                     Name = "John",
                     LastName = "Doe",
                     Bio = "Experienced fitness trainer with a passion for helping clients achieve their goals.",
-                    ImageUrl = "/images/JohnDoe.jpg"
+                    ImageUrl = "/images/JohnDoe.jpg",
+                    ClientId = "1"
                 },
                 new Trainer
                 {
@@ -57,7 +73,8 @@ namespace SportComplexApp.Data.Configuration
                     Name = "Jane",
                     LastName = "Smith",
                     Bio = "Certified yoga instructor with over 5 years of experience.",
-                    ImageUrl = "/images/JaneSmith.jpg"
+                    ImageUrl = "/images/JaneSmith.jpg",
+                    ClientId = "2"
                 },
             };
 

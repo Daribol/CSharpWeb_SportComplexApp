@@ -1,5 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using SportComplexApp.Data.Models;
+using SportComplexApp.Services.Data;
 using SportComplexApp.Services.Data.Contracts;
 using SportComplexApp.Web.Controllers;
 
@@ -10,10 +13,13 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
     public class UserManagementController : BaseController
     {
         private readonly IUserService userService;
+        private readonly UserManager<Client> userManager;
+        private readonly ITrainerService trainerService;
 
-        public UserManagementController(IUserService userService)
+        public UserManagementController(IUserService userService, ITrainerService trainerService)
         {
             this.userService = userService;
+            this.trainerService = trainerService;
         }
 
         public async Task<IActionResult> Index()

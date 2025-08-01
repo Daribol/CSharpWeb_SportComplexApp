@@ -12,8 +12,8 @@ using SportComplexApp.Data;
 namespace SportComplexApp.Data.Migrations
 {
     [DbContext(typeof(SportComplexDbContext))]
-    [Migration("20250724144413_AddEndDatePropertyToTournament")]
-    partial class AddEndDatePropertyToTournament
+    [Migration("20250801080742_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -237,26 +237,26 @@ namespace SportComplexApp.Data.Migrations
                         {
                             Id = "1",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "5a2b9189-00eb-404c-b8c8-b3e13682d4aa",
+                            ConcurrencyStamp = "6ae57139-bf7c-4890-b26a-4f9fce7e8d0a",
                             EmailConfirmed = false,
                             FirstName = "John",
                             LastName = "Doe",
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "d522028f-2e35-4ce6-a4ab-20da0a90ebc2",
+                            SecurityStamp = "3545be0b-2098-4568-951a-bd3d206baac6",
                             TwoFactorEnabled = false
                         },
                         new
                         {
                             Id = "2",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "a0309e20-f7db-42e2-9165-1db96b915ea6",
+                            ConcurrencyStamp = "18006d7e-7c53-4fc9-badd-1e6de5bc6cd9",
                             EmailConfirmed = false,
                             FirstName = "Jane",
                             LastName = "Smith",
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "c7eb2968-91ae-40bd-b71c-58fd922a2ed5",
+                            SecurityStamp = "fbdc526a-9170-4eba-aa25-df7e5a82addf",
                             TwoFactorEnabled = false
                         });
                 });
@@ -348,7 +348,7 @@ namespace SportComplexApp.Data.Migrations
                             ClientId = "1",
                             Duration = 0,
                             NumberOfPeople = 2,
-                            ReservationDateTime = new DateTime(2025, 7, 25, 17, 44, 12, 452, DateTimeKind.Local).AddTicks(9826),
+                            ReservationDateTime = new DateTime(2025, 8, 2, 11, 7, 42, 59, DateTimeKind.Local).AddTicks(3007),
                             SportId = 1,
                             TrainerId = 1
                         });
@@ -391,7 +391,7 @@ namespace SportComplexApp.Data.Migrations
                             Id = 1,
                             ClientId = "1",
                             NumberOfPeople = 2,
-                            ReservationDateTime = new DateTime(2025, 7, 25, 17, 44, 12, 453, DateTimeKind.Local).AddTicks(4103),
+                            ReservationDateTime = new DateTime(2025, 8, 2, 11, 7, 42, 59, DateTimeKind.Local).AddTicks(7814),
                             SpaServiceId = 1
                         },
                         new
@@ -399,7 +399,7 @@ namespace SportComplexApp.Data.Migrations
                             Id = 2,
                             ClientId = "2",
                             NumberOfPeople = 3,
-                            ReservationDateTime = new DateTime(2025, 7, 26, 17, 44, 12, 453, DateTimeKind.Local).AddTicks(4148),
+                            ReservationDateTime = new DateTime(2025, 8, 3, 11, 7, 42, 59, DateTimeKind.Local).AddTicks(7869),
                             SpaServiceId = 2
                         });
                 });
@@ -624,7 +624,7 @@ namespace SportComplexApp.Data.Migrations
                             IsDeleted = false,
                             Name = "Summer Cup",
                             SportId = 1,
-                            StartDate = new DateTime(2025, 8, 24, 17, 44, 12, 454, DateTimeKind.Local).AddTicks(8503)
+                            StartDate = new DateTime(2025, 9, 1, 11, 7, 42, 61, DateTimeKind.Local).AddTicks(4218)
                         },
                         new
                         {
@@ -634,7 +634,7 @@ namespace SportComplexApp.Data.Migrations
                             IsDeleted = false,
                             Name = "Winter Championship",
                             SportId = 2,
-                            StartDate = new DateTime(2025, 10, 24, 17, 44, 12, 454, DateTimeKind.Local).AddTicks(8560)
+                            StartDate = new DateTime(2025, 11, 1, 11, 7, 42, 61, DateTimeKind.Local).AddTicks(4268)
                         });
                 });
 
@@ -674,6 +674,10 @@ namespace SportComplexApp.Data.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
+                    b.Property<string>("ClientId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("ImageUrl")
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
@@ -693,6 +697,8 @@ namespace SportComplexApp.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ClientId");
+
                     b.ToTable("Trainers");
 
                     b.HasData(
@@ -700,6 +706,7 @@ namespace SportComplexApp.Data.Migrations
                         {
                             Id = 1,
                             Bio = "Experienced fitness trainer with a passion for helping clients achieve their goals.",
+                            ClientId = "1",
                             ImageUrl = "/images/JohnDoe.jpg",
                             IsDeleted = false,
                             LastName = "Doe",
@@ -709,6 +716,7 @@ namespace SportComplexApp.Data.Migrations
                         {
                             Id = 2,
                             Bio = "Certified yoga instructor with over 5 years of experience.",
+                            ClientId = "2",
                             ImageUrl = "/images/JaneSmith.jpg",
                             IsDeleted = false,
                             LastName = "Smith",
@@ -743,15 +751,15 @@ namespace SportComplexApp.Data.Migrations
                         new
                         {
                             Id = 1,
-                            EndTime = new DateTime(2025, 7, 24, 19, 44, 12, 455, DateTimeKind.Local).AddTicks(5512),
-                            StartTime = new DateTime(2025, 7, 24, 18, 44, 12, 455, DateTimeKind.Local).AddTicks(5471),
+                            EndTime = new DateTime(2025, 8, 1, 13, 7, 42, 62, DateTimeKind.Local).AddTicks(1857),
+                            StartTime = new DateTime(2025, 8, 1, 12, 7, 42, 62, DateTimeKind.Local).AddTicks(1822),
                             TrainerId = 1
                         },
                         new
                         {
                             Id = 2,
-                            EndTime = new DateTime(2025, 7, 24, 21, 44, 12, 455, DateTimeKind.Local).AddTicks(5517),
-                            StartTime = new DateTime(2025, 7, 24, 20, 44, 12, 455, DateTimeKind.Local).AddTicks(5516),
+                            EndTime = new DateTime(2025, 8, 1, 15, 7, 42, 62, DateTimeKind.Local).AddTicks(1863),
+                            StartTime = new DateTime(2025, 8, 1, 14, 7, 42, 62, DateTimeKind.Local).AddTicks(1861),
                             TrainerId = 2
                         });
                 });
@@ -822,9 +830,9 @@ namespace SportComplexApp.Data.Migrations
                         .IsRequired();
 
                     b.HasOne("SportComplexApp.Data.Models.Trainer", "Trainer")
-                        .WithMany()
+                        .WithMany("Reservations")
                         .HasForeignKey("TrainerId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Client");
 
@@ -912,6 +920,17 @@ namespace SportComplexApp.Data.Migrations
                     b.Navigation("Tournament");
                 });
 
+            modelBuilder.Entity("SportComplexApp.Data.Models.Trainer", b =>
+                {
+                    b.HasOne("SportComplexApp.Data.Models.Client", "Client")
+                        .WithMany()
+                        .HasForeignKey("ClientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Client");
+                });
+
             modelBuilder.Entity("SportComplexApp.Data.Models.TrainerSession", b =>
                 {
                     b.HasOne("SportComplexApp.Data.Models.Trainer", "Trainer")
@@ -956,6 +975,8 @@ namespace SportComplexApp.Data.Migrations
 
             modelBuilder.Entity("SportComplexApp.Data.Models.Trainer", b =>
                 {
+                    b.Navigation("Reservations");
+
                     b.Navigation("SportTrainers");
 
                     b.Navigation("TrainerSessions");

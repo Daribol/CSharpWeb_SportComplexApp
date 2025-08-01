@@ -77,6 +77,23 @@ namespace SportComplexApp.Services.Data
                 }
             }
 
+            if (role == "Trainer")
+            {
+                var trainerExists = await context.Trainers.AnyAsync(t => t.ClientId == userId && !t.IsDeleted);
+                if(!trainerExists)
+                {
+                    var trainer = new Trainer
+                    {
+                        Name = user.FirstName,
+                        LastName = user.LastName,
+                        ClientId = user.Id,
+                        IsDeleted = false
+                    };
+                    await context.Trainers.AddAsync(trainer);
+                    await context.SaveChangesAsync();
+                }
+            }
+
             return true;
         }
 

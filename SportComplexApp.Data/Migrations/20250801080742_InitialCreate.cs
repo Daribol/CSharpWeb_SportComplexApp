@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace SportComplexApp.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialDb : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -60,7 +60,8 @@ namespace SportComplexApp.Data.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -75,43 +76,15 @@ namespace SportComplexApp.Data.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
+                    ProcedureDetails = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Price = table.Column<decimal>(type: "decimal(18,2)", precision: 10, scale: 2, nullable: false),
-                    ImageUrl = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true)
+                    ImageUrl = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    Duration = table.Column<int>(type: "int", nullable: false, defaultValue: 60),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_SpaServices", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Tournaments",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Tournaments", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Trainers",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Specialization = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Bio = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
-                    ImageUrl = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Trainers", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -221,6 +194,30 @@ namespace SportComplexApp.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Trainers",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Bio = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    ImageUrl = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    ClientId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Trainers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Trainers_AspNetUsers_ClientId",
+                        column: x => x.ClientId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Sports",
                 columns: table => new
                 {
@@ -230,7 +227,10 @@ namespace SportComplexApp.Data.Migrations
                     FacilityId = table.Column<int>(type: "int", nullable: false),
                     Price = table.Column<decimal>(type: "decimal(18,2)", precision: 10, scale: 2, nullable: false),
                     ImageUrl = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
-                    Duration = table.Column<int>(type: "int", nullable: false)
+                    Duration = table.Column<int>(type: "int", nullable: false),
+                    MinPeople = table.Column<int>(type: "int", nullable: false),
+                    MaxPeople = table.Column<int>(type: "int", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -272,32 +272,6 @@ namespace SportComplexApp.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "TournamentRegistrations",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ClientId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    TournamentId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TournamentRegistrations", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_TournamentRegistrations_AspNetUsers_ClientId",
-                        column: x => x.ClientId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_TournamentRegistrations_Tournaments_TournamentId",
-                        column: x => x.TournamentId,
-                        principalTable: "Tournaments",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "TrainerSessions",
                 columns: table => new
                 {
@@ -328,6 +302,7 @@ namespace SportComplexApp.Data.Migrations
                     SportId = table.Column<int>(type: "int", nullable: false),
                     TrainerId = table.Column<int>(type: "int", nullable: true),
                     ReservationDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Duration = table.Column<int>(type: "int", nullable: false),
                     NumberOfPeople = table.Column<int>(type: "int", nullable: false, defaultValue: 1)
                 },
                 constraints: table =>
@@ -350,7 +325,7 @@ namespace SportComplexApp.Data.Migrations
                         column: x => x.TrainerId,
                         principalTable: "Trainers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.SetNull);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -368,11 +343,61 @@ namespace SportComplexApp.Data.Migrations
                         column: x => x.SportId,
                         principalTable: "Sports",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_SportTrainers_Trainers_TrainerId",
                         column: x => x.TrainerId,
                         principalTable: "Trainers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Tournaments",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    StartDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
+                    SportId = table.Column<int>(type: "int", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Tournaments", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Tournaments_Sports_SportId",
+                        column: x => x.SportId,
+                        principalTable: "Sports",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TournamentRegistrations",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ClientId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    TournamentId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TournamentRegistrations", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_TournamentRegistrations_AspNetUsers_ClientId",
+                        column: x => x.ClientId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_TournamentRegistrations_Tournaments_TournamentId",
+                        column: x => x.TournamentId,
+                        principalTable: "Tournaments",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -382,45 +407,27 @@ namespace SportComplexApp.Data.Migrations
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "FirstName", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
                 values: new object[,]
                 {
-                    { "1", 0, "b65ecdf3-d271-4788-94ad-4f0b7a4ba7dd", null, false, "John", "Doe", false, null, null, null, null, null, false, "d6923e20-a7be-4566-9a19-5cf8d7298e2b", false, null },
-                    { "2", 0, "b658fa06-5548-44f3-b361-89acf373359e", null, false, "Jane", "Smith", false, null, null, null, null, null, false, "f2740660-c94a-4f05-88a2-4e3810367821", false, null }
+                    { "1", 0, "6ae57139-bf7c-4890-b26a-4f9fce7e8d0a", null, false, "John", "Doe", false, null, null, null, null, null, false, "3545be0b-2098-4568-951a-bd3d206baac6", false, null },
+                    { "2", 0, "18006d7e-7c53-4fc9-badd-1e6de5bc6cd9", null, false, "Jane", "Smith", false, null, null, null, null, null, false, "fbdc526a-9170-4eba-aa25-df7e5a82addf", false, null }
                 });
 
             migrationBuilder.InsertData(
                 table: "Facilities",
-                columns: new[] { "Id", "Name" },
+                columns: new[] { "Id", "IsDeleted", "Name" },
                 values: new object[,]
                 {
-                    { 1, "Main Hall" },
-                    { 2, "Swimming Pool" },
-                    { 3, "Tennis Court" }
+                    { 1, false, "Main Hall" },
+                    { 2, false, "Swimming Pool" },
+                    { 3, false, "Tennis Court" }
                 });
 
             migrationBuilder.InsertData(
                 table: "SpaServices",
-                columns: new[] { "Id", "Description", "ImageUrl", "Name", "Price" },
+                columns: new[] { "Id", "Description", "ImageUrl", "IsDeleted", "Name", "Price", "ProcedureDetails" },
                 values: new object[,]
                 {
-                    { 1, "A soothing massage to relieve stress and tension.", "https://example.com/images/relaxing-massage.jpg", "Relaxing Massage", 50.00m },
-                    { 2, "A rejuvenating facial to enhance your skin's glow.", "https://example.com/images/facial-treatment.jpg", "Facial Treatment", 70.00m }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Tournaments",
-                columns: new[] { "Id", "Description", "Name", "StartDate" },
-                values: new object[,]
-                {
-                    { 1, "Annual summer tournament for all skill levels.", "Summer Cup", new DateTime(2025, 7, 13, 11, 10, 10, 563, DateTimeKind.Local).AddTicks(7157) },
-                    { 2, "Competitive winter tournament with prizes.", "Winter Championship", new DateTime(2025, 9, 13, 11, 10, 10, 563, DateTimeKind.Local).AddTicks(7211) }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Trainers",
-                columns: new[] { "Id", "Bio", "ImageUrl", "Name", "Specialization" },
-                values: new object[,]
-                {
-                    { 1, "Experienced fitness trainer with a passion for helping clients achieve their goals.", "https://example.com/images/john_doe.jpg", "John Doe", "Fitness" },
-                    { 2, "Certified yoga instructor with over 5 years of experience.", "https://example.com/images/jane_smith.jpg", "Jane Smith", "Yoga" }
+                    { 1, "A soothing massage to relieve stress and tension.", "/images/RelaxingMassage.jpg", false, "Relaxing Massage", 50.00m, "This massage focuses on relaxation and stress relief, using gentle techniques to soothe the body and mind." },
+                    { 2, "A rejuvenating facial to enhance your skin's glow.", "/images/FacialTreatment.jpg", false, "Facial Treatment", 70.00m, "This facial treatment includes cleansing, exfoliation, and moisturizing to improve skin texture and appearance." }
                 });
 
             migrationBuilder.InsertData(
@@ -428,17 +435,50 @@ namespace SportComplexApp.Data.Migrations
                 columns: new[] { "Id", "ClientId", "NumberOfPeople", "ReservationDateTime", "SpaServiceId" },
                 values: new object[,]
                 {
-                    { 1, "1", 2, new DateTime(2025, 6, 14, 11, 10, 10, 562, DateTimeKind.Local).AddTicks(6480), 1 },
-                    { 2, "2", 3, new DateTime(2025, 6, 15, 11, 10, 10, 562, DateTimeKind.Local).AddTicks(6505), 2 }
+                    { 1, "1", 2, new DateTime(2025, 8, 2, 11, 7, 42, 59, DateTimeKind.Local).AddTicks(7814), 1 },
+                    { 2, "2", 3, new DateTime(2025, 8, 3, 11, 7, 42, 59, DateTimeKind.Local).AddTicks(7869), 2 }
                 });
 
             migrationBuilder.InsertData(
                 table: "Sports",
-                columns: new[] { "Id", "Duration", "FacilityId", "ImageUrl", "Name", "Price" },
+                columns: new[] { "Id", "Duration", "FacilityId", "ImageUrl", "IsDeleted", "MaxPeople", "MinPeople", "Name", "Price" },
                 values: new object[,]
                 {
-                    { 1, 60, 1, "https://example.com/tennis.jpg", "Tennis", 20.00m },
-                    { 2, 45, 2, "https://example.com/swimming.jpg", "Swimming", 15.00m }
+                    { 1, 60, 3, "/images/Tennis.jpg", false, 0, 0, "Tennis", 20.00m },
+                    { 2, 45, 2, "/images/swimming.jpg", false, 0, 0, "Swimming", 15.00m },
+                    { 3, 45, 1, "/images/football.jpg", false, 0, 0, "Football", 10.00m }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Trainers",
+                columns: new[] { "Id", "Bio", "ClientId", "ImageUrl", "IsDeleted", "LastName", "Name" },
+                values: new object[,]
+                {
+                    { 1, "Experienced fitness trainer with a passion for helping clients achieve their goals.", "1", "/images/JohnDoe.jpg", false, "Doe", "John" },
+                    { 2, "Certified yoga instructor with over 5 years of experience.", "2", "/images/JaneSmith.jpg", false, "Smith", "Jane" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Reservations",
+                columns: new[] { "Id", "ClientId", "Duration", "NumberOfPeople", "ReservationDateTime", "SportId", "TrainerId" },
+                values: new object[] { 1, "1", 0, 2, new DateTime(2025, 8, 2, 11, 7, 42, 59, DateTimeKind.Local).AddTicks(3007), 1, 1 });
+
+            migrationBuilder.InsertData(
+                table: "SportTrainers",
+                columns: new[] { "SportId", "TrainerId" },
+                values: new object[,]
+                {
+                    { 1, 1 },
+                    { 2, 2 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Tournaments",
+                columns: new[] { "Id", "Description", "EndDate", "IsDeleted", "Name", "SportId", "StartDate" },
+                values: new object[,]
+                {
+                    { 1, "Annual summer tournament for all skill levels.", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), false, "Summer Cup", 1, new DateTime(2025, 9, 1, 11, 7, 42, 61, DateTimeKind.Local).AddTicks(4218) },
+                    { 2, "Competitive winter tournament with prizes.", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), false, "Winter Championship", 2, new DateTime(2025, 11, 1, 11, 7, 42, 61, DateTimeKind.Local).AddTicks(4268) }
                 });
 
             migrationBuilder.InsertData(
@@ -446,14 +486,9 @@ namespace SportComplexApp.Data.Migrations
                 columns: new[] { "Id", "EndTime", "StartTime", "TrainerId" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2025, 6, 13, 13, 10, 10, 564, DateTimeKind.Local).AddTicks(5930), new DateTime(2025, 6, 13, 12, 10, 10, 564, DateTimeKind.Local).AddTicks(5885), 1 },
-                    { 2, new DateTime(2025, 6, 13, 15, 10, 10, 564, DateTimeKind.Local).AddTicks(5936), new DateTime(2025, 6, 13, 14, 10, 10, 564, DateTimeKind.Local).AddTicks(5935), 2 }
+                    { 1, new DateTime(2025, 8, 1, 13, 7, 42, 62, DateTimeKind.Local).AddTicks(1857), new DateTime(2025, 8, 1, 12, 7, 42, 62, DateTimeKind.Local).AddTicks(1822), 1 },
+                    { 2, new DateTime(2025, 8, 1, 15, 7, 42, 62, DateTimeKind.Local).AddTicks(1863), new DateTime(2025, 8, 1, 14, 7, 42, 62, DateTimeKind.Local).AddTicks(1861), 2 }
                 });
-
-            migrationBuilder.InsertData(
-                table: "Reservations",
-                columns: new[] { "Id", "ClientId", "NumberOfPeople", "ReservationDateTime", "SportId", "TrainerId" },
-                values: new object[] { 1, "1", 2, new DateTime(2025, 6, 14, 11, 10, 10, 562, DateTimeKind.Local).AddTicks(2871), 1, 1 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -540,6 +575,16 @@ namespace SportComplexApp.Data.Migrations
                 column: "TournamentId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Tournaments_SportId",
+                table: "Tournaments",
+                column: "SportId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Trainers_ClientId",
+                table: "Trainers",
+                column: "ClientId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_TrainerSessions_TrainerId",
                 table: "TrainerSessions",
                 column: "TrainerId");
@@ -585,16 +630,16 @@ namespace SportComplexApp.Data.Migrations
                 name: "SpaServices");
 
             migrationBuilder.DropTable(
-                name: "Sports");
-
-            migrationBuilder.DropTable(
-                name: "AspNetUsers");
-
-            migrationBuilder.DropTable(
                 name: "Tournaments");
 
             migrationBuilder.DropTable(
                 name: "Trainers");
+
+            migrationBuilder.DropTable(
+                name: "Sports");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUsers");
 
             migrationBuilder.DropTable(
                 name: "Facilities");

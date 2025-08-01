@@ -47,6 +47,12 @@
                                 <li><a class="dropdown-item" asp-controller="Tournament" asp-action="MyTournaments">My Tournaments</a></li>
                             </ul>
                         </li>
+                            @if (User.IsInRole("Trainer"))
+                            {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Trainer" asp-action="Reservations">Trainer Dashboard</a>
+                            </li>
+                            }
                             @if (User.IsInRole("Admin"))
                             {
                             <li class="nav-item dropdown">

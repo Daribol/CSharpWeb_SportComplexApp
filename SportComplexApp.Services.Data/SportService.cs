@@ -49,7 +49,7 @@ namespace SportComplexApp.Services
                     MinDuration = s.Duration,
                     MaxDuration = s.Duration * 2,
                     MinPeople = s.MinPeople,
-                    MaxPeople = s.MaxPeople
+                    MaxPeople = s.MaxPeople,
                 })
                 .FirstOrDefaultAsync();
 

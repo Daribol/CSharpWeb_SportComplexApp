@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using SportComplexApp.Data.Models;
 using SportComplexApp.Web.ViewModels.Trainer;
 using System;
 using System.Collections.Generic;
@@ -13,7 +14,9 @@ namespace SportComplexApp.Services.Data.Contracts
         //Client-facing
         Task<IEnumerable<AllTrainersViewModel>> GetAllAsync();
         Task<TrainerDetailsViewModel> GetTrainerDetailsAsync(int trainerId);
+        Task<int?> GetTrainerIdByUserId(string userId);
         Task<IEnumerable<AllTrainersViewModel>> GetTrainersBySportIdAsync(int sportId);
+        Task<List<TrainerReservationViewModel>> GetReservationsForTrainerAsync(int trainerId);
 
         //Admin CRUD operations
         Task AddAsync(AddTrainerViewModel model);

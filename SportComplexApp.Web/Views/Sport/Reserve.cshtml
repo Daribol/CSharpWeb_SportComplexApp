@@ -38,7 +38,7 @@
 
     <div class="mb-3">
         <label asp-for="NumberOfPeople" class="form-label"></label>
-        <input asp-for="NumberOfPeople" min="@Model.MinPeople" max="@Model.MaxPeople" class="form-control" />
+        <input asp-for="NumberOfPeople" type="number" min="@Model.MinPeople" max="@Model.MaxPeople" class="form-control" value="@Model.NumberOfPeople"/>
         <span asp-validation-for="NumberOfPeople" class="text-danger"></span>
     </div>
 

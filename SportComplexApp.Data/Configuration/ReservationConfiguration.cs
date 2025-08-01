@@ -34,9 +34,9 @@ namespace SportComplexApp.Data.Configuration
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasOne(r => r.Trainer)
-                .WithMany()
+                .WithMany(t => t.Reservations)
                 .HasForeignKey(r => r.TrainerId)
-                .OnDelete(DeleteBehavior.SetNull);
+                .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasData(SeedReservations());
         }

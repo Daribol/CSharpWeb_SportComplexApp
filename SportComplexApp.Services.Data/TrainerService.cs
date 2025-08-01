@@ -81,6 +81,33 @@ namespace SportComplexApp.Services.Data
                 .ToListAsync();
         }
 
+        public async Task<int?> GetTrainerIdByUserId(string userId)
+        {
+            return await context.Trainers
+                .Where(t => t.ClientId == userId && !t.IsDeleted)
+                .Select(t => (int?)t.Id)
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<List<TrainerReservationViewModel>> GetReservationsForTrainerAsync(int trainerId)
+        {
+            return await context.Reservations
+                .Where(r => r.TrainerId == trainerId)
+                .Include(r => r.Client)
+                .Include(r => r.Sport)
+                .OrderBy(r => r.ReservationDateTime)
+                .Select(r => new TrainerReservationViewModel
+                {
+                    Id = r.Id,
+                    ClientName = r.Client.FirstName + " " + r.Client.LastName,
+                    SportName = r.Sport.Name,
+                    ReservationDate = r.ReservationDateTime,
+                    Duration = r.Duration,
+                    NumberOfPeople = r.NumberOfPeople
+                })
+                .ToListAsync();
+        }
+
         // Admin CRUD operations
 
         public async Task<IEnumerable<SelectListItem>> GetSportsAsSelectListAsync()
