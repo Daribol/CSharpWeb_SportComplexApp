@@ -5,56 +5,106 @@
     ViewData["Title"] = "User Management";
 }
 
-<h2>User Management</h2>
+<div class="container mt-4">
+    <h2 class="mb-4 text-center">User Management</h2>
 
-<table class="table table-bordered">
-    <thead>
-        <tr>
-            <th>Email</th>
-            <th>Full Name</th>
-            <th>Roles</th>
-            <th>Assign Role</th>
-            <th>Remove Role</th>
-            <th>Delete User</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var user in Model)
-        {
-            <tr>
-                <td>@user.Email</td>
-                <td>@($"{user.FirstName} {user.LastName}")</td>
-                <td>@string.Join(", ", user.Roles)</td>
-                <td>
-                    <form asp-action="AssignRole" method="post">
-                        <input type="hidden" name="userId" value="@user.Id" />
-                        <select name="role" class="form-control form-select mb-1">
-                            <option value="Admin">Admin</option>
-                            <option value="User">User</option>
-                            <option value="Trainer">Trainer</option>
-                        </select>
-                        <button type="submit" class="btn btn-sm btn-success">Assign</button>
-                    </form>
-                </td>
-                <td>
-                    <form asp-action="RemoveRole" method="post">
-                        <input type="hidden" name="userId" value="@user.Id" />
-                        <select name="role" class="form-control form-select mb-1">
-                            @foreach (var role in user.Roles)
-                            {
-                                <option value="@role">@role</option>
-                            }
-                        </select>
-                        <button type="submit" class="btn btn-sm btn-warning">Remove</button>
-                    </form>
-                </td>
-                <td>
-                    <form asp-action="DeleteUser" method="post" onsubmit="return confirm('Are you sure you want to delete this user?');">
-                        <input type="hidden" name="userId" value="@user.Id" />
-                        <button type="submit" class="btn btn-sm btn-danger">Delete</button>
-                    </form>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">There are no users registered.</div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover align-middle text-center">
+                <thead class="table-light">
+                    <tr>
+                        <th>Email</th>
+                        <th>Full Name</th>
+                        <th>Roles</th>
+                        <th>Assign Role</th>
+                        <th>Remove Role</th>
+                        <th>Delete User</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var user in Model)
+                    {
+                        <tr>
+                            <td>@user.Email</td>
+                            <td>@($"{user.FirstName} {user.LastName}")</td>
+                            <td>
+                                @if (user.Roles.Any())
+                                {
+                                    @foreach (var role in user.Roles)
+                                    {
+                                        string badgeClass;
+                                        string icon;
+
+                                        switch (role)
+                                        {
+                                            case "Admin":
+                                                badgeClass = "bg-danger";
+                                                icon = "<i class='bi bi-shield-lock'></i>";
+                                                break;
+                                            case "Client":
+                                                badgeClass = "bg-primary";
+                                                icon = "<i class='bi bi-person'></i>";
+                                                break;
+                                            case "Trainer":
+                                                badgeClass = "bg-warning text-dark";
+                                                icon = "<i class='bi bi-star'></i>";
+                                                break;
+                                            default:
+                                                badgeClass = "bg-secondary";
+                                                icon = "<i class='bi bi-question-circle'></i>";
+                                                break;
+                                        }
+
+                                        @:<span class="badge @badgeClass me-1">@Html.Raw(icon) @role</span>
+                                    }
+                                }
+                                else
+                                {
+                                    <span class="text-muted">No roles</span>
+                                }
+                            </td>
+                            <td>
+                                <form asp-action="AssignRole" method="post" class="d-flex flex-column align-items-center">
+                                    <input type="hidden" name="userId" value="@user.Id" />
+                                    <select name="role" class="form-select form-select-sm mb-2">
+                                        <option value="Admin">Admin</option>
+                                        <option value="Client">Client</option>
+                                        <option value="Trainer">Trainer</option>
+                                    </select>
+                                    <button type="submit" class="btn btn-success btn-sm w-100">Assign</button>
+                                </form>
+                            </td>
+                            <td>
+                                <form asp-action="RemoveRole" method="post" class="d-flex flex-column align-items-center">
+                                    <input type="hidden" name="userId" value="@user.Id" />
+                                    <select name="role" class="form-select form-select-sm mb-2">
+                                        @foreach (var role in user.Roles)
+                                        {
+                                            <option value="@role">@role</option>
+                                        }
+                                    </select>
+                                    <button type="submit" class="btn btn-warning btn-sm w-100">Remove</button>
+                                </form>
+                            </td>
+                            <td>
+                                <form asp-action="DeleteUser" method="post" onsubmit="return confirm('Are you sure you want to delete this user?');">
+                                    <input type="hidden" name="userId" value="@user.Id" />
+                                    <button type="submit" class="btn btn-danger btn-sm w-100">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

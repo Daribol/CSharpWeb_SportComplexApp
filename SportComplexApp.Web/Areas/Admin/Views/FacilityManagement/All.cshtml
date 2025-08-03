@@ -1,44 +1,66 @@
 ﻿@using SportComplexApp.Web.ViewModels.Facility
 @model IEnumerable<AllFacilitiesViewModel>
 
-<h2 class="mb-3">Facilities</h2>
+@{
+    ViewData["Title"] = "Manage Facilities";
+}
+
+<h2 class="mb-4 text-center">Manage Facilities</h2>
 
 @if (TempData["SuccessMessage"] != null)
 {
     <div class="alert alert-success alert-dismissible fade show" role="alert">
-        @TempData["SuccessMessage"]
+        <i class="bi bi-check-circle-fill me-2"></i> @TempData["SuccessMessage"]
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 }
+
 @if (TempData["ErrorMessage"] != null)
 {
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        @TempData["ErrorMessage"]
+        <i class="bi bi-exclamation-triangle-fill me-2"></i> @TempData["ErrorMessage"]
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 }
 
-<a asp-action="Add" class="btn btn-primary mb-3">Add Facility</a>
+<div class="d-flex justify-content-end mb-3">
+    <a asp-action="Add" class="btn btn-success mb-4">
+        <i class="bi bi-plus-circle me-1"></i> Add Facility
+    </a>
+</div>
 
-<table class="table table-bordered">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Sports</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var facility in Model)
-        {
+@if (!Model.Any())
+{
+    <div class="alert alert-info">
+        <i class="bi bi-info-circle me-2"></i> No facilities available.
+    </div>
+}
+else
+{
+    <table class="table table-bordered table-hover">
+        <thead class="table-light">
             <tr>
-                <td>@facility.Name</td>
-                <td>@facility.SportCount</td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@facility.Id" class="btn btn-sm btn-warning">Edit</a>
-                    <a asp-action="Delete" asp-route-id="@facility.Id" class="btn btn-sm btn-danger">Delete</a>
-                </td>
+                <th>Name</th>
+                <th>Sports Count</th>
+                <th class="text-center">Actions</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var facility in Model)
+            {
+                <tr>
+                    <td>@facility.Name</td>
+                    <td>@facility.SportCount</td>
+                    <td class="text-center">
+                        <a asp-action="Edit" asp-route-id="@facility.Id" class="btn btn-outline-warning btn-sm me-2">
+                            <i class="bi bi-pencil-fill"></i> Edit
+                        </a>
+                        <a asp-action="Delete" asp-route-id="@facility.Id" class="btn btn-outline-danger btn-sm">
+                            <i class="bi bi-trash3-fill"></i> Delete
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

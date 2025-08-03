@@ -4,52 +4,62 @@
     ViewData["Title"] = "My Spa Reservations";
 }
 
-<h2 class="mb-4">My Spa Reservations</h2>
-@if (TempData["SuccessMessage"] != null)
-{
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        @TempData["SuccessMessage"]
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-}
+<div class="container mt-5">
+    <h2 class="mb-4 text-center text-primary">My Spa Reservations</h2>
 
-@if (!Model.Any())
-{
-    <div class="alert alert-info">You don't have any spa reservations yet.</div>
-}
-else
-{
-    <table class="table table-bordered table-striped align-middle">
-        <thead class="table-light">
-            <tr>
-                <th>Spa Service</th>
-                <th>Date & Time</th>
-                <th>Duration</th>
-                <th>Price</th>
-                <th>People</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var reservation in Model)
-            {
-                <tr>
-                    <td>@reservation.SpaServiceName</td>
-                    <td>@reservation.DateTime.ToString("f")</td>
-                    <td>@reservation.Duration minutes</td>
-                    <td>@reservation.TotalPrice.ToString("F2") лв</td>
-                    <td>@reservation.People</td>
-                    <td>
-                        <form asp-action="Cancel" asp-route-id="@reservation.Id" method="post"
-                              onsubmit="return confirm('Are you sure you want to cancel this reservation?');">
-                            <button type="submit" class="btn btn-danger btn-sm">Cancel</button>
-                        </form>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle-fill me-2"></i>@TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info text-center">
+            <i class="bi bi-info-circle-fill me-2"></i>You don't have any spa reservations yet.
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table table-hover align-middle border rounded shadow-sm">
+                <thead class="table-primary">
+                    <tr>
+                        <th>Spa Service</th>
+                        <th>Date & Time</th>
+                        <th>Duration</th>
+                        <th>Price</th>
+                        <th>People</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var reservation in Model)
+                    {
+                        <tr>
+                            <td class="fw-semibold">@reservation.SpaServiceName</td>
+                            <td>@reservation.DateTime.ToString("f")</td>
+                            <td>@reservation.Duration minutes</td>
+                            <td>@reservation.TotalPrice.ToString("F2") лв</td>
+                            <td>@reservation.People</td>
+                            <td class="text-center">
+                                <form asp-action="Cancel" asp-route-id="@reservation.Id" method="post"
+                                      onsubmit="return confirm('Are you sure you want to cancel this reservation?');"
+                                      class="d-inline">
+                                    <button type="submit" class="btn btn-outline-danger btn-sm">
+                                        <i class="bi bi-x-circle"></i> Cancel
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

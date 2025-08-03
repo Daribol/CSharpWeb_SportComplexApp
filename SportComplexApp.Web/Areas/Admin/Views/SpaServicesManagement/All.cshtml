@@ -4,7 +4,7 @@
     ViewData["Title"] = "Manage Spa Services";
 }
 
-<h2 class="mb-4">Manage Spa Services</h2>
+<h2 class="mb-4 text-center">Manage Spa Services</h2>
 
 @if (TempData["SuccessMessage"] != null)
 {
@@ -14,41 +14,58 @@
     </div>
 }
 
-<a asp-action="Add" class="btn btn-success mb-3">Add New Spa Service</a>
+<div class="d-flex justify-content-end mb-3">
+    <a asp-action="Add" class="btn btn-success">
+        <i class="bi bi-plus-circle"></i> Add New Spa Service
+    </a>
+</div>
 
-@if
-  (!Model.Any())
+@if (!Model.Any())
 {
-    <div class="alert alert-info">No sports available.</div>
+    <div class="alert alert-info text-center">
+        No spa services available.
+    </div>
 }
 else
 {
-    <table class="table table-bordered table-hover">
-        <thead class="table-light">
-            <tr>
-                <th>Image</th>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Price</th>
-                <th>Duration</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var spa in Model)
-            {
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover align-middle">
+            <thead class="table-light">
                 <tr>
-                    <td><img src="@spa.ImageUrl" alt="@spa.Name" style="width: 100px; height: auto;" /></td>
-                    <td>@spa.Name</td>
-                    <td>@spa.Description</td>
-                    <td>@spa.Price лв.</td>
-                    <td>@spa.Duration мин.</td>
-                    <td>
-                        <a asp-action="Edit" asp-route-id="@spa.Id" class="btn btn-warning btn-sm">Edit</a>
-                        <a asp-action="Delete" asp-route-id="@spa.Id" class="btn btn-danger btn-sm">Delete</a>
-                    </td>
+                    <th style="width: 120px;">Image</th>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Price</th>
+                    <th>Duration</th>
+                    <th class="text-center">Actions</th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach (var spa in Model)
+                {
+                    <tr>
+                        <td class="text-center">
+                            <img src="@spa.ImageUrl" alt="@spa.Name" class="img-thumbnail" style="height: 80px; object-fit: cover;" />
+                        </td>
+                        <td>@spa.Name</td>
+                        <td>@spa.Description</td>
+                        <td>@spa.Price.ToString("F2") лв</td>
+                        <td>@spa.Duration мин</td>
+                        <td class="text-center">
+                            <a asp-action="Edit" asp-route-id="@spa.Id" class="btn btn-outline-warning btn-sm me-2">
+                                <i class="bi bi-pencil-square"></i> Edit
+                            </a>
+                            <a asp-action="Delete" asp-route-id="@spa.Id" class="btn btn-outline-danger btn-sm">
+                                <i class="bi bi-trash"></i> Delete
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
 }

@@ -4,20 +4,37 @@
     ViewData["Title"] = "Trainer Details";
 }
 
-<div class="card shadow-lg">
-    <div class="row g-0">
-        <div class="col-md-4">
-            <img src="@Model.ImageUrl" class="img-fluid rounded-start" alt="@Model.Name @Model.LastName" />
-        </div>
-        <div class="col-md-8">
-            <div class="card-body">
-                <h2 class="card-title">@Model.Name @Model.LastName</h2>
-                @if (!string.IsNullOrWhiteSpace(Model.Bio))
-                {
-                    <p class="card-text"><strong>Bio:</strong> @Model.Bio</p>
-                }
+<div class="container mt-4">
+    <div class="card shadow-lg border-0">
+        <div class="row g-0">
+            <div class="col-md-4">
+                <img src="@Model.ImageUrl"
+                     class="img-fluid rounded-start h-100"
+                     alt="@Model.Name @Model.LastName"
+                     style="object-fit: cover;" />
             </div>
-            <a asp-action="All" asp-route-sportId="@ViewBag.SportId" class="btn btn-secondary">Back</a>
+            <div class="col-md-8 d-flex flex-column">
+                <div class="card-body">
+                    <h2 class="card-title text-primary">@Model.Name @Model.LastName</h2>
+
+                    @if (!string.IsNullOrWhiteSpace(Model.Bio))
+                    {
+                        <p class="card-text mt-3"><strong>Bio:</strong> @Model.Bio</p>
+                    }
+                    else
+                    {
+                        <p class="card-text mt-3 text-muted">This trainer has not provided a bio yet.</p>
+                    }
+                </div>
+
+                <div class="card-footer bg-white border-0 mt-auto p-3">
+                    <a asp-action="All"
+                       asp-route-sportId="@ViewBag.SportId"
+                       class="btn btn-outline-secondary">
+                        <i class="bi bi-arrow-left-circle"></i> Back to Trainers
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 </div>

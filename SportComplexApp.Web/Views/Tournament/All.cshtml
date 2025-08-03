@@ -1,22 +1,40 @@
 ﻿@using SportComplexApp.Web.ViewModels.Tournament
 @model IEnumerable<TournamentViewModel>
-<h2 class="mb-4">All Tournaments</h2>
 
-@foreach (var tournament in Model)
-{
-    <div class="card mb-3">
-        <div class="card-body">
-            <h5>@tournament.Name</h5>
-            <p><strong>Sport:</strong> @tournament.Sport</p>
-            <p><strong>Start Date:</strong> @tournament.StartDate.ToShortDateString()</p>
-            <p><strong>End Date:</strong> @tournament.EndDate.ToShortDateString()</p>
-            <p>@tournament.Description</p>
-            <form asp-action="Register" asp-route-id="@tournament.Id" method="post">
-                <button type="submit" class="btn btn-success btn-sm">Register</button>
-            </form>
-        </div>
-    </div>
+@{
+    ViewData["Title"] = "All Tournaments";
 }
+
+<h2 class="mb-4 text-center">Upcoming Tournaments</h2>
+
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    @foreach (var tournament in Model)
+    {
+        <div class="col">
+            <div class="card h-100 shadow-sm border-0">
+                <div class="card-body d-flex flex-column justify-content-between">
+                    <div>
+                        <h5 class="card-title">@tournament.Name</h5>
+                        <p class="card-text"><strong>Sport:</strong> @tournament.Sport</p>
+                        <p class="card-text mb-1">
+                            <strong>Start:</strong> @tournament.StartDate.ToString("dd MMM yyyy")
+                        </p>
+                        <p class="card-text">
+                            <strong>End:</strong> @tournament.EndDate.ToString("dd MMM yyyy")
+                        </p>
+                        <p class="card-text">@tournament.Description</p>
+                    </div>
+
+                    <form asp-action="Register" asp-route-id="@tournament.Id" method="post" class="mt-3">
+                        <button type="submit" class="btn btn-outline-primary w-100">
+                            <i class="bi bi-pencil-square"></i> Register
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    }
+</div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

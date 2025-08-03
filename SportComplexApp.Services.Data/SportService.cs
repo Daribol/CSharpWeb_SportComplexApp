@@ -184,7 +184,7 @@ namespace SportComplexApp.Services
                     Duration = r.Duration,
                     ReservationDateTime = r.ReservationDateTime,
                     NumberOfPeople = r.NumberOfPeople,
-                    TrainerName = r.Trainer != null ? r.Trainer.Name : "No Trainer",
+                    TrainerName = r.Trainer != null ? r.Trainer.Name + r.Trainer.LastName : "No Trainer",
                     TotalPrice = Math.Round(r.Sport.Price * (r.Duration/60m) * r.NumberOfPeople, 2)
                 })
                 .ToListAsync();

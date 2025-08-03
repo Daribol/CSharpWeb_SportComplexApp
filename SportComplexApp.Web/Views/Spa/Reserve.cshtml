@@ -5,44 +5,59 @@
     ViewData["Title"] = "Reserve Spa Service";
 }
 
-<h2 class="mb-4">Reserve: @Model.SpaServiceName</h2>
-@if (!ViewData.ModelState.IsValid)
-{
-    <div class="alert alert-danger">
-        @foreach (var modelError in ViewData.ModelState.Values.SelectMany(v => v.Errors))
-        {
-            <p>@modelError.ErrorMessage</p>
-        }
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <h2 class="mb-4 text-center text-success">Reserve: @Model.SpaServiceName</h2>
+
+                    @if (!ViewData.ModelState.IsValid)
+                    {
+                        <div class="alert alert-danger">
+                            @foreach (var modelError in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                            {
+                                <p>@modelError.ErrorMessage</p>
+                            }
+                        </div>
+                    }
+
+                    <form asp-action="Reserve" method="post">
+                        <input type="hidden" asp-for="SpaServiceId" />
+                        <input type="hidden" asp-for="SpaServiceName" />
+
+                        <div class="mb-3">
+                            <label class="form-label">Service</label>
+                            <input class="form-control" value="@Model.SpaServiceName" disabled />
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="ReservationDate" class="form-label"></label>
+                            <input asp-for="ReservationDate" type="datetime-local" class="form-control" />
+                            <span asp-validation-for="ReservationDate" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="NumberOfPeople" class="form-label"></label>
+                            <input asp-for="NumberOfPeople" class="form-control" />
+                            <span asp-validation-for="NumberOfPeople" class="text-danger"></span>
+                        </div>
+
+                        <div class="d-flex justify-content-between mt-4">
+                            <a asp-action="All" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left-circle"></i> Back
+                            </a>
+                            <button type="submit" class="btn btn-outline-success">
+                                <i class="bi bi-check-circle"></i> Confirm Reservation
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
-}
-
-
-<form asp-action="Reserve" method="post">
-    <input type="hidden" asp-for="SpaServiceId" />
-    <input type="hidden" asp-for="SpaServiceName" />
-
-    <div class="mb-3">
-        <label class="form-label">Service</label>
-        <input class="form-control" value="@Model.SpaServiceName" disabled />
-    </div>
-
-    <div class="mb-3">
-        <label asp-for="ReservationDate" class="form-label"></label>
-        <input asp-for="ReservationDate" type="datetime-local" class="form-control" />
-        <span asp-validation-for="ReservationDate" class="text-danger"></span>
-    </div>
-
-    <div class="mb-3">
-        <label asp-for="NumberOfPeople" class="form-label"></label>
-        <input asp-for="NumberOfPeople" class="form-control">
-        <span asp-validation-for="NumberOfPeople" class="text-danger"></span>
-    </div>
-
-    <button type="submit" class="btn btn-primary">Confirm Reservation</button>
-    <a asp-action="All" class="btn btn-secondary ms-2">Back</a>
-</form>
+</div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }
-

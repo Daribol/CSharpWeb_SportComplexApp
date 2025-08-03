@@ -4,55 +4,66 @@
     ViewData["Title"] = "My Sport Reservations";
 }
 
-<h2 class="mb-4">My Sport Reservations</h2>
-@if (TempData["SuccessMessage"] != null)
-{
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        @TempData["SuccessMessage"]
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-}
+<div class="container mt-5">
+    <h2 class="mb-4 text-center text-primary">My Sport Reservations</h2>
 
-@if (!Model.Any())
-{
-    <div class="alert alert-info">You have no sport reservations yet.</div>
-}
-else
-{
-    <table class="table table-bordered table-striped">
-        <thead>
-            <tr>
-                <th>Sport</th>
-                <th>Facility</th>
-                <th>Date</th>
-                <th>Duration</th>
-                <th>People</th>
-                <th>Trainer</th>
-                <th>Total Price</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var reservation in Model)
-            {
-                <tr>
-                    <td>@reservation.SportName</td>
-                    <td>@reservation.FacilityName</td>
-                    <td>@reservation.ReservationDateTime.ToString("f")</td>
-                    <td>@reservation.Duration</td>
-                    <td>@reservation.NumberOfPeople</td>
-                    <td>@reservation.TrainerName</td>
-                    <td>$@Math.Round(reservation.TotalPrice, 2)</td>
-                    <td>
-                        <form asp-action="Cancel" method="post" asp-route-id="@reservation.Id" onsubmit="return confirm('Cancel this reservation?');">
-                            <button type="submit" class="btn btn-sm btn-danger">Cancel</button>
-                        </form>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle-fill me-2"></i>@TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info text-center">
+            <i class="bi bi-info-circle-fill me-2"></i>You have no sport reservations yet.
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table table-hover align-middle border rounded shadow-sm">
+                <thead class="table-primary">
+                    <tr>
+                        <th>Sport</th>
+                        <th>Facility</th>
+                        <th>Date</th>
+                        <th>Duration</th>
+                        <th>People</th>
+                        <th>Trainer</th>
+                        <th>Total Price</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var reservation in Model)
+                    {
+                        <tr>
+                            <td class="fw-semibold">@reservation.SportName</td>
+                            <td>@reservation.FacilityName</td>
+                            <td>@reservation.ReservationDateTime.ToString("f")</td>
+                            <td>@reservation.Duration min</td>
+                            <td>@reservation.NumberOfPeople</td>
+                            <td>@(string.IsNullOrEmpty(reservation.TrainerName) ? "-" : reservation.TrainerName)</td>
+                            <td>$@reservation.TotalPrice.ToString("F2")</td>
+                            <td class="text-center">
+                                <form asp-action="Cancel" method="post" asp-route-id="@reservation.Id"
+                                      onsubmit="return confirm('Are you sure you want to cancel this reservation?');"
+                                      class="d-inline">
+                                    <button type="submit" class="btn btn-outline-danger btn-sm">
+                                        <i class="bi bi-x-circle"></i> Cancel
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

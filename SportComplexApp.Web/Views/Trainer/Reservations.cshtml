@@ -1,58 +1,66 @@
 ﻿@using SportComplexApp.Web.ViewModels.Trainer
 @model IEnumerable<TrainerReservationViewModel>
+
 @{
     ViewData["Title"] = "My Reservations";
 }
 
-<h2 class="mb-3">Your Reservations</h2>
+<h2 class="mb-4 text-center">Upcoming Sessions</h2>
+
 @if (TempData["SuccessMessage"] != null)
 {
-    <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
 }
 
 @if (TempData["ErrorMessage"] != null)
 {
-    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        @TempData["ErrorMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
 }
-
 
 @if (!Model.Any())
 {
-    <p>No upcoming reservations.</p>
+    <div class="alert alert-info text-center">You have no upcoming training sessions.</div>
 }
 else
 {
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>Client</th>
-                <th>Sport</th>
-                <th>Start Time</th>
-                <th>Duration (min)</th>
-                <th>People</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var res in Model)
-            {
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped align-middle">
+            <thead class="table-light">
                 <tr>
-                    <td>@res.ClientName</td>
-                    <td>@res.SportName</td>
-                    <td>@res.ReservationDate.ToString("g")</td>
-                    <td>@res.Duration</td>
-                    <td>@res.NumberOfPeople</td>
-                    <td>
-                        <form asp-action="CancelReservation" method="post" asp-controller="Trainer">
-                            <input type="hidden" name="reservationId" value="@res.Id" />
-                            <button type="submit" class="btn btn-danger btn-sm"
-                                    onclick="return confirm('Are you sure you want to cancel this reservation?');">
-                                Cancel
-                            </button>
-                        </form>
-                    </td>
+                    <th>Client</th>
+                    <th>Sport</th>
+                    <th>Start Time</th>
+                    <th>Duration</th>
+                    <th>Participants</th>
+                    <th>Actions</th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach (var res in Model)
+                {
+                    <tr>
+                        <td>@res.ClientName</td>
+                        <td>@res.SportName</td>
+                        <td>@res.ReservationDate.ToString("f")</td>
+                        <td>@res.Duration min</td>
+                        <td>@res.NumberOfPeople</td>
+                        <td>
+                            <form asp-action="CancelReservation" method="post" asp-controller="Trainer" onsubmit="return confirm('Are you sure you want to cancel this reservation?');">
+                                <input type="hidden" name="reservationId" value="@res.Id" />
+                                <button type="submit" class="btn btn-sm btn-outline-danger">
+                                    <i class="bi bi-x-circle"></i> Cancel
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 }
-
