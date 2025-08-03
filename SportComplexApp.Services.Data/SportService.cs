@@ -4,6 +4,7 @@ using SportComplexApp.Common;
 using SportComplexApp.Data;
 using SportComplexApp.Data.Models;
 using SportComplexApp.Services.Data.Contracts;
+using SportComplexApp.Web.ViewModels.Home;
 using SportComplexApp.Web.ViewModels.Sport;
 using static SportComplexApp.Common.ErrorMessages.Reservation;
 using static SportComplexApp.Common.ErrorMessages.Sport;
@@ -35,6 +36,20 @@ namespace SportComplexApp.Services
                 })
                 .ToListAsync();
         }
+
+        public async Task<IEnumerable<SportHomeViewModel>> GetAllForHomeAsync()
+        {
+            return await context.Sports
+                .Where(s => !s.IsDeleted)
+                .Select(s => new SportHomeViewModel
+                {
+                    Id = s.Id,
+                    Name = s.Name,
+                    ImageUrl = s.ImageUrl
+                })
+                .ToListAsync();
+        }
+
 
         public async Task<SportReservationFormViewModel?> GetReservationFormAsync(int sportId, string? currentUserId = null)
         {

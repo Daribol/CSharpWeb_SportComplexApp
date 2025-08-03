@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using SportComplexApp.Web.ViewModels.Home;
 using SportComplexApp.Web.ViewModels.Sport;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,7 @@ namespace SportComplexApp.Services.Data.Contracts
     public interface ISportService
     {
         Task<IEnumerable<AllSportsViewModel>> GetAllSportsAsync();
+        Task<IEnumerable<SportHomeViewModel>> GetAllForHomeAsync();
         Task<SportReservationFormViewModel?> GetReservationFormAsync(int sportId, string? userId);
         Task<int> CreateReservationAsync(SportReservationFormViewModel model, string userId);
         Task<IEnumerable<SportReservationViewModel>> GetUserReservationsAsync(string userId);

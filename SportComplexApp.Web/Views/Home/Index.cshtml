@@ -1,4 +1,105 @@
-﻿<h2>@ViewData["Title"]</h2>
-<h3>@ViewData["Message"]</h3>
-<p>Explore our sports offers and services.</p>
-<p>Make and appoinment and enjoy.</p>
+﻿@using SportComplexApp.Web.ViewModels.Home
+@model HomePageViewModel
+@{
+    ViewData["Title"] = "Welcome to the Sport Complex";
+}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<div class="container py-5 text-center bg-light rounded shadow-sm mb-5">
+    <h1 class="display-4 fw-bold mb-3">Welcome to SportComplexApp</h1>
+    <p class="lead">
+        Discover a world of fitness, wellness, and recreation in one place.
+        Book your favorite sports, connect with professional trainers,
+        and relax with our premium spa services – all tailored for your lifestyle.
+    </p>
+    <a href="/Sport/All" class="btn btn-primary btn-lg mt-3">Get Started</a>
+</div>
+
+
+<div class="container mt-5">
+    <div class="row text-center mb-4">
+        <h2>Explore Our Services</h2>
+    </div>
+
+    <div class="row">
+        <!-- Sports -->
+        <div class="col-md-4">
+            <h4>Sports</h4>
+            <div id="sportsCarousel" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    @for (int i = 0; i < Model.Sports.Count(); i++)
+                    {
+                        var sport = Model.Sports.ElementAt(i);
+                        <div class="carousel-item @(i == 0 ? "active" : "")">
+                            <img src="@sport.ImageUrl" class="d-block w-100 rounded" alt="@sport.Name" />
+                            <div class="carousel-caption d-none d-md-block">
+                                <h5>@sport.Name</h5>
+                            </div>
+                        </div>
+                    }
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#sportsCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon"></span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#sportsCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon"></span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Trainers -->
+        <div class="col-md-4">
+            <h4>Trainers</h4>
+            <div id="trainersCarousel" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    @for (int i = 0; i < Model.Trainers.Count(); i++)
+                    {
+                        var trainer = Model.Trainers.ElementAt(i);
+                        <div class="carousel-item @(i == 0 ? "active" : "")">
+                            <img src="@trainer.ImageUrl" class="d-block w-100 rounded" alt="@trainer.FullName" />
+                            <div class="carousel-caption d-none d-md-block">
+                                <h5>@trainer.FullName</h5>
+                            </div>
+                        </div>
+                    }
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#trainersCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon"></span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#trainersCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon"></span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Spa Procedures -->
+        <div class="col-md-4">
+            <h4>Spa Procedures</h4>
+            <div id="spaCarousel" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    @for (int i = 0; i < Model.SpaProcedures.Count(); i++)
+                    {
+                        var spa = Model.SpaProcedures.ElementAt(i);
+                        <div class="carousel-item @(i == 0 ? "active" : "")">
+                            <img src="@spa.ImageUrl" class="d-block w-100 rounded" alt="@spa.Name" />
+                            <div class="carousel-caption d-none d-md-block">
+                                <h5>@spa.Name</h5>
+                            </div>
+                        </div>
+                    }
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#spaCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon"></span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#spaCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,21 +1,32 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using SportComplexApp.Services.Data.Contracts;
 using SportComplexApp.Web.ViewModels;
+using SportComplexApp.Web.ViewModels.Home;
 
 namespace SportComplexApp.Web.Controllers;
 
 public class HomeController : Controller
 {
-    public HomeController()
+    private readonly ISportService sportService;
+    private readonly ITrainerService trainerService;
+    private readonly ISpaService spaService;
+    public HomeController(ISportService sportService, ITrainerService trainerService, ISpaService spaService)
     {
-
+        this.sportService = sportService;
+        this.trainerService = trainerService;
+        this.spaService = spaService;
     }
 
-    public IActionResult Index()
+    public async Task<IActionResult> Index()
     {
-        ViewData["Title"] = "Home Page";
-        ViewData["Message"] = "Welcome to the Sport Complex Web App!";
+        var model = new HomePageViewModel
+        {
+            Sports = await sportService.GetAllForHomeAsync(),
+            Trainers = await trainerService.GetAllForHomeAsync(),
+            SpaProcedures = await spaService.GetAllForHomeAsync()
+        };
 
-        return View();
+        return View(model);
     }
 }

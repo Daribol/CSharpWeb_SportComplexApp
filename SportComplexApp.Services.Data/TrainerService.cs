@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using SportComplexApp.Data;
 using SportComplexApp.Data.Models;
 using SportComplexApp.Services.Data.Contracts;
+using SportComplexApp.Web.ViewModels.Home;
 using SportComplexApp.Web.ViewModels.Trainer;
 using System;
 using System.Collections.Generic;
@@ -41,6 +42,20 @@ namespace SportComplexApp.Services.Data
                 })
                 .ToListAsync();
         }
+
+        public async Task<IEnumerable<TrainerHomeViewModel>> GetAllForHomeAsync()
+        {
+            return await context.Trainers
+                .Where(t => !t.IsDeleted)
+                .Select(t => new TrainerHomeViewModel
+                {
+                    Id = t.Id,
+                    FullName = t.Name + " " + t.LastName,
+                    ImageUrl = t.ImageUrl
+                })
+                .ToListAsync();
+        }
+
 
         public async Task<TrainerDetailsViewModel?> GetTrainerDetailsAsync(int trainerId)
         {

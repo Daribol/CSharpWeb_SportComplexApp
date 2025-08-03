@@ -1,4 +1,5 @@
-﻿using SportComplexApp.Web.ViewModels.Spa;
+﻿using SportComplexApp.Web.ViewModels.Home;
+using SportComplexApp.Web.ViewModels.Spa;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,7 @@ namespace SportComplexApp.Services.Data.Contracts
     public interface ISpaService
     {
         Task<IEnumerable<SpaServiceViewModel>> GetAllSpaServicesAsync();
+        Task<IEnumerable<SpaProcedureHomeViewModel>> GetAllForHomeAsync();
         Task<SpaReservationFormViewModel?> GetSpaServiceByIdAsync(int id);
         Task<int> CreateReservationAsync(SpaReservationFormViewModel model, string userId);
         Task<IEnumerable<MySpaReservationViewModel>> GetUserReservationsAsync(string userId);
