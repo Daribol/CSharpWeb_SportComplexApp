@@ -28,6 +28,12 @@ namespace SportComplexApp.Web.Controllers
         {
             var userId = GetUserId();
 
+            if (User.IsInRole("Trainer"))
+            {
+                TempData["ErrorMessage"] = "Trainers cannot register for tournaments.";
+                return RedirectToAction(nameof(All));
+            }
+
             var isRegistered = await tournamentService.IsUserRegisteredAsync(id, userId);
 
             if (isRegistered)
