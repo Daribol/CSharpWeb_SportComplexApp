@@ -37,6 +37,25 @@ namespace SportComplexApp.Services.Data
                 .ToListAsync();
         }
 
+        public async Task<TournamentViewModel?> GetByIdAsync(int id)
+        {
+            var tournament = await context.Tournaments
+                .Where(t => t.Id == id && !t.IsDeleted)
+                .Include(t => t.Sport)
+                .FirstOrDefaultAsync();
+            if (tournament == null)
+                return null;
+            return new TournamentViewModel
+            {
+                Id = tournament.Id,
+                Name = tournament.Name,
+                Sport = tournament.Sport.Name,
+                StartDate = tournament.StartDate,
+                EndDate = tournament.EndDate,
+                Description = tournament.Description
+            };
+        }
+
         public async Task RegisterAsync(int tournamentId, string userId)
         {
             bool alreadyRegistered = await context.TournamentRegistrations

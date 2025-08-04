@@ -74,7 +74,11 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
         public async Task<IActionResult> Edit(int id)
         {
             var model = await tournamentService.GetForEditAsync(id);
-            if (model == null) return NotFound();
+            if (model == null)
+            {
+                TempData["ErrorMessage"] = TournamentNotFound;
+                return RedirectToAction(nameof(All));
+            }
 
             model.Sports = await sportService.GetAllAsSelectListAsync();
             return View(model);
@@ -107,7 +111,11 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             var model = await tournamentService.GetForDeleteAsync(id);
-            if (model == null) return NotFound();
+            if (model == null)
+            {
+                TempData["ErrorMessage"] = TournamentNotFound;
+                return RedirectToAction(nameof(All));
+            }
 
             return View(model);
         }

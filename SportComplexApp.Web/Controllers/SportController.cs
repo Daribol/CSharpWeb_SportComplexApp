@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using SportComplexApp.Common;
 using SportComplexApp.Services.Data.Contracts;
 using SportComplexApp.Web.ViewModels.Sport;
+using static SportComplexApp.Common.ErrorMessages.Sport;
 
 namespace SportComplexApp.Web.Controllers
 {
@@ -30,7 +31,8 @@ namespace SportComplexApp.Web.Controllers
             var model = await sportService.GetReservationFormAsync(id, userId);
             if (model == null)
             {
-                return NotFound();
+                TempData["ErrorMessage"] = SportNotFound;
+                return RedirectToAction(nameof(All));
             }
 
             return View(model);

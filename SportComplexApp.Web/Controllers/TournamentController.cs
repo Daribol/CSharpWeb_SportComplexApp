@@ -28,9 +28,25 @@ namespace SportComplexApp.Web.Controllers
         {
             var userId = GetUserId();
 
+            var tournament = await tournamentService.GetByIdAsync(id);
+
+            if (tournament == null)
+            {
+                TempData["ErrorMessage"] = TournamentNotFound;
+                return RedirectToAction(nameof(All));
+            }
+
+            var now = DateTime.UtcNow;
+
+            if (tournament.StartDate <= now && tournament.EndDate >= now)
+            {
+                TempData["ErrorMessage"] = TournamentRegistrationClosed;
+                return RedirectToAction(nameof(All));
+            }
+
             if (User.IsInRole("Trainer"))
             {
-                TempData["ErrorMessage"] = "Trainers cannot register for tournaments.";
+                TempData["ErrorMessage"] = TrainerCannotRegister;
                 return RedirectToAction(nameof(All));
             }
 

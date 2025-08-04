@@ -10,6 +10,7 @@ namespace SportComplexApp.Services.Data.Contracts
     public interface ITournamentService
     {
         Task<IEnumerable<TournamentViewModel>> GetAllAsync();
+        Task<TournamentViewModel?> GetByIdAsync(int id);
         Task RegisterAsync(int tournamentId, string userId);
         Task<bool> UnregisterAsync(int tournamentId, string userId);
         Task<IEnumerable<TournamentViewModel>> GetUserTournamentsAsync(string userId);

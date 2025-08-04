@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SportComplexApp.Common
+﻿namespace SportComplexApp.Common
 {
     public static class SuccessfulValidationMessages
     {
+        public static class Users
+        {
+            public const string RoleAssigned = "Role successfully assigned to user.";
+            public const string RoleRemoved = "Role successfully removed from user.";
+            public const string UserDeleted = "User successfully deleted.";
+        }
         public static class Sport
         {
             public const string SportAddedToMyList = "Sport successfully added to your list.";

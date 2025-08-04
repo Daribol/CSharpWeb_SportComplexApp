@@ -1,10 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using SportComplexApp.Data.Models;
-using SportComplexApp.Services.Data;
 using SportComplexApp.Services.Data.Contracts;
 using SportComplexApp.Web.Controllers;
+using static SportComplexApp.Common.ErrorMessages.Users;
+using static SportComplexApp.Common.SuccessfulValidationMessages.Users;
 
 namespace SportComplexApp.Web.Areas.Admin.Controllers
 {
@@ -13,13 +12,10 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
     public class UserManagementController : BaseController
     {
         private readonly IUserService userService;
-        private readonly UserManager<Client> userManager;
-        private readonly ITrainerService trainerService;
 
-        public UserManagementController(IUserService userService, ITrainerService trainerService)
+        public UserManagementController(IUserService userService)
         {
             this.userService = userService;
-            this.trainerService = trainerService;
         }
 
         public async Task<IActionResult> Index()
@@ -33,7 +29,7 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
         {
             if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(role))
             {
-                //TempData["ErrorMessage"] = UserIdOrRoleCannotBeEmpty;
+                TempData["ErrorMessage"] = UserIdOrRoleCannotBeEmpty;
                 return RedirectToAction(nameof(Index));
             }
 
@@ -41,7 +37,7 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
 
             if (!userExists)
             {
-                //TempData["ErrorMessage"] = UserDoesNotExist;
+                TempData["ErrorMessage"] = UserDoesNotExist;
                 return RedirectToAction(nameof(Index));
             }
 
@@ -49,11 +45,11 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
 
             if (!assignResult)
             {
-                //TempData["ErrorMessage"] = FailedToAssignRole;
+                TempData["ErrorMessage"] = FailedToAssignRole;
                 return RedirectToAction(nameof(Index));
             }
 
-            //TempData["SuccessMessage"] = RoleAssigned;
+            TempData["SuccessMessage"] = RoleAssigned;
             return RedirectToAction(nameof(Index));
         }
 
@@ -62,7 +58,7 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
         {
             if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(role))
             {
-                //TempData["ErrorMessage"] = UserIdOrRoleCannotBeEmpty;
+                TempData["ErrorMessage"] = UserIdOrRoleCannotBeEmpty;
                 return RedirectToAction(nameof(Index));
             }
 
@@ -70,7 +66,7 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
 
             if (!userExists)
             {
-                //TempData["ErrorMessage"] = UserDoesNotExist;
+                TempData["ErrorMessage"] = UserDoesNotExist;
                 return RedirectToAction(nameof(Index));
             }
 
@@ -78,11 +74,11 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
 
             if (!removeRoleResult)
             {
-                //TempData["ErrorMessage"] = FailedToRemoveRole;
+                TempData["ErrorMessage"] = FailedToRemoveRole;
                 return RedirectToAction(nameof(Index));
             }
 
-            //TempData["SuccessMessage"] = RoleRemoved;
+            TempData["SuccessMessage"] = RoleRemoved;
             return RedirectToAction(nameof(Index));
         }
 
@@ -91,7 +87,7 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
         {
             if (string.IsNullOrEmpty(userId))
             {
-                //TempData["ErrorMessage"] = UserIdOrRoleCannotBeEmpty;
+                TempData["ErrorMessage"] = UserIdOrRoleCannotBeEmpty;
                 return RedirectToAction(nameof(Index));
             }
 
@@ -99,7 +95,7 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
 
             if (!userExists)
             {
-                //TempData["ErrorMessage"] = UserDoesNotExist;
+                TempData["ErrorMessage"] = UserDoesNotExist;
                 return RedirectToAction(nameof(Index));
             }
 
@@ -107,11 +103,11 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
 
             if (!deleteResult)
             {
-                //TempData["ErrorMessage"] = FailedToDeleteRole;
+                TempData["ErrorMessage"] = FailedToDeleteUser;
                 return RedirectToAction(nameof(Index));
             }
 
-            //TempData["SuccessMessage"] = RoleDeleted;
+            TempData["SuccessMessage"] = UserDeleted;
             return RedirectToAction(nameof(Index));
         }
     }

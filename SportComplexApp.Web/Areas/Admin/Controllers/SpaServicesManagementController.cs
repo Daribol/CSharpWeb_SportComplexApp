@@ -4,7 +4,7 @@ using SportComplexApp.Services.Data.Contracts;
 using SportComplexApp.Web.Controllers;
 using SportComplexApp.Web.ViewModels.Spa;
 using static SportComplexApp.Common.SuccessfulValidationMessages.SpaService;
-using static SportComplexApp.Common.ErrorMessages.SpaReservation;
+using static SportComplexApp.Common.ErrorMessages.SpaService;
 
 namespace SportComplexApp.Web.Areas.Admin.Controllers
 {
@@ -53,7 +53,11 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
         public async Task<IActionResult> Edit(int id)
         {
             var model = await spaService.GetForEditAsync(id);
-            if (model == null) return NotFound();
+            if (model == null)
+            {
+                TempData["ErrorMessage"] = SpaServiceNotFound;
+                return RedirectToAction(nameof(All));
+            }
 
             return View(model);
         }
@@ -73,7 +77,11 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             var model = await spaService.GetForDeleteAsync(id);
-            if (model == null) return NotFound();
+            if (model == null)
+            {
+                TempData["ErrorMessage"] = SpaServiceNotFound;
+                return RedirectToAction(nameof(All));
+            }
 
             return View(model);
         }
