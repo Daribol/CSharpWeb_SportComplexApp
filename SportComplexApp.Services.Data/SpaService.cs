@@ -18,10 +18,32 @@ namespace SportComplexApp.Services.Data
             this.context = context;
         }
 
-        public async Task<IEnumerable<SpaServiceViewModel>> GetAllSpaServicesAsync()
+        public async Task<IEnumerable<SpaServiceViewModel>> GetAllSpaServicesAsync(string? searchQuery = null, int? minDuration = null, int? maxDuration = null)
         {
-            return await context.SpaServices
+            var query = context.SpaServices
                 .Where(s => !s.IsDeleted)
+                .AsQueryable();
+
+            if (!string.IsNullOrEmpty(searchQuery))
+            {
+                query = query
+                    .Where(s => s.Name.ToLower().Contains(searchQuery.ToLower().Trim())
+                                || s.Description.ToLower().Contains(searchQuery.ToLower().Trim()));
+            }
+
+            if (minDuration.HasValue)
+            {
+                query = query
+                    .Where(s => s.Duration >= minDuration.Value);
+            }
+
+            if (maxDuration.HasValue)
+            {
+                query = query
+                    .Where(s => s.Duration <= maxDuration.Value);
+            }
+
+            return await query
                 .Select(s => new SpaServiceViewModel
                 {
                     Id = s.Id,

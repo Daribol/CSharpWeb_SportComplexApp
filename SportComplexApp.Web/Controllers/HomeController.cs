@@ -29,4 +29,14 @@ public class HomeController : Controller
 
         return View(model);
     }
+
+    public IActionResult Error(int? statusCode = null)
+    {
+        if (statusCode == 404)
+        {
+            return View("Error404");
+        }
+
+        return View("Error500");
+    }
 }

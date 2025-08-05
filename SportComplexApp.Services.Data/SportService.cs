@@ -20,11 +20,29 @@ namespace SportComplexApp.Services
             this.context = db;
         }
 
-        public async Task<IEnumerable<AllSportsViewModel>> GetAllSportsAsync()
+        public async Task<IEnumerable<AllSportsViewModel>> GetAllSportsAsync(string? searchQuery = null, int? minDuration = null, int? maxDuration = null)
         {
-            return await context.Sports
+            var query = context.Sports
                 .Where(s => !s.IsDeleted && !s.Facility.IsDeleted)
                 .Include(s => s.Facility)
+                .AsQueryable();
+
+            if (!string.IsNullOrEmpty(searchQuery))
+            {
+                query = query.Where(s => s.Name.Contains(searchQuery));
+            }
+
+            if (minDuration.HasValue)
+            {
+                query = query.Where(s => s.Duration >= minDuration.Value);
+            }
+
+            if (maxDuration.HasValue)
+            {
+                query = query.Where(s => s.Duration <= maxDuration.Value);
+            }
+
+                return await query
                 .Select(s => new AllSportsViewModel
                 {
                     Id = s.Id,
@@ -34,6 +52,7 @@ namespace SportComplexApp.Services
                     Facility = s.Facility.Name,
                     ImageUrl = s.ImageUrl
                 })
+                .AsNoTracking()
                 .ToListAsync();
         }
 

@@ -17,9 +17,10 @@ namespace SportComplexApp.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> All()
+        public async Task<IActionResult> All(string? searchQuery = null, int? minDuration = null, int? maxDuration = null)
         {
-            var sports = await this.sportService.GetAllSportsAsync();
+            var sports = await this.sportService
+                .GetAllSportsAsync(searchQuery, minDuration, maxDuration);
             return View(sports);
         }
 

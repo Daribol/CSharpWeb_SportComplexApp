@@ -20,9 +20,33 @@ namespace SportComplexApp.Services.Data
             this.context = context;
         }
 
-        public async Task<IEnumerable<TournamentViewModel>> GetAllAsync()
+        public async Task<IEnumerable<TournamentViewModel>> GetAllAsync(string? searchQuery = null, DateTime? startFrom = null, DateTime? endTo = null)
         {
-            return await context.Tournaments
+            var query = context.Tournaments
+                .Where(t => !t.IsDeleted)
+                .Include(t => t.Sport)
+                .AsQueryable();
+
+            if (!string.IsNullOrEmpty(searchQuery))
+            {
+                query = query
+                    .Where(t => t.Name.Contains(searchQuery) ||
+                                t.Description.Contains(searchQuery));
+            }
+
+            if (startFrom.HasValue)
+            {
+                query = query
+                    .Where(t => t.StartDate >= startFrom.Value);
+            }
+
+            if (endTo.HasValue)
+            {
+                query = query
+                    .Where(t => t.EndDate <= endTo.Value);
+            }
+
+            return await query
                 .Where(t => !t.IsDeleted)
                 .Include(t => t.Sport)
                 .Select(t => new TournamentViewModel
@@ -34,6 +58,7 @@ namespace SportComplexApp.Services.Data
                     EndDate = t.EndDate,
                     Description = t.Description
                 })
+                .AsNoTracking()
                 .ToListAsync();
         }
 

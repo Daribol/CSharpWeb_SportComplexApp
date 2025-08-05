@@ -6,6 +6,20 @@
 
 <h2 class="mb-4 text-center">Available Spa Services</h2>
 
+<form method="get" asp-controller="Spa" asp-action="All" class="mb-4">
+    <div class="input-group mb-2">
+        <input type="text" name="searchQuery" class="form-control" placeholder="Search spa services......" />
+    </div>
+    <div class="d-flex mb-2">
+        <input type="number" name="minDuration" class="form-control me-2" placeholder="Min Duration {minutes}" />
+        <input type="number" name="maxDuration" class="form-control" placeholder="Max Duration {minutes}" />
+    </div>
+    <div class="input-group">
+        <button type="submit" class="btn btn-outline-secondary">Search</button>
+        <a asp-controller="Spa" asp-action="All" class="btn btn-outline-secondary">Clear</a>
+    </div>
+</form>
+
 <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
     @foreach (var spa in Model)
     {
