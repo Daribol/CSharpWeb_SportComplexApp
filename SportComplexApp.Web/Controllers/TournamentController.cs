@@ -32,8 +32,7 @@ namespace SportComplexApp.Web.Controllers
 
             if (tournament == null)
             {
-                TempData["ErrorMessage"] = TournamentNotFound;
-                return RedirectToAction(nameof(All));
+                return NotFound();
             }
 
             var now = DateTime.UtcNow;

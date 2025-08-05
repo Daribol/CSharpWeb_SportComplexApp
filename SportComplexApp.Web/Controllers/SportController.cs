@@ -32,8 +32,7 @@ namespace SportComplexApp.Web.Controllers
             var model = await sportService.GetReservationFormAsync(id, userId);
             if (model == null)
             {
-                TempData["ErrorMessage"] = SportNotFound;
-                return RedirectToAction(nameof(All));
+                return NotFound();
             }
 
             return View(model);

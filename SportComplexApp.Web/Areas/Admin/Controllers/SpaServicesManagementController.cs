@@ -55,8 +55,7 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
             var model = await spaService.GetForEditAsync(id);
             if (model == null)
             {
-                TempData["ErrorMessage"] = SpaServiceNotFound;
-                return RedirectToAction(nameof(All));
+                return NotFound();
             }
 
             return View(model);
@@ -79,8 +78,7 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
             var model = await spaService.GetForDeleteAsync(id);
             if (model == null)
             {
-                TempData["ErrorMessage"] = SpaServiceNotFound;
-                return RedirectToAction(nameof(All));
+                return NotFound();
             }
 
             return View(model);

@@ -35,7 +35,7 @@ namespace SportComplexApp.Web.Controllers
 
             if (trainers == null || !trainers.Any())
             {
-                return View("Empty");
+                return NotFound();
             }
 
             ViewBag.SportId = sportId;
@@ -63,7 +63,7 @@ namespace SportComplexApp.Web.Controllers
 
             if (trainerId == null)
             {
-                return NotFound("Trainer not found.");
+                return NotFound();
             }
 
             var reservations = await trainerService.GetReservationsForTrainerAsync(trainerId.Value);
@@ -79,8 +79,7 @@ namespace SportComplexApp.Web.Controllers
 
             if (trainerId == null)
             {
-                TempData["ErrorMessage"] = "Unable to identify trainer.";
-                return RedirectToAction(nameof(Reservations));
+                return NotFound();
             }
 
             var reservation = await context.Reservations

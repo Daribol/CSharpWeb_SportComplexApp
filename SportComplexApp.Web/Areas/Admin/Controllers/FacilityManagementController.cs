@@ -56,8 +56,7 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
             var model = await facilityService.GetFacilityForEditAsync(id);
             if (model == null)
             {
-                TempData["ErrorMessage"] = FacilityNotFound;
-                return RedirectToAction(nameof(All));
+                return NotFound();
             }
 
             return View(model);
@@ -82,8 +81,7 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
             var model = await facilityService.GetFacilityForDeleteAsync(id);
             if (model == null)
             {
-                TempData["ErrorMessage"] = FacilityNotFound;
-                return RedirectToAction(nameof(All));
+                return NotFound();
             }
 
             return View(model);

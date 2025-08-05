@@ -62,8 +62,7 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
             var model = await trainerService.GetTrainerForEditAsync(id);
             if (model == null)
             {
-                TempData["ErrorMessage"] = TrainerNotFound;
-                return RedirectToAction(nameof(All));
+                return NotFound();
             }
 
             model.AvailableSports = await trainerService.GetSportsAsSelectListAsync();
@@ -95,8 +94,7 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
             var trainer = await trainerService.GetTrainerForDeleteAsync(id);
             if (trainer == null)
             {
-                TempData["ErrorMessage"] = TrainerNotFound;
-                return RedirectToAction(nameof(All));
+                return NotFound();
             }
 
             return View(trainer);

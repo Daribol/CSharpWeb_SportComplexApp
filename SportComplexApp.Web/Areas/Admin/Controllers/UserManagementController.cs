@@ -37,8 +37,7 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
 
             if (!userExists)
             {
-                TempData["ErrorMessage"] = UserDoesNotExist;
-                return RedirectToAction(nameof(Index));
+                return NotFound();
             }
 
             bool assignResult = await userService.AssignUserToRoleAsync(userId, role);
@@ -66,8 +65,7 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
 
             if (!userExists)
             {
-                TempData["ErrorMessage"] = UserDoesNotExist;
-                return RedirectToAction(nameof(Index));
+                return NotFound();
             }
 
             bool removeRoleResult = await userService.RemoveUserRoleAsync(userId, role);
@@ -95,8 +93,7 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
 
             if (!userExists)
             {
-                TempData["ErrorMessage"] = UserDoesNotExist;
-                return RedirectToAction(nameof(Index));
+                return NotFound();
             }
 
             bool deleteResult = await userService.DeleteUserAsync(userId);
