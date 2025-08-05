@@ -18,7 +18,12 @@ namespace SportComplexApp.Services.Data
             this.context = context;
         }
 
-        public async Task<IEnumerable<SpaServiceViewModel>> GetAllSpaServicesAsync(string? searchQuery = null, int? minDuration = null, int? maxDuration = null)
+        public async Task<IEnumerable<SpaServiceViewModel>> GetAllSpaServicesAsync(
+            string? searchQuery = null, 
+            int? minDuration = null, 
+            int? maxDuration = null,
+            int currentPage = 1,
+            int spaPerPage = 9)
         {
             var query = context.SpaServices
                 .Where(s => !s.IsDeleted)
@@ -44,6 +49,8 @@ namespace SportComplexApp.Services.Data
             }
 
             return await query
+                .Skip((currentPage - 1) * spaPerPage)
+                .Take(spaPerPage)
                 .Select(s => new SpaServiceViewModel
                 {
                     Id = s.Id,
@@ -293,5 +300,22 @@ namespace SportComplexApp.Services.Data
                 await context.SaveChangesAsync();
             }
         }
+
+        public async Task<int> GetSpaServicesCountAsync(string? searchQuery, int? minDuration, int? maxDuration)
+        {
+            var query = context.SpaServices.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(searchQuery))
+                query = query.Where(s => s.Name.Contains(searchQuery));
+
+            if (minDuration.HasValue)
+                query = query.Where(s => s.Duration >= minDuration.Value);
+
+            if (maxDuration.HasValue)
+                query = query.Where(s => s.Duration <= maxDuration.Value);
+
+            return await query.CountAsync();
+        }
+
     }
 }

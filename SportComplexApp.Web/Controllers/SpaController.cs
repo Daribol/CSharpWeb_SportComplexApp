@@ -16,10 +16,25 @@ namespace SportComplexApp.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> All(string? searchQuery = null, int? minDuration = null, int? maxDuration = null)
+        public async Task<IActionResult> All(string? searchQuery = null, int? minDuration = null, int? maxDuration = null, int page = 1)
         {
-            var services = await spaService.GetAllSpaServicesAsync(searchQuery, minDuration, maxDuration);
-            return View(services);
+            const int spaPerPage = 9;
+            const int maxPages = 3;
+
+
+            var services = await spaService.GetAllSpaServicesAsync(searchQuery, minDuration, maxDuration, page, spaPerPage);
+            var totalSpaCount = await spaService.GetSpaServicesCountAsync(searchQuery, minDuration, maxDuration);
+
+            var totalPages = (int)Math.Ceiling((double)totalSpaCount / spaPerPage);
+            totalPages = Math.Min(totalPages, maxPages);
+
+            var viewModel = new PaginationSpaServiceViewModel
+            {
+                SpaServices = services,
+                CurrentPage = page,
+                TotalPages = totalPages
+            };
+            return View(viewModel);
         }
 
         [HttpGet]
