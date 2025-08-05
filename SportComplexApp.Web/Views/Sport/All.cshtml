@@ -8,18 +8,36 @@
 <hr />
 
 <form method="get" asp-controller="Sport" asp-action="All" class="mb-4">
-    <div class="input-group mb-2">
-        <input type="text" name="searchQuery" class="form-control" placeholder="Search sports......"/>
+    <div class="row g-2 align-items-end">
+        <div class="col-md-4">
+            <label for="searchQuery" class="form-label">Search by Sport Name</label>
+            <input type="text" name="searchQuery" id="searchQuery" class="form-control" placeholder="E.g. Basketball..." />
+        </div>
+
+        <div class="col-md-3">
+            <label for="minDuration" class="form-label">Min Duration (min)</label>
+            <input type="number" name="minDuration" id="minDuration" class="form-control" />
+        </div>
+
+        <div class="col-md-3">
+            <label for="maxDuration" class="form-label">Max Duration (min)</label>
+            <input type="number" name="maxDuration" id="maxDuration" class="form-control" />
+        </div>
+
+        <div class="col-md-2 d-grid">
+            <button type="submit" class="btn btn-outline-primary">
+                <i class="bi bi-funnel-fill"></i> Filter
+            </button>
+        </div>
     </div>
-    <div class="d-flex mb-2">
-        <input type="number" name="minDuration" class="form-control me-2" placeholder="Min Duration {minutes}" />
-        <input type="number" name="maxDuration" class="form-control" placeholder="Max Duration {minutes}" />
-    </div>
-    <div class="input-group">
-        <button type="submit" class="btn btn-outline-secondary">Search</button>
-        <a asp-controller="Sport" asp-action="All" class="btn btn-outline-secondary">Clear</a>
+
+    <div class="mt-2 d-flex justify-content-end">
+        <a asp-controller="Sport" asp-action="All" class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-x-circle"></i> Clear
+        </a>
     </div>
 </form>
+
 
 <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
     @foreach (var sport in Model)

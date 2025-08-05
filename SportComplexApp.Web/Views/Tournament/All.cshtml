@@ -6,24 +6,31 @@
 }
 
 <h2 class="mb-4 text-center">Upcoming Tournaments</h2>
+<hr />
 
 <form method="get" asp-controller="Tournament" asp-action="All" class="mb-4">
-    <div class="input-group mb-2">
-        <input type="text" name="searchQuery" class="form-control" placeholder="Search tournaments......" />
-    </div>
-    <div class="d-flex mb-2">
-        <div class="col">
-        <label for="startFrom" class="form-label">Start from</label>
-        <input type="date" name="startFrom" class="form-control me-2" placeholder="Start from....." />
+    <div class="row g-2 align-items-end">
+        <div class="col-md-5">
+            <label for="searchQuery" class="form-label">Search by Name</label>
+            <input type="text" name="searchQuery" id="searchQuery" class="form-control" placeholder="E.g. Summer Cup..." />
         </div>
-        <div class="col">
-        <label for="endTo" class="form-label">End to</label>
-        <input type="date" name="endTo" class="form-control" placeholder="End to....." />
+
+        <div class="col-md-5">
+            <label for="sport" class="form-label">Filter by Sport</label>
+            <input type="text" name="sport" id="sport" class="form-control" placeholder="E.g. Football" />
+        </div>
+
+        <div class="col-md-2 d-grid">
+            <button type="submit" class="btn btn-outline-primary">
+                <i class="bi bi-funnel-fill"></i> Filter
+            </button>
         </div>
     </div>
-    <div class="input-group">
-        <button type="submit" class="btn btn-outline-secondary">Search</button>
-        <a asp-controller="Tournament" asp-action="All" class="btn btn-outline-secondary">Clear</a>
+
+    <div class="mt-2 d-flex justify-content-end">
+        <a asp-controller="Tournament" asp-action="All" class="btn btn-outline-secondary btn-sm">
+            <i class="bi bi-x-circle"></i> Clear
+        </a>
     </div>
 </form>
 
