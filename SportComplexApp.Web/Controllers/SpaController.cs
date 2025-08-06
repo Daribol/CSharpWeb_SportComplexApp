@@ -21,19 +21,20 @@ namespace SportComplexApp.Web.Controllers
             const int spaPerPage = 9;
             const int maxPages = 3;
 
+            var viewModel = await spaService.GetAllSpaServicesPaginationAsync(
+                searchQuery, minDuration, maxDuration, page, spaPerPage, maxPages);
 
-            var services = await spaService.GetAllSpaServicesAsync(searchQuery, minDuration, maxDuration, page, spaPerPage);
-            var totalSpaCount = await spaService.GetSpaServicesCountAsync(searchQuery, minDuration, maxDuration);
-
-            var totalPages = (int)Math.Ceiling((double)totalSpaCount / spaPerPage);
-            totalPages = Math.Min(totalPages, maxPages);
-
-            var viewModel = new PaginationSpaServiceViewModel
+            if (page > viewModel.TotalPages && viewModel.TotalPages > 0)
             {
-                SpaServices = services,
-                CurrentPage = page,
-                TotalPages = totalPages
-            };
+                return RedirectToAction(nameof(All), new
+                {
+                    searchQuery,
+                    minDuration,
+                    maxDuration,
+                    page = viewModel.TotalPages
+                });
+            }
+
             return View(viewModel);
         }
 

@@ -73,8 +73,11 @@
         <ul class="pagination justify-content-center">
             @for (int i = 1; i <= Model.TotalPages; i++)
             {
-                <li class="page-item @(Model.CurrentPage == i ? "active" : "")">
-                    <a class="page-link" asp-action="All" asp-route-page="@i">@i</a>
+                <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                    <a class="page-link" asp-action="All" asp-route-page="@i"
+                    asp-route-searchQuery="@Model.SearchQuery"
+                    asp-route-minDuration="@Model.MinDuration"
+                    asp-route-maxDuration="@Model.MaxDuration">@i</a>
                 </li>
             }
         </ul>

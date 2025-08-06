@@ -12,5 +12,9 @@ namespace SportComplexApp.Web.ViewModels.Spa
 
         public int CurrentPage { get; set; }
         public int TotalPages { get; set; }
+
+        public string? SearchQuery { get; set; }
+        public int? MinDuration { get; set; }
+        public int? MaxDuration { get; set; }
     }
 }

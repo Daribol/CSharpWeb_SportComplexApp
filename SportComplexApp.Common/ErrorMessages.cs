@@ -53,7 +53,7 @@ namespace SportComplexApp.Common
             public const string TournamentAlreadyRegistered = "You are already registered for this tournament.";
             public const string TournamentRegistrationClosed = "Registration for this tournament is closed.";
 
-            public const string CannotUnregister = "You cannot unregister from this tournament.";
+            public const string CannotUnregister = "You cannot unregister from this tournament. It's active.";
             public const string TrainerCannotRegister = "Trainers cannot register for tournaments.";
 
             public const string TournamentStartInPast = "The start date of the tournament cannot be in the past.";

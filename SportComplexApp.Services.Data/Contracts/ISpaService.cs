@@ -10,12 +10,14 @@ namespace SportComplexApp.Services.Data.Contracts
 {
     public interface ISpaService
     {
-        Task<IEnumerable<SpaServiceViewModel>> GetAllSpaServicesAsync(
+        Task<PaginationSpaServiceViewModel> GetAllSpaServicesPaginationAsync(
             string? searchQuery = null, 
             int? minDuration = null, 
             int? maxDuration = null,
             int currentPage = 1,
-            int spaPerpage = 9);
+            int spaPerpage = 9,
+            int maxPages = 3);
+        Task<IEnumerable<SpaServiceViewModel>> GetAllSpaServicesAsync();
         Task<IEnumerable<SpaProcedureHomeViewModel>> GetAllForHomeAsync();
         Task<SpaReservationFormViewModel?> GetSpaServiceByIdAsync(int id);
         Task<int> CreateReservationAsync(SpaReservationFormViewModel model, string userId);

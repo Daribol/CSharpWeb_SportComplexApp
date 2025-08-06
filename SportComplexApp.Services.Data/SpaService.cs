@@ -18,12 +18,31 @@ namespace SportComplexApp.Services.Data
             this.context = context;
         }
 
-        public async Task<IEnumerable<SpaServiceViewModel>> GetAllSpaServicesAsync(
+        public async Task<IEnumerable<SpaServiceViewModel>> GetAllSpaServicesAsync()
+        {
+            return await context.SpaServices
+                .Where(s => !s.IsDeleted)
+                .Select(s => new SpaServiceViewModel
+                {
+                    Id = s.Id,
+                    Name = s.Name,
+                    Description = s.Description,
+                    Duration = s.Duration,
+                    Price = s.Price,
+                    ImageUrl = s.ImageUrl
+                })
+                .AsNoTracking()
+                .ToListAsync();
+        }
+
+
+        public async Task<PaginationSpaServiceViewModel> GetAllSpaServicesPaginationAsync(
             string? searchQuery = null, 
             int? minDuration = null, 
             int? maxDuration = null,
             int currentPage = 1,
-            int spaPerPage = 9)
+            int spaPerPage = 9,
+            int maxPages = 3)
         {
             var query = context.SpaServices
                 .Where(s => !s.IsDeleted)
@@ -48,7 +67,18 @@ namespace SportComplexApp.Services.Data
                     .Where(s => s.Duration <= maxDuration.Value);
             }
 
-            return await query
+            var totalCount = await query.CountAsync();
+
+            int totalPages = (int)Math.Ceiling((double)totalCount / spaPerPage);
+            totalPages = Math.Min(totalPages, maxPages);
+
+            if (currentPage > totalPages && totalPages > 0)
+            {
+                currentPage = totalPages;
+            }
+
+
+            var spaServices = await query
                 .Skip((currentPage - 1) * spaPerPage)
                 .Take(spaPerPage)
                 .Select(s => new SpaServiceViewModel
@@ -56,11 +86,21 @@ namespace SportComplexApp.Services.Data
                     Id = s.Id,
                     Name = s.Name,
                     Description = s.Description,
-                    Price = s.Price,
                     Duration = s.Duration,
+                    Price = s.Price,
                     ImageUrl = s.ImageUrl
                 })
                 .ToListAsync();
+
+            return new PaginationSpaServiceViewModel
+            {
+                SpaServices = spaServices,
+                CurrentPage = currentPage,
+                TotalPages = totalPages,
+                SearchQuery = searchQuery,
+                MinDuration = minDuration,
+                MaxDuration = maxDuration
+            };
         }
 
         public async Task<IEnumerable<SpaProcedureHomeViewModel>> GetAllForHomeAsync()

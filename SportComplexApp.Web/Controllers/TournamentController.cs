@@ -35,9 +35,9 @@ namespace SportComplexApp.Web.Controllers
                 return NotFound();
             }
 
-            var now = DateTime.UtcNow;
+            var today = DateTime.Now.Date;
 
-            if (tournament.StartDate <= now && tournament.EndDate >= now)
+            if (tournament.StartDate.Date <= today && tournament.EndDate.Date >= today)
             {
                 TempData["ErrorMessage"] = TournamentRegistrationClosed;
                 return RedirectToAction(nameof(All));
