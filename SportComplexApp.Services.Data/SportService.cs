@@ -14,10 +14,12 @@ namespace SportComplexApp.Services
     public class SportService : ISportService
     {
         private readonly SportComplexDbContext context;
+        private readonly TimeProvider time;
 
-        public SportService(SportComplexDbContext db)
+        public SportService(SportComplexDbContext db, TimeProvider timeProvider)
         {
             this.context = db;
+            this.time = timeProvider ?? TimeProvider.System;
         }
 
         public async Task<IEnumerable<AllSportsViewModel>> GetAllSportsAsync(string? searchQuery = null, int? minDuration = null, int? maxDuration = null)
@@ -91,12 +93,14 @@ namespace SportComplexApp.Services
                     .FirstOrDefaultAsync();
             }
 
+            var now = time.GetLocalNow().DateTime;
+
             var model = new SportReservationFormViewModel
             {
                 SportId = sport.Id,
                 SportName = sport.Name,
                 FacilityName = sport.Facility.Name,
-                ReservationDateTime = DateTime.Now.AddDays(1),
+                ReservationDateTime = now.AddDays(1),
                 Duration = sport.Duration,
                 MinDuration = sport.Duration,
                 MaxDuration = sport.Duration * 2,
@@ -122,6 +126,7 @@ namespace SportComplexApp.Services
                 .FirstOrDefaultAsync(s => s.Id == model.SportId && !s.IsDeleted);
 
             var reservationTime = model.ReservationDateTime;
+            var now = time.GetLocalNow().DateTime;
 
             if (reservationTime.TimeOfDay < ApplicationConstants.OpeningTime
                 || reservationTime.TimeOfDay >= ApplicationConstants.ClosingTime)
@@ -129,18 +134,18 @@ namespace SportComplexApp.Services
                 throw new InvalidOperationException(ReservationOutsideWorkingHours);
             }
 
-            if(reservationTime > DateTime.Now.AddDays(ApplicationConstants.MaxReservationDaysInAdvance))
+            if(reservationTime > now.AddDays(ApplicationConstants.MaxReservationDaysInAdvance))
             {
                 throw new InvalidOperationException(ReservationTooFarInFuture);
             }
 
 
-            if (model.ReservationDateTime < DateTime.Now)
+            if (reservationTime < now)
             {
                 throw new InvalidOperationException(ReservationInPast);
             }
 
-            if (model.ReservationDateTime < DateTime.Now.AddHours(1))
+            if (reservationTime < now.AddHours(1))
             {
                 throw new InvalidOperationException(ReservationTooSoon);
             }
@@ -180,7 +185,7 @@ namespace SportComplexApp.Services
                 TrainerId = model.TrainerId,
                 Duration = model.Duration,
                 NumberOfPeople = model.NumberOfPeople,
-                ReservationDateTime = model.ReservationDateTime
+                ReservationDateTime = reservationTime
             };
 
             await context.Reservations.AddAsync(reservation);
@@ -203,8 +208,8 @@ namespace SportComplexApp.Services
                     Duration = r.Duration,
                     ReservationDateTime = r.ReservationDateTime,
                     NumberOfPeople = r.NumberOfPeople,
-                    TrainerName = r.Trainer != null ? r.Trainer.Name + r.Trainer.LastName : "No Trainer",
-                    TotalPrice = Math.Round(r.Sport.Price * (r.Duration/60m) * r.NumberOfPeople, 2)
+                    TrainerName = r.Trainer != null ? $"{r.Trainer.Name} {r.Trainer.LastName}" : "No Trainer",
+                    TotalPrice = Math.Round(r.Sport.Price * (r.Duration/r.Sport.Duration) * r.NumberOfPeople, 2)
                 })
                 .ToListAsync();
         }

@@ -36,6 +36,8 @@ builder.Services
 builder.Services.ConfigureApplicationCookie(cfg =>
 cfg.LoginPath = "/Identity/Account/Login");
 
+builder.Services.AddSingleton<TimeProvider>(TimeProvider.System);
+
 builder.Services.AddRazorPages();
 builder.Services.AddControllersWithViews();
 

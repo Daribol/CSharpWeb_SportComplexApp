@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using SportComplexApp.Data.Models;
 using SportComplexApp.Services.Data.Contracts;
 using SportComplexApp.Web.Controllers;
 using static SportComplexApp.Common.ErrorMessages.Users;
@@ -12,10 +14,12 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
     public class UserManagementController : BaseController
     {
         private readonly IUserService userService;
+        private readonly UserManager<Client> userManager;
 
-        public UserManagementController(IUserService userService)
+        public UserManagementController(IUserService userService, UserManager<Client> userManager)
         {
             this.userService = userService;
+            this.userManager = userManager;
         }
 
         public async Task<IActionResult> Index()
@@ -38,6 +42,19 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
             if (!userExists)
             {
                 return NotFound();
+            }
+
+            var user = await userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                TempData["ErrorMessage"] = UserDoesNotExist;
+                return RedirectToAction(nameof(Index));
+            }
+
+            if (await userManager.IsInRoleAsync(user, role))
+            {
+                TempData["ErrorMessage"] = UserAlreadyInRole;
+                return RedirectToAction(nameof(Index));
             }
 
             bool assignResult = await userService.AssignUserToRoleAsync(userId, role);

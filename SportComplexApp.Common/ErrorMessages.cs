@@ -16,6 +16,7 @@ namespace SportComplexApp.Common
             public const string FailedToAssignRole = "Failed to assign role to user.";
             public const string FailedToRemoveRole = "Failed to remove role from user.";
             public const string FailedToDeleteUser = "Failed to delete user.";
+            public const string UserAlreadyInRole = "User is already in this role.";
         }
 
         public static class Sport

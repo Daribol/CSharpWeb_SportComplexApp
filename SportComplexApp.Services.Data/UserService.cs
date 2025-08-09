@@ -80,7 +80,7 @@ namespace SportComplexApp.Services.Data
             if (role == "Trainer")
             {
                 var trainerExists = await context.Trainers.AnyAsync(t => t.ClientId == userId && !t.IsDeleted);
-                if(!trainerExists)
+                if (!trainerExists)
                 {
                     var trainer = new Trainer
                     {
