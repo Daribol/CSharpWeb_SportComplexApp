@@ -36,6 +36,9 @@ namespace SportComplexApp.Data.Configuration
                 .HasMaxLength(ImageUrlMaxLength)
                 .HasDefaultValue(null);
 
+            builder.Property(t => t.ClientId)
+                .IsRequired(false);
+
             builder.HasMany(t => t.TrainerSessions)
                 .WithOne(ts => ts.Trainer)
                 .HasForeignKey(ts => ts.TrainerId)

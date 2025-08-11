@@ -88,7 +88,6 @@ public class SpaServiceTests
         Assert.That(list.Any(s => s.Name == "Massage"), Is.True);
         Assert.That(list.Any(s => s.Name == "Sauna"),Is.True);
         Assert.That(list.Any(s => s.Name == "Facial"), Is.False);
-
     }
 
     [Test]

@@ -21,7 +21,7 @@ namespace SportComplexApp.Data.Models
 
         public bool IsDeleted { get; set; } = false;
 
-        public string ClientId { get; set; } = null!;
+        public string? ClientId { get; set; } = null!;
         public Client Client { get; set; } = null!;
 
         public virtual ICollection<TrainerSession> TrainerSessions { get; set; } = new HashSet<TrainerSession>();

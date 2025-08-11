@@ -185,6 +185,17 @@ namespace SportComplexApp.Services.Data
                 throw new InvalidOperationException(ReservationConflict);
             }
 
+            bool sportOverlap = await context.Reservations
+                .AnyAsync(r =>
+                    r.ClientId == userId &&
+                    r.ReservationDateTime < endTime &&
+                    r.ReservationDateTime.AddMinutes(r.Duration) > startTime);
+
+            if (sportOverlap)
+            {
+                throw new InvalidOperationException(ReservationConflict);
+            }
+
             var reservation = new SpaReservation()
             {
                 SpaServiceId = model.SpaServiceId,

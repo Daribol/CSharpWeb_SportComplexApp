@@ -178,6 +178,34 @@ namespace SportComplexApp.Services
                 }
             }
 
+            int? currentTrainerId = await context.Trainers
+                .Where(t => t.ClientId == userId && !t.IsDeleted)
+                .Select(t => (int?)t.Id)
+                .FirstOrDefaultAsync();
+
+            if (currentTrainerId.HasValue)
+            {
+                bool selfBusy = await context.Reservations.AnyAsync(r =>
+                    r.TrainerId == currentTrainerId.Value &&
+                    r.ReservationDateTime < endTime &&
+                    r.ReservationDateTime.AddMinutes(r.Duration) > startTime);
+
+                if (selfBusy)
+                    throw new InvalidOperationException(ReservationConflict);
+            }
+
+            bool spaOverlap = await context.SpaReservations
+                .Include(sr => sr.SpaService)
+                .AnyAsync(sr =>
+                    sr.ClientId == userId &&
+                    sr.ReservationDateTime < endTime &&
+                    sr.ReservationDateTime.AddMinutes(sr.SpaService.Duration) > startTime);
+
+            if (spaOverlap)
+            {
+                throw new InvalidOperationException(ReservationConflict);
+            }
+
             var reservation = new Reservation
             {
                 ClientId = userId,
@@ -209,7 +237,7 @@ namespace SportComplexApp.Services
                     ReservationDateTime = r.ReservationDateTime,
                     NumberOfPeople = r.NumberOfPeople,
                     TrainerName = r.Trainer != null ? $"{r.Trainer.Name} {r.Trainer.LastName}" : "No Trainer",
-                    TotalPrice = Math.Round(r.Sport.Price * (r.Duration/r.Sport.Duration) * r.NumberOfPeople, 2)
+                    TotalPrice = Math.Round(r.Sport.Price * ((decimal)r.Duration/r.Sport.Duration) * r.NumberOfPeople, 2)
                 })
                 .ToListAsync();
         }

@@ -81,7 +81,7 @@ public class TournamentServiceTests
     }
 
     [Test]
-    public async Task Returns_All_NotDeleted_When_NoFilters()
+    public async Task GetAllAsync_Returns_All_NotDeleted_When_NoFilters()
     {
         var result = await _service.GetAllAsync();
 
@@ -97,7 +97,7 @@ public class TournamentServiceTests
     }
 
     [Test]
-    public async Task Filters_By_SearchQuery_In_Name()
+    public async Task GetAllAsync_Filters_By_SearchQuery_In_Name()
     {
         var result = await _service.GetAllAsync(searchQuery: "Wimbledon");
 
@@ -108,7 +108,7 @@ public class TournamentServiceTests
     }
 
     [Test]
-    public async Task Filters_By_SearchQuery_In_Description()
+    public async Task GetAllAsync_Filters_By_SearchQuery_In_Description()
     {
         var result = await _service.GetAllAsync(searchQuery: "tennis");
         var list = result.ToList();
@@ -118,7 +118,7 @@ public class TournamentServiceTests
     }
 
     [Test]
-    public async Task Filters_By_Sport_CaseInsensitive_And_Trim()
+    public async Task GetAllAsync_Filters_By_Sport_CaseInsensitive_And_Trim()
     {
         var result = await _service.GetAllAsync(sport: "  tEnNiS  ");
         var list = result.ToList();
@@ -128,7 +128,7 @@ public class TournamentServiceTests
     }
 
     [Test]
-    public async Task Applies_Both_Filters_Search_And_Sport()
+    public async Task GetAllAsync_Applies_Both_Filters_Search_And_Sport()
     {
         var result = await _service.GetAllAsync(searchQuery: "tennis", sport: "Tennis");
         var list = result.ToList();
@@ -138,7 +138,7 @@ public class TournamentServiceTests
     }
 
     [Test]
-    public async Task Returns_Empty_When_NoMatches()
+    public async Task GetAllAsync_Returns_Empty_When_NoMatches()
     {
         var result = await _service.GetAllAsync(searchQuery: "no-such-text");
         var list = result.ToList();
@@ -147,7 +147,7 @@ public class TournamentServiceTests
     }
 
     [Test]
-    public async Task Deleted_Tournaments_Are_Excluded_Even_If_Matching()
+    public async Task GetAllAsync_Deleted_Tournaments_Are_Excluded_Even_If_Matching()
     {
         var result = await _service.GetAllAsync(searchQuery: "football");
         var list = result.ToList();
@@ -156,7 +156,7 @@ public class TournamentServiceTests
     }
 
     [Test]
-    public async Task Maps_Sport_Name_In_ViewModel()
+    public async Task GetAllAsync_Maps_Sport_Name_In_ViewModel()
     {
         var result = (await _service.GetAllAsync(searchQuery: "Champions")).FirstOrDefault();
 
@@ -168,7 +168,7 @@ public class TournamentServiceTests
     }
 
     [Test]
-    public async Task Sport_Filter_With_Only_Whitespace_Yields_NoResults()
+    public async Task GetAllAsync_Sport_Filter_With_Only_Whitespace_Yields_NoResults()
     {
         var result = await _service.GetAllAsync(sport: "    ");
         var list = result.ToList();
@@ -177,7 +177,7 @@ public class TournamentServiceTests
     }
 
     [Test]
-    public async Task ReturnsNull_WhenIdNotFound()
+    public async Task GetByIdAsync_ReturnsNull_WhenIdNotFound()
     {
         var tournament = await _service.GetByIdAsync(999);
 
@@ -185,14 +185,14 @@ public class TournamentServiceTests
     }
 
     [Test]
-    public async Task ReturnsNull_WhenTournamentIsDeleted()
+    public async Task GetByIdAsync_ReturnsNull_WhenTournamentIsDeleted()
     {
         var tournament = await _service.GetByIdAsync(3);
         Assert.IsNull(tournament);
     }
 
     [Test]
-    public async Task ReturnsMappedViewModel_WhenFoundAndNotDeleted()
+    public async Task GetByIdAsync_ReturnsMappedViewModel_WhenFoundAndNotDeleted()
     {
         var tournament = await _service.GetByIdAsync(1);
 
@@ -206,7 +206,7 @@ public class TournamentServiceTests
     }
 
     [Test]
-    public async Task Registers_WhenNotAlreadyRegistered_AddsOneRow()
+    public async Task RegisterAsync_Registers_WhenNotAlreadyRegistered_AddsOneRow()
     {
         // Arrange
         int tournamentId = 1;
@@ -226,7 +226,7 @@ public class TournamentServiceTests
     }
 
     [Test]
-    public async Task Register_IsIdempotent_CalledTwice_StillOneRow()
+    public async Task RegisterAsync_Register_IsIdempotent_CalledTwice_StillOneRow()
     {
         // Arrange
         int tournamentId = 1;
@@ -245,7 +245,7 @@ public class TournamentServiceTests
     }
 
     [Test]
-    public async Task Register_DifferentUser_ProducesSeparateRow()
+    public async Task RegisterAsync_Register_DifferentUser_ProducesSeparateRow()
     {
         // Arrange
         int tournamentId = 1;
@@ -267,7 +267,7 @@ public class TournamentServiceTests
     }
 
     [Test]
-    public async Task Register_SameUser_DifferentTournament_ProducesSeparateRow()
+    public async Task RegisterAsync_Register_SameUser_DifferentTournament_ProducesSeparateRow()
     {
         // Arrange
         string userId = "user-a";
@@ -288,7 +288,7 @@ public class TournamentServiceTests
     }
 
     [Test]
-    public async Task Register_DoesNothing_WhenPreSeededRegistrationExists()
+    public async Task RegisterAsync_Register_DoesNothing_WhenPreSeededRegistrationExists()
     {
         // Arrange
         int tournamentId = 1;
@@ -313,7 +313,7 @@ public class TournamentServiceTests
     }
 
     [Test]
-    public async Task Unregister_RemovesRegistration_WhenExists_AndTournamentIsInFuture()
+    public async Task UnregisterAsync_Unregister_RemovesRegistration_WhenExists_AndTournamentIsInFuture()
     {
         // Arrange
         var UserId = "test-client-id";
@@ -337,7 +337,7 @@ public class TournamentServiceTests
     }
 
     [Test]
-    public async Task Unregister_ReturnsFalse_WhenRegistrationDoesNotExist()
+    public async Task UnregisterAsync_Unregister_ReturnsFalse_WhenRegistrationDoesNotExist()
     {
         // Arrange
         var UserId = "test-client-id";
@@ -354,7 +354,7 @@ public class TournamentServiceTests
     }
 
     [Test]
-    public async Task Unregister_ReturnsFalse_WhenTournamentAlreadyStarted()
+    public async Task UnregisterAsync_Unregister_ReturnsFalse_WhenTournamentAlreadyStarted()
     {
         // Arrange
         var UserId = "test-client-id";
@@ -382,7 +382,7 @@ public class TournamentServiceTests
     }
 
     [Test]
-    public async Task Unregister_DoesNotAffect_OtherUsersOrTournaments()
+    public async Task UnregisterAsync_Unregister_DoesNotAffect_OtherUsersOrTournaments()
     {
         // Arrange
         var UserId = "test-client-id";
@@ -407,7 +407,7 @@ public class TournamentServiceTests
     }
 
     [Test]
-    public async Task Unregister_Works_Even_IfTournamentIsDeleted_InSeed()
+    public async Task UnregisterAsync_Unregister_Works_Even_IfTournamentIsDeleted_InSeed()
     {
         // Arrange
         var UserId = "test-client-id";
@@ -431,7 +431,7 @@ public class TournamentServiceTests
     }
 
     [Test]
-    public async Task Returns_OnlyFuture_NonDeleted_Tournaments_ForUser()
+    public async Task GetUserTournamentsAsync_Returns_OnlyFuture_NonDeleted_Tournaments_ForUser()
     {
         // Arrange
         var UserId = "test-client-id";
@@ -453,7 +453,7 @@ public class TournamentServiceTests
     }
 
     [Test]
-    public async Task Removes_PastRegistrations_And_ExcludesThemFromResult()
+    public async Task GetUserTournamentsAsync_Removes_PastRegistrations_And_ExcludesThemFromResult()
     {
         // Arrange:
         var UserId = "test-client-id";
@@ -484,7 +484,7 @@ public class TournamentServiceTests
     }
 
     [Test]
-    public async Task Returns_Empty_When_UserHasNoRegistrations()
+    public async Task GetUserTournamentsAsync_Returns_Empty_When_UserHasNoRegistrations()
     {
         // Arrange
         var UserId = "test-client-id";
@@ -496,7 +496,7 @@ public class TournamentServiceTests
     }
 
     [Test]
-    public async Task Keeps_Registrations_To_Deleted_Tournaments_Untouched_And_ReturnsEmpty()
+    public async Task GetUserTournamentsAsync_Keeps_Registrations_To_Deleted_Tournaments_Untouched_And_ReturnsEmpty()
     {
         // Arrange:
         var UserId = "test-client-id";
@@ -517,7 +517,7 @@ public class TournamentServiceTests
     }
 
     [Test]
-    public async Task Maps_ViewModel_Fields_Correctly()
+    public async Task GetUserTournamentsAsync_Maps_ViewModel_Fields_Correctly()
     {
         // Arrange
         var UserId = "test-client-id";
@@ -539,7 +539,7 @@ public class TournamentServiceTests
     }
 
     [Test]
-    public async Task ReturnsTrue_WhenUserHasRegistrationForTournament()
+    public async Task IsUserRegisteredAsync_ReturnsTrue_WhenUserHasRegistrationForTournament()
     {
         // Arrange
         var UserId = "test-client-id";
@@ -558,7 +558,7 @@ public class TournamentServiceTests
     }
 
     [Test]
-    public async Task ReturnsFalse_WhenUserHasNoRegistrationForTournament()
+    public async Task IsUserRegisteredAsync_ReturnsFalse_WhenUserHasNoRegistrationForTournament()
     {
         // Arrange
         var UserId = "test-client-id";
@@ -577,7 +577,7 @@ public class TournamentServiceTests
     }
 
     [Test]
-    public async Task ReturnsFalse_WhenOtherUserRegisteredForTournament()
+    public async Task IsUserRegisteredAsync_ReturnsFalse_WhenOtherUserRegisteredForTournament()
     {
         // Arrange
         var UserId = "test-client-id";
@@ -597,7 +597,7 @@ public class TournamentServiceTests
     }
 
     [Test]
-    public async Task ReturnsTrue_EvenIfTournamentIsDeleted()
+    public async Task IsUserRegisteredAsync_ReturnsTrue_EvenIfTournamentIsDeleted()
     {
         // Arrange
         var UserId = "test-client-id";

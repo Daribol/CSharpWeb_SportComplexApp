@@ -44,7 +44,7 @@ public class FacilityServiceTests
     }
 
     [Test]
-    public async Task Returns_Only_NotDeleted_Facilities()
+    public async Task GetAllAsync_Returns_Only_NotDeleted_Facilities()
     {
         // Act
         var result = (await _service.GetAllAsync()).ToList();
@@ -55,7 +55,7 @@ public class FacilityServiceTests
     }
 
     [Test]
-    public async Task SportCount_Excludes_Deleted_Sports()
+    public async Task GetAllAsync_SportCount_Excludes_Deleted_Sports()
     {
         // Act
         var result = (await _service.GetAllAsync()).ToList();
@@ -71,7 +71,7 @@ public class FacilityServiceTests
     }
 
     [Test]
-    public async Task Maps_Id_And_Name_Correctly()
+    public async Task GetAllAsync_Maps_Id_And_Name_Correctly()
     {
         // Act
         var result = (await _service.GetAllAsync()).OrderBy(r => r.Id).ToList();
@@ -86,7 +86,7 @@ public class FacilityServiceTests
     }
 
     [Test]
-    public async Task Deleted_Facility_Is_Excluded_Even_If_Has_Active_Sports()
+    public async Task GetAllAsync_Deleted_Facility_Is_Excluded_Even_If_Has_Active_Sports()
     {
         // Act
         var result = (await _service.GetAllAsync()).ToList();
@@ -96,7 +96,7 @@ public class FacilityServiceTests
     }
 
     [Test]
-    public async Task Returns_Empty_When_AllFacilitiesDeleted()
+    public async Task GetAllAsync_Returns_Empty_When_AllFacilitiesDeleted()
     {
         // Arrange
         foreach (var facility in _context.Facilities)
@@ -167,7 +167,7 @@ public class FacilityServiceTests
     }
 
     [Test]
-    public async Task ReturnsTrue_WhenFacilityWithNameExists_AndIsNotDeleted()
+    public async Task ExistsAsync_ReturnsTrue_WhenFacilityWithNameExists_AndIsNotDeleted()
     {
         // Act
         var exists = await _service.ExistsAsync("Main Arena");
@@ -177,7 +177,7 @@ public class FacilityServiceTests
     }
 
     [Test]
-    public async Task ReturnsFalse_WhenFacilityNameDoesNotExist()
+    public async Task ExistsAsync_ReturnsFalse_WhenFacilityNameDoesNotExist()
     {
         // Act
         var exists = await _service.ExistsAsync("Non Existing Facility");
@@ -187,7 +187,7 @@ public class FacilityServiceTests
     }
 
     [Test]
-    public async Task ReturnsFalse_WhenFacilityWithNameIsDeleted()
+    public async Task ExistsAsync_ReturnsFalse_WhenFacilityWithNameIsDeleted()
     {
         // Act
         var exists = await _service.ExistsAsync("Old Stadium");
@@ -197,7 +197,7 @@ public class FacilityServiceTests
     }
 
     [Test]
-    public async Task NameMatch_IsCaseSensitive_ByDefault()
+    public async Task ExistsAsync_NameMatch_IsCaseSensitive_ByDefault()
     {
         // Act
         var existsLower = await _service.ExistsAsync("main arena");
@@ -207,7 +207,7 @@ public class FacilityServiceTests
     }
 
     [Test]
-    public async Task ReturnsModel_WhenFacilityExists_AndNotDeleted()
+    public async Task GetFacilityForEditAsync_ReturnsModel_WhenFacilityExists_AndNotDeleted()
     {
         // Act
         var vm = await _service.GetFacilityForEditAsync(1);
@@ -218,7 +218,7 @@ public class FacilityServiceTests
     }
 
     [Test]
-    public async Task ReturnsNull_WhenFacilityIsDeleted()
+    public async Task GetFacilityForEditAsync_ReturnsNull_WhenFacilityIsDeleted()
     {
         // Act
         var vm = await _service.GetFacilityForEditAsync(3);
@@ -228,7 +228,7 @@ public class FacilityServiceTests
     }
 
     [Test]
-    public async Task ReturnsNull_WhenFacilityDoesNotExist()
+    public async Task GetFacilityForEditAsync_ReturnsNull_WhenFacilityDoesNotExist()
     {
         // Act
         var vm = await _service.GetFacilityForEditAsync(999);
@@ -238,7 +238,7 @@ public class FacilityServiceTests
     }
 
     [Test]
-    public async Task MapsOnly_Name_Field_AsExpected()
+    public async Task GetFacilityForEditAsync_MapsOnly_Name_Field_AsExpected()
     {
         // Act
         var vm = await _service.GetFacilityForEditAsync(4);
@@ -306,7 +306,7 @@ public class FacilityServiceTests
     }
 
     [Test]
-    public async Task ReturnsModel_WhenFacilityExistsAndNotDeleted()
+    public async Task GetFacilityForDeleteAsync_ReturnsModel_WhenFacilityExistsAndNotDeleted()
     {
         // Act
         var vm = await _service.GetFacilityForDeleteAsync(1);
@@ -318,7 +318,7 @@ public class FacilityServiceTests
     }
 
     [Test]
-    public async Task CorrectlyMaps_Id_And_Name()
+    public async Task GetFacilityForDeleteAsync_CorrectlyMaps_Id_And_Name()
     {
         // Act
         var vm = await _service.GetFacilityForDeleteAsync(4);
@@ -343,7 +343,7 @@ public class FacilityServiceTests
     [Test]
     public void DeleteAsync_Throws_WhenFacilityHasAnySports_Facility1()
     {
-        // Arrange: Facility 1 има поне един спорт
+        // Arrange
 
         // Act + Assert
         Assert.ThrowsAsync<InvalidOperationException>(() => _service.DeleteAsync(1));
@@ -353,9 +353,19 @@ public class FacilityServiceTests
     }
 
     [Test]
+    public async Task GetFacilityForDeleteAsync_ReturnsNull_WhenFacilityIsDeleted()
+    {
+        // Act
+        var vm = await _service.GetFacilityForDeleteAsync(3);
+
+        // Assert
+        Assert.IsNull(vm);
+    }
+
+    [Test]
     public void DeleteAsync_Throws_WhenFacilityHasAnySports_Facility4()
     {
-        // Arrange: Facility 4 има 2 спорта
+        // Arrange
 
         // Act + Assert
         Assert.ThrowsAsync<InvalidOperationException>(() => _service.DeleteAsync(4));
