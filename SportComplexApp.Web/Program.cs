@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using SportComplexApp.Data;
@@ -39,7 +40,10 @@ cfg.LoginPath = "/Identity/Account/Login");
 builder.Services.AddSingleton<TimeProvider>(TimeProvider.System);
 
 builder.Services.AddRazorPages();
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews(cfg =>
+{
+    cfg.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
+});
 
 builder.Services.AddScoped<ISportService, SportService>();
 builder.Services.AddScoped<ISpaService, SportComplexApp.Services.Data.SpaService>();
