@@ -12,10 +12,12 @@ namespace SportComplexApp.Services.Data
     public class SpaService : ISpaService
     {
         private readonly SportComplexDbContext context;
+        private readonly TimeProvider time;
 
-        public SpaService(SportComplexDbContext context)
+        public SpaService(SportComplexDbContext context, TimeProvider timeProvider)
         {
             this.context = context;
+            this.time = timeProvider ?? TimeProvider.System;
         }
 
         public async Task<IEnumerable<SpaServiceViewModel>> GetAllSpaServicesAsync()
@@ -99,7 +101,8 @@ namespace SportComplexApp.Services.Data
                 TotalPages = totalPages,
                 SearchQuery = searchQuery,
                 MinDuration = minDuration,
-                MaxDuration = maxDuration
+                MaxDuration = maxDuration,
+                PageSize = spaPerPage
             };
         }
 
@@ -127,12 +130,14 @@ namespace SportComplexApp.Services.Data
                 return null;
             }
 
+            var now = time.GetLocalNow().DateTime;
+
             return new SpaReservationFormViewModel
             {
                 SpaServiceId = service.Id,
                 SpaServiceName = service.Name,
                 ImageUrl = service.ImageUrl,
-                ReservationDate = DateTime.Now.AddDays(1)
+                ReservationDate = now.AddDays(1)
             };
         }
 
@@ -142,6 +147,7 @@ namespace SportComplexApp.Services.Data
                 .FirstOrDefaultAsync(s => s.Id == model.SpaServiceId && !s.IsDeleted);
 
             var reservationTime = model.ReservationDate;
+            var now = time.GetLocalNow().DateTime;
 
             if (reservationTime.TimeOfDay < ApplicationConstants.OpeningTime
                 || reservationTime.TimeOfDay >= ApplicationConstants.ClosingTime)
@@ -149,19 +155,18 @@ namespace SportComplexApp.Services.Data
                 throw new InvalidOperationException(ReservationOutsideWorkingHours);
             }
 
-            if (reservationTime > DateTime.Now.AddDays(ApplicationConstants.MaxReservationDaysInAdvance))
+            if (reservationTime > now.AddDays(ApplicationConstants.MaxReservationDaysInAdvance))
             {
                 throw new InvalidOperationException(ReservationTooFarInFuture);
             }
 
-            var now = DateTime.Now;
 
-            if (model.ReservationDate < now)
+            if (reservationTime < now)
             {
                 throw new InvalidOperationException(ReservationInPast);
             }
 
-            if (model.ReservationDate < now.AddHours(1))
+            if (reservationTime < now.AddHours(1))
             {
                 throw new InvalidOperationException(ReservationTooSoon);
             }
@@ -248,7 +253,7 @@ namespace SportComplexApp.Services.Data
 
         public async Task DeleteExpiredSpaReservationsAsync(string userId)
         {
-            var now = DateTime.Now;
+            var now = time.GetLocalNow().DateTime;
 
             var expiredSpaReservations = await context.SpaReservations
                 .Where(r => r.ClientId == userId &&

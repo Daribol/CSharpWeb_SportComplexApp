@@ -233,7 +233,7 @@ namespace SportComplexApp.Services
 
         public async Task DeleteExpiredReservationsAsync(string userId)
         {
-            var now = DateTime.Now;
+            var now = time.GetLocalNow().DateTime;
 
             var expired = await context.Reservations
                 .Where(r => r.ClientId == userId &&
