@@ -3,102 +3,182 @@
 @{
     ViewData["Title"] = "Welcome to the Sport Complex";
 }
+<link rel="stylesheet" href="~/css/neon-theme.css" asp-append-version="true" />
+<div class="container mt-4">
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
-
-<div class="container py-5 text-center bg-light rounded shadow-sm mb-5">
-    <h1 class="display-4 fw-bold mb-3">Welcome to SportComplexApp</h1>
-    <p class="lead">
-        Discover a world of fitness, wellness, and recreation in one place.
-        Book your favorite sports, connect with professional trainers,
-        and relax with our premium spa services – all tailored for your lifestyle.
-    </p>
-    <a href="/Sport/All" class="btn btn-primary btn-lg mt-3">Get Started</a>
-</div>
-
-
-<div class="container mt-5">
-    <div class="row text-center mb-4">
-        <h2>Explore Our Services</h2>
+    <!-- HERO -->
+    <div class="position-relative rounded-4 overflow-hidden shadow-lg mb-5 home-hero">
+        <div class="ratio ratio-21x9"></div>
+        <div class="position-absolute top-50 start-50 translate-middle text-center px-3 px-md-5">
+            <h1 class="display-5 fw-bold text-white mb-3">Welcome to SportComplexApp</h1>
+            <p class="lead text-white-50 mb-3">
+                Discover fitness, trainers & premium spa — all in one place.
+            </p>
+            <a href="/Sport/All" class="btn btn-neon btn-lg rounded-pill">
+                <i class="bi bi-rocket-takeoff me-1"></i> Get Started
+            </a>
+        </div>
     </div>
 
-    <div class="row">
+    <!-- EXPLORE -->
+    <h2 class="mb-4 text-center" style="color:#00ffc8;">Explore Our Services</h2>
+
+    <div class="row g-4">
         <!-- Sports -->
-        <div class="col-md-4">
-            <h4>Sports</h4>
-            <div id="sportsCarousel" class="carousel slide" data-bs-ride="carousel">
-                <div class="carousel-inner">
-                    @for (int i = 0; i < Model.Sports.Count(); i++)
-                    {
-                        var sport = Model.Sports.ElementAt(i);
-                        <div class="carousel-item @(i == 0 ? "active" : "")">
-                            <img src="@sport.ImageUrl" class="d-block w-100 rounded" alt="@sport.Name" />
-                            <div class="carousel-caption d-none d-md-block">
-                                <h5>@sport.Name</h5>
-                            </div>
-                        </div>
-                    }
+        <div class="col-12 col-lg-4">
+            <div class="card card-dark border-0 shadow-sm">
+                <div class="card-header bg-transparent border-0 d-flex align-items-center justify-content-between">
+                    <h4 class="mb-0 text-white">Sports</h4>
+                    <a asp-controller="Sport" asp-action="All" class="btn btn-outline-neon btn-sm">View all</a>
                 </div>
-                <button class="carousel-control-prev" type="button" data-bs-target="#sportsCarousel" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon"></span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#sportsCarousel" data-bs-slide="next">
-                    <span class="carousel-control-next-icon"></span>
-                </button>
+                @if (Model.Sports?.Any() == true)
+                {
+                    <div id="sportsCarousel" class="carousel slide home-carousel" data-bs-ride="carousel">
+                        <div class="carousel-inner">
+                            @for (int i = 0; i < Model.Sports.Count(); i++)
+                            {
+                                var sport = Model.Sports.ElementAt(i);
+                                <div class="carousel-item @(i == 0 ? "active" : "")">
+                                    <div class="ratio ratio-16x9 rounded-bottom home-slide"
+                                         style="background-image:url('@sport.ImageUrl');">
+                                        <div class="home-caption">
+                                            <h5 class="mb-0">@sport.Name</h5>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#sportsCarousel" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon"></span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#sportsCarousel" data-bs-slide="next">
+                            <span class="carousel-control-next-icon"></span>
+                        </button>
+                    </div>
+                }
+                else
+                {
+                    <div class="p-4 text-muted">No sports to show.</div>
+                }
             </div>
         </div>
 
         <!-- Trainers -->
-        <div class="col-md-4">
-            <h4>Trainers</h4>
-            <div id="trainersCarousel" class="carousel slide" data-bs-ride="carousel">
-                <div class="carousel-inner">
-                    @for (int i = 0; i < Model.Trainers.Count(); i++)
-                    {
-                        var trainer = Model.Trainers.ElementAt(i);
-                        <div class="carousel-item @(i == 0 ? "active" : "")">
-                            <img src="@trainer.ImageUrl" class="d-block w-100 rounded" alt="@trainer.FullName" />
-                            <div class="carousel-caption d-none d-md-block">
-                                <h5>@trainer.FullName</h5>
-                            </div>
-                        </div>
-                    }
+        <div class="col-12 col-lg-4">
+            <div class="card card-dark border-0 shadow-sm">
+                <div class="card-header bg-transparent border-0 d-flex align-items-center justify-content-between">
+                    <h4 class="mb-0 text-white">Trainers</h4>
+                    <a asp-controller="Trainer" asp-action="All" class="btn btn-outline-neon btn-sm">View all</a>
                 </div>
-                <button class="carousel-control-prev" type="button" data-bs-target="#trainersCarousel" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon"></span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#trainersCarousel" data-bs-slide="next">
-                    <span class="carousel-control-next-icon"></span>
-                </button>
+                @if (Model.Trainers?.Any() == true)
+                {
+                    <div id="trainersCarousel" class="carousel slide home-carousel" data-bs-ride="carousel">
+                        <div class="carousel-inner">
+                            @for (int i = 0; i < Model.Trainers.Count(); i++)
+                            {
+                                var trainer = Model.Trainers.ElementAt(i);
+                                <div class="carousel-item @(i == 0 ? "active" : "")">
+                                    <div class="ratio ratio-16x9 rounded-bottom home-slide"
+                                         style="background-image:url('@trainer.ImageUrl');">
+                                        <div class="home-caption">
+                                            <h5 class="mb-0">@trainer.FullName</h5>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#trainersCarousel" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon"></span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#trainersCarousel" data-bs-slide="next">
+                            <span class="carousel-control-next-icon"></span>
+                        </button>
+                    </div>
+                }
+                else
+                {
+                    <div class="p-4 text-muted">No trainers to show.</div>
+                }
             </div>
         </div>
 
-        <!-- Spa Procedures -->
-        <div class="col-md-4">
-            <h4>Spa Procedures</h4>
-            <div id="spaCarousel" class="carousel slide" data-bs-ride="carousel">
-                <div class="carousel-inner">
-                    @for (int i = 0; i < Model.SpaProcedures.Count(); i++)
-                    {
-                        var spa = Model.SpaProcedures.ElementAt(i);
-                        <div class="carousel-item @(i == 0 ? "active" : "")">
-                            <img src="@spa.ImageUrl" class="d-block w-100 rounded" alt="@spa.Name" />
-                            <div class="carousel-caption d-none d-md-block">
-                                <h5>@spa.Name</h5>
-                            </div>
-                        </div>
-                    }
+        <!-- Spa -->
+        <div class="col-12 col-lg-4">
+            <div class="card card-dark border-0 shadow-sm">
+                <div class="card-header bg-transparent border-0 d-flex align-items-center justify-content-between">
+                    <h4 class="mb-0 text-white">Spa Procedures</h4>
+                    <a asp-controller="Spa" asp-action="All" class="btn btn-outline-neon btn-sm">View all</a>
                 </div>
-                <button class="carousel-control-prev" type="button" data-bs-target="#spaCarousel" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon"></span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#spaCarousel" data-bs-slide="next">
-                    <span class="carousel-control-next-icon"></span>
-                </button>
+                @if (Model.SpaProcedures?.Any() == true)
+                {
+                    <div id="spaCarousel" class="carousel slide home-carousel" data-bs-ride="carousel">
+                        <div class="carousel-inner">
+                            @for (int i = 0; i < Model.SpaProcedures.Count(); i++)
+                            {
+                                var spa = Model.SpaProcedures.ElementAt(i);
+                                <div class="carousel-item @(i == 0 ? "active" : "")">
+                                    <div class="ratio ratio-16x9 rounded-bottom home-slide"
+                                         style="background-image:url('@spa.ImageUrl');">
+                                        <div class="home-caption">
+                                            <h5 class="mb-0">@spa.Name</h5>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#spaCarousel" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon"></span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#spaCarousel" data-bs-slide="next">
+                            <span class="carousel-control-next-icon"></span>
+                        </button>
+                    </div>
+                }
+                else
+                {
+                    <div class="p-4 text-muted">No spa procedures to show.</div>
+                }
             </div>
         </div>
     </div>
 </div>
+
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <style>
+        .home-hero {
+            background-size: cover;
+            background-position: center;
+        }
+
+        .home-carousel .carousel-inner {
+            border-bottom-left-radius: 1rem;
+            border-bottom-right-radius: 1rem;
+            overflow: hidden;
+        }
+
+        .home-slide {
+            background-size: cover;
+            background-position: center;
+        }
+
+        .home-caption {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            padding: .75rem 1rem;
+            background: linear-gradient(180deg, transparent, rgba(0,0,0,.65));
+            color: #fff;
+        }
+
+        .carousel-control-prev-icon,
+        .carousel-control-next-icon {
+            filter: invert(1) drop-shadow(0 0 4px rgba(0,255,200,.8));
+        }
+
+        .text-white-50 {
+            color: rgba(255,255,255,.7) !important;
+        }
+    </style>
 }

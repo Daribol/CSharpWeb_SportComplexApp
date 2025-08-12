@@ -3,10 +3,11 @@
 @{
     ViewData["Title"] = "Trainers";
 }
+<link rel="stylesheet" href="~/css/neon-theme.css" asp-append-version="true" />
 
 <div class="container mt-4">
-    <h2 class="mb-4 text-center text-primary">Trainers for This Sport</h2>
-    <hr />
+    <h2 class="mb-4 text-center" style="color:#00ffc8;">Trainers for This Sport</h2>
+    <hr class="mb-4" style="border-color: rgba(255,255,255,.08);" />
 
     @if (!Model.Any())
     {
@@ -20,33 +21,41 @@
             @foreach (var trainer in Model)
             {
                 <div class="col">
-                    <div class="card h-100 shadow-sm border-0">
-                        <img src="@trainer.ImageUrl"
-                             class="card-img-top rounded-top"
-                             alt="@trainer.Name @trainer.LastName"
-                             style="height: 250px; object-fit: cover;" />
+                    <div class="card card-dark hover h-100 border-0">
+                        @if (!string.IsNullOrWhiteSpace(trainer.ImageUrl))
+                        {
+                            <div class="cover ratio ratio-16x9" style="background-image:url('@trainer.ImageUrl');"></div>
+                        }
+                        else
+                        {
+                            <div class="cover cover--placeholder ratio ratio-16x9 d-flex align-items-center justify-content-center">
+                                <i class="bi bi-person-bounding-box display-6 text-muted"></i>
+                            </div>
+                        }
 
                         <div class="card-body d-flex flex-column">
-                            <h5 class="card-title text-center">@trainer.Name @trainer.LastName</h5>
+                            <h5 class="card-title text-center mb-2">@trainer.Name @trainer.LastName</h5>
 
-                            <p class="card-text">
-                                <strong>Sports:</strong>
-                                @if (trainer.Sports.Any())
+                            <div class="mb-3 text-center">
+                                @if (trainer.Sports != null && trainer.Sports.Any())
                                 {
-                                    @string.Join(", ", trainer.Sports)
+                                    foreach (var sport in trainer.Sports)
+                                    {
+                                        <span class="badge badge-sport me-1 mb-1">@sport</span>
+                                    }
                                 }
                                 else
                                 {
-                                    <span>None</span>
+                                    <span class="text-muted">No specialization</span>
                                 }
-                            </p>
+                            </div>
 
                             <div class="mt-auto">
                                 <a asp-controller="Trainer"
                                    asp-action="Details"
                                    asp-route-id="@trainer.Id"
                                    asp-route-sportId="@ViewBag.SportId"
-                                   class="btn btn-outline-primary btn-sm w-100">
+                                   class="btn btn-neon btn-sm w-100">
                                     <i class="bi bi-person-lines-fill me-1"></i> View Details
                                 </a>
                             </div>

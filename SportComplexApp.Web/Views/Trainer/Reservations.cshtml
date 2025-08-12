@@ -4,63 +4,82 @@
 @{
     ViewData["Title"] = "My Reservations";
 }
+<link rel="stylesheet" href="~/css/neon-theme.css" asp-append-version="true" />
+<div class="container mt-4">
+    <h2 class="mb-4 text-center" style="color:#00ffc8;">Upcoming Sessions</h2>
 
-<h2 class="mb-4 text-center">Upcoming Sessions</h2>
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
 
-@if (TempData["SuccessMessage"] != null)
-{
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        @TempData["SuccessMessage"]
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-}
-
-@if (TempData["ErrorMessage"] != null)
-{
-    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        @TempData["ErrorMessage"]
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-}
-
-@if (!Model.Any())
-{
-    <div class="alert alert-info text-center">You have no upcoming training sessions.</div>
-}
-else
-{
-    <div class="table-responsive">
-        <table class="table table-bordered table-striped align-middle">
-            <thead class="table-light">
-                <tr>
-                    <th>Client</th>
-                    <th>Sport</th>
-                    <th>Start Time</th>
-                    <th>Duration</th>
-                    <th>Participants</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var res in Model)
-                {
+    @if (!Model.Any())
+    {
+        <div class="card card-dark text-center p-5 border-0">
+            <div class="display-6 mb-2">🗓️</div>
+            <h5 class="mb-1">You have no upcoming training sessions.</h5>
+            <p class="text-muted mb-0">When you book one, it will appear here.</p>
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table table-neon table-hover align-middle">
+                <thead>
                     <tr>
-                        <td>@res.ClientName</td>
-                        <td>@res.SportName</td>
-                        <td>@res.ReservationDate.ToString("f")</td>
-                        <td>@res.Duration min</td>
-                        <td>@res.NumberOfPeople</td>
-                        <td>
-                            <form asp-action="CancelReservation" method="post" asp-controller="Trainer" onsubmit="return confirm('Are you sure you want to cancel this reservation?');">
-                                <input type="hidden" name="reservationId" value="@res.Id" />
-                                <button type="submit" class="btn btn-sm btn-outline-danger">
-                                    <i class="bi bi-x-circle"></i> Cancel
-                                </button>
-                            </form>
-                        </td>
+                        <th>Client</th>
+                        <th>Sport</th>
+                        <th>Start Time</th>
+                        <th>Duration</th>
+                        <th>Participants</th>
+                        <th class="text-end">Actions</th>
                     </tr>
-                }
-            </tbody>
-        </table>
-    </div>
+                </thead>
+                <tbody>
+                    @foreach (var res in Model)
+                    {
+                        <tr>
+                            <td>@res.ClientName</td>
+                            <td>
+                                <span class="badge badge-sport">@res.SportName</span>
+                            </td>
+                            <td>@res.ReservationDate.ToString("dd MMM yyyy, HH:mm")</td>
+                            <td><span class="badge badge-soft">@res.Duration min</span></td>
+                            <td><span class="badge badge-soft">@res.NumberOfPeople</span></td>
+                            <td class="text-end">
+                                <form asp-action="CancelReservation" method="post" asp-controller="Trainer"
+                                      onsubmit="return confirm('Are you sure you want to cancel this reservation?');" class="d-inline">
+                                    <input type="hidden" name="reservationId" value="@res.Id" />
+                                    <button type="submit" class="btn btn-outline-neon btn-sm">
+                                        <i class="bi bi-x-circle me-1"></i> Cancel
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <style>
+        .table-neon tbody tr:hover {
+            background: rgba(0,255,200,0.08);
+            color: #e6e6e6;
+            box-shadow: inset 0 0 8px rgba(0,255,200,.3);
+        }
+    </style>
 }

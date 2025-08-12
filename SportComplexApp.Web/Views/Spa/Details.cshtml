@@ -8,31 +8,31 @@
     <div class="row g-4 align-items-center">
         <!-- Image -->
         <div class="col-md-6">
-            <div class="border rounded shadow-sm overflow-hidden">
+            <div class="border rounded shadow-sm overflow-hidden neon-border">
                 <img src="@Model.ImageUrl" alt="@Model.Name" class="img-fluid w-100" style="object-fit: cover; height: 350px;" />
             </div>
         </div>
 
         <!-- Details -->
         <div class="col-md-6">
-            <h2 class="mb-3">@Model.Name</h2>
-            <ul class="list-group list-group-flush mb-3">
-                <li class="list-group-item"><strong>Duration:</strong> @Model.Duration minutes</li>
-                <li class="list-group-item"><strong>Price:</strong> @Model.Price лв</li>
+            <h2 class="mb-3" style="color:#00ffc8;">@Model.Name</h2>
+            <ul class="list-group list-group-flush mb-3 neon-list">
+                <li class="list-group-item bg-dark text-light"><strong>Duration:</strong> @Model.Duration minutes</li>
+                <li class="list-group-item bg-dark text-light"><strong>Price:</strong> @Model.Price лв</li>
             </ul>
 
-            <p class="text-muted mb-3">@Model.Description</p>
+            <p class="text-light-50 mb-3">@Model.Description</p>
 
             <div class="mb-3">
-                <h5>Procedure Details</h5>
-                <p>@Model.ProcedureDetails</p>
+                <h5 style="color:#00ffc8;">Procedure Details</h5>
+                <p class="text-light">@Model.ProcedureDetails</p>
             </div>
 
             <div class="d-flex gap-2 mt-4">
-                <a asp-controller="Spa" asp-action="Reserve" asp-route-id="@Model.Id" class="btn btn-outline-success">
+                <a asp-controller="Spa" asp-action="Reserve" asp-route-id="@Model.Id" class="btn btn-neon">
                     <i class="bi bi-calendar-check"></i> Reserve
                 </a>
-                <a asp-action="All" class="btn btn-outline-secondary">
+                <a asp-action="All" class="btn btn-outline-neon">
                     <i class="bi bi-arrow-left-circle"></i> Back
                 </a>
             </div>
@@ -42,4 +42,18 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <style>
+        .neon-border {
+            border: 1px solid rgba(0,255,200,.4);
+            box-shadow: 0 0 12px rgba(0,255,200,.3);
+        }
+
+        .neon-list .list-group-item {
+            border: 1px solid rgba(0,255,200,.25);
+        }
+
+        .text-light-50 {
+            color: rgba(255,255,255,0.65);
+        }
+    </style>
 }

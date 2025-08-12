@@ -29,7 +29,6 @@ namespace SportComplexApp.Web.ViewModels.Sport
         public int MaxDuration { get; set; }
 
         [Required]
-        [Range(NumberOfPeopleMinValue, NumberOfPeopleMaxValue)]
         [Display(Name = "Number of People")]
         public int NumberOfPeople { get; set; }
 

@@ -16,36 +16,166 @@
     <link rel="stylesheet" href="~/SportComplexApp.Web.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background-color: #121212;
+        }
+
+        main {
+            flex-grow: 1;
+            padding-top: 4.5rem;
+        }
+
+        /* Navbar Dark + Neon */
+        .sc-navbar {
+            background: linear-gradient(135deg, #0a0a0a, #1a1a1a);
+            border-bottom: 2px solid #00ffc8;
+            transition: box-shadow 0.3s ease-in-out;
+        }
+
+            .sc-navbar .nav-link,
+            .sc-navbar .navbar-brand {
+                color: #e0e0e0 !important;
+            }
+
+                .sc-navbar .nav-link:hover {
+                    color: #00ffc8 !important;
+                }
+
+        .glow {
+            animation: neonPulse 1.5s infinite alternate;
+        }
+        @@keyframes neonPulse {
+            0%
+
+        {
+            box-shadow: 0 0 10px #00ffc8, 0 0 20px rgba(0, 255, 200, 0.5);
+        }
+
+        100% {
+            box-shadow: 0 0 20px #00ffc8, 0 0 40px rgba(0, 255, 200, 0.8);
+        }
+
+        }
+
+        /* Footer Dark Neon */
+        .sc-footer {
+            background: #000;
+            color: rgba(255,255,255,.85);
+            transition: box-shadow 0.3s ease-in-out;
+        }
+
+            .sc-footer a {
+                color: rgba(255,255,255,.85);
+                text-decoration: none;
+            }
+
+                .sc-footer a:hover {
+                    color: #00ffc8;
+                }
+
+        .sc-title {
+            color: #00ffc8;
+            margin-bottom: .5rem;
+        }
+
+        .sc-muted {
+            color: rgba(255,255,255,.65);
+        }
+
+        /* Neon Logo */
+        .sc-logo {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            color: #000;
+            background: #00ffc8;
+            box-shadow: 0 0 15px #00ffc8;
+        }
+
+        .sc-brand {
+            color: #fff;
+        }
+
+        /* Social buttons with neon hover */
+        .sc-social {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255,255,255,.08);
+            color: #fff;
+            transition: all .2s ease-in-out;
+        }
+
+            .sc-social:hover {
+                background: #00ffc8;
+                color: #000;
+                box-shadow: 0 0 10px #00ffc8;
+            }
+
+        /* Neon button */
+        .sc-btn-gradient {
+            background: #00ffc8;
+            border: 0;
+            color: #000;
+            font-weight: 600;
+        }
+
+            .sc-btn-gradient:hover {
+                filter: brightness(1.1);
+                color: #000;
+                box-shadow: 0 0 10px #00ffc8;
+            }
+
+        /* Footer bottom bar */
+        .sc-footbar {
+            border-top: 1px solid rgba(255,255,255,.08);
+            padding: .75rem 0;
+            color: rgba(255,255,255,.7);
+        }
+    </style>
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-dark sc-navbar fixed-top shadow-sm">
             <div class="container-fluid">
-                @if(User.IsInRole("Admin"))
+                @if (User.IsInRole("Admin"))
                 {
-                    <a class="navbar-brand" asp-area="Admin" asp-controller="Home" asp-action="Index">SportComplexWebApp</a>
+                    <a class="navbar-brand fw-bold" asp-area="Admin" asp-controller="Home" asp-action="Index">SportComplex</a>
                 }
                 else
                 {
-                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">SportComplexWebApp</a>
+                    <a class="navbar-brand fw-bold" asp-area="" asp-controller="Home" asp-action="Index">SportComplex</a>
                 }
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
+                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Sport" asp-action="All">Sports</a>
+                            <a class="nav-link" asp-area="" asp-controller="Sport" asp-action="All">Sports</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Spa" asp-action="All">Spa Service</a>
+                            <a class="nav-link" asp-area="" asp-controller="Spa" asp-action="All">Spa Service</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Tournament" asp-action="All">Tournaments</a>
+                            <a class="nav-link" asp-area="" asp-controller="Tournament" asp-action="All">Tournaments</a>
+                        </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle text-dark" href="#" id="reservationsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 My Reservations
@@ -56,14 +186,14 @@
                                 <li><a class="dropdown-item" asp-controller="Tournament" asp-action="MyTournaments">My Tournaments</a></li>
                             </ul>
                         </li>
-                            @if (User.IsInRole("Trainer"))
-                            {
+                        @if (User.IsInRole("Trainer"))
+                        {
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Trainer" asp-action="Reservations">Trainer Dashboard</a>
                             </li>
-                            }
-                            @if (User.IsInRole("Admin"))
-                            {
+                        }
+                        @if (User.IsInRole("Admin"))
+                        {
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle text-dark" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     Admin
@@ -77,27 +207,74 @@
                                     <li><a class="dropdown-item" asp-area="Admin" asp-controller="FacilityManagement" asp-action="All">Facilities</a></li>
                                 </ul>
                             </li>
-                            }
+                        }
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>
             </div>
         </nav>
     </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
+    <main role="main" class="pb-3 container">
+        @RenderBody()
+    </main>
+
+    <footer class="sc-footer mt-auto">
+        <div class="container py-4">
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <h5 class="sc-title">SportComplex</h5>
+                    <p class="sc-muted">Manage sports, spa services, tournaments, and more with a neon touch.</p>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <h5 class="sc-title">Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a asp-controller="Sport" asp-action="All">Sports</a></li>
+                        <li><a asp-controller="Spa" asp-action="All">Spa Services</a></li>
+                        <li><a asp-controller="Tournament" asp-action="All">Tournaments</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <h5 class="sc-title">Follow Us</h5>
+                    <div class="d-flex gap-2">
+                        <a href="#" class="sc-social"><i class="bi bi-facebook"></i></a>
+                        <a href="#" class="sc-social"><i class="bi bi-instagram"></i></a>
+                        <a href="#" class="sc-social"><i class="bi bi-twitter"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="sc-footbar text-center">
             &copy; @footerNote - SportComplexWebApp
         </div>
     </footer>
+    <link rel="stylesheet" href="~/css/neon-theme.css" asp-append-version="true" />
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+
     @await RenderSectionAsync("Scripts", required: false)
+
+    <script>
+        document.addEventListener("scroll", function () {
+            const navbar = document.querySelector(".sc-navbar");
+            const footer = document.querySelector(".sc-footer");
+
+            // Navbar glow on scroll
+            if (window.scrollY > 10) {
+                navbar.classList.add("glow");
+            } else {
+                navbar.classList.remove("glow");
+            }
+
+            // Footer glow when near bottom
+            const scrollPosition = window.scrollY + window.innerHeight;
+            const footerTop = footer.offsetTop;
+            if (scrollPosition >= footerTop) {
+                footer.classList.add("glow");
+            } else {
+                footer.classList.remove("glow");
+            }
+        });
+    </script>
 </body>
 </html>

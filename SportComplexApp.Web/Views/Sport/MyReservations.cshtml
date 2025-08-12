@@ -5,7 +5,7 @@
 }
 
 <div class="container mt-5">
-    <h2 class="mb-4 text-center text-primary">My Sport Reservations</h2>
+    <h2 class="mb-4 text-center" style="color:#00ffc8;">My Sport Reservations</h2>
 
     @if (TempData["SuccessMessage"] != null)
     {
@@ -17,15 +17,19 @@
 
     @if (!Model.Any())
     {
-        <div class="alert alert-info text-center">
-            <i class="bi bi-info-circle-fill me-2"></i>You have no sport reservations yet.
+        <div class="card" style="background:#151515; border:1px solid rgba(255,255,255,.08); border-radius:1rem;">
+            <div class="card-body text-center p-5">
+                <div class="display-6 mb-2">🗓️</div>
+                <h5 class="mb-1">You have no sport reservations yet.</h5>
+                <p class="text-muted mb-0">Booked sessions will appear here.</p>
+            </div>
         </div>
     }
     else
     {
-        <div class="table-responsive">
-            <table class="table table-hover align-middle border rounded shadow-sm">
-                <thead class="table-primary">
+        <div class="table-responsive shadow-sm">
+            <table class="table align-middle mb-0 sc-table">
+                <thead>
                     <tr>
                         <th>Sport</th>
                         <th>Facility</th>
@@ -42,17 +46,17 @@
                     {
                         <tr>
                             <td class="fw-semibold">@reservation.SportName</td>
-                            <td>@reservation.FacilityName</td>
-                            <td>@reservation.ReservationDateTime.ToString("f")</td>
-                            <td>@reservation.Duration min</td>
-                            <td>@reservation.NumberOfPeople</td>
+                            <td class="text-muted">@reservation.FacilityName</td>
+                            <td>@reservation.ReservationDateTime.ToString("dd MMM yyyy, HH:mm")</td>
+                            <td><span class="badge sc-badge-soft">@reservation.Duration min</span></td>
+                            <td><span class="badge sc-badge-soft">@reservation.NumberOfPeople</span></td>
                             <td>@(string.IsNullOrEmpty(reservation.TrainerName) ? "-" : reservation.TrainerName)</td>
-                            <td>$@reservation.TotalPrice.ToString("F2")</td>
+                            <td>@reservation.TotalPrice.ToString("F2") лв</td>
                             <td class="text-center">
                                 <form asp-action="Cancel" method="post" asp-route-id="@reservation.Id"
                                       onsubmit="return confirm('Are you sure you want to cancel this reservation?');"
                                       class="d-inline">
-                                    <button type="submit" class="btn btn-outline-danger btn-sm">
+                                    <button type="submit" class="btn btn-outline-neon btn-sm">
                                         <i class="bi bi-x-circle"></i> Cancel
                                     </button>
                                 </form>
@@ -67,4 +71,67 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <style>
+        .sc-table {
+            background: #0f0f10;
+            color: #e9ecef;
+            border-collapse: separate;
+            border-spacing: 0;
+            border: 1px solid rgba(255,255,255,.08);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+            .sc-table thead {
+                background: linear-gradient(90deg, #00b3ff, #00ffc8);
+                color: #fff !important;
+                text-transform: uppercase;
+                letter-spacing: .02em;
+            }
+
+                .sc-table thead th {
+                    border: none !important;
+                    padding: .9rem .9rem;
+                    font-weight: 700;
+                    font-size: .85rem;
+                }
+
+            .sc-table tbody td {
+                color: #f1f3f5 !important;
+                border-top: 1px solid rgba(255,255,255,.06) !important;
+                padding: .85rem .9rem;
+                line-height: 1.35;
+                vertical-align: middle;
+            }
+            .sc-table tbody tr:nth-child(even) {
+                background: #121214;
+            }
+
+            .sc-table tbody tr:nth-child(odd) {
+                background: #161618;
+            }
+            .sc-table tbody tr:hover {
+                background: rgba(0,255,200,.12) !important;
+                color: #fff !important;
+            }
+
+        .sc-badge-soft {
+            background: #202024;
+            color: #c9ccd1;
+            border: 1px solid rgba(255,255,255,.08);
+        }
+
+        .btn-outline-neon {
+            border: 1px solid #00ffc8;
+            color: #00ffc8;
+            background: transparent;
+            font-weight: 600;
+        }
+
+            .btn-outline-neon:hover {
+                background: #00ffc8;
+                color: #000;
+                box-shadow: 0 0 10px #00ffc8;
+            }
+    </style>
 }

@@ -5,8 +5,8 @@
 }
 
 <div class="d-flex align-items-center justify-content-between mb-4">
-    <h2 class="mb-0">Manage Spa Services</h2>
-    <a asp-action="Add" class="btn btn-success">
+    <h2 class="mb-0 text-neon">Manage Spa Services</h2>
+    <a asp-action="Add" class="btn btn-neon">
         <i class="bi bi-plus-circle"></i> Add New Spa Service
     </a>
 </div>
@@ -15,24 +15,24 @@
 {
     <div class="alert alert-success alert-dismissible fade show" role="alert">
         @TempData["SuccessMessage"]
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     </div>
 }
 @if (TempData["ErrorMessage"] != null)
 {
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
         @TempData["ErrorMessage"]
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     </div>
 }
 
 @if (!Model.Any())
 {
-    <div class="card shadow-sm text-center p-5 bg-light-subtle">
+    <div class="card card-dark text-center p-5 rounded-4 border-0">
         <div class="display-6 mb-2">💆</div>
-        <h5 class="mb-1">No spa services available</h5>
+        <h5 class="mb-1 text-light">No spa services available</h5>
         <p class="text-muted mb-3">Add your first spa service to get started.</p>
-        <a asp-action="Add" class="btn btn-primary">
+        <a asp-action="Add" class="btn btn-neon">
             <i class="bi bi-plus-circle"></i> Add Spa Service
         </a>
     </div>
@@ -43,7 +43,7 @@ else
         @foreach (var spa in Model)
         {
             <div class="col">
-                <div class="card spa-card h-100 shadow-sm border-0">
+                <div class="card card-dark spa-card h-100 border-0">
                     @if (!string.IsNullOrWhiteSpace(spa.ImageUrl))
                     {
                         <div class="spa-cover ratio ratio-16x9"
@@ -57,11 +57,9 @@ else
                     }
 
                     <div class="card-body d-flex flex-column">
-                        <h5 class="card-title mb-1">@spa.Name</h5>
+                        <h5 class="card-title text-light mb-1">@spa.Name</h5>
 
-                        <p class="card-text text-muted small mb-3 clamp-3">
-                            @spa.Description
-                        </p>
+                        <p class="text-muted small mb-3 clamp-3">@spa.Description</p>
 
                         <ul class="list-unstyled small text-muted mb-3">
                             <li><i class="bi bi-cash-coin text-success"></i> @spa.Price.ToString("F2") лв</li>
@@ -90,11 +88,12 @@ else
         .spa-card {
             transition: transform .15s ease, box-shadow .15s ease;
             border-radius: 1rem;
+            background: #121212;
         }
 
             .spa-card:hover {
                 transform: translateY(-3px);
-                box-shadow: 0 .75rem 1.5rem rgba(0,0,0,.1);
+                box-shadow: 0 .75rem 1.5rem rgba(0,255,200,.25);
             }
 
         .spa-cover {
@@ -105,12 +104,23 @@ else
         }
 
         .spa-cover--placeholder {
-            background: linear-gradient(135deg, #f6d365, #fda085);
+            background: linear-gradient(135deg, #43e97b, #38f9d7);
         }
 
-        .card-title {
-            line-height: 1.2;
+        .text-neon {
+            color: #00ffc8;
         }
+
+        .btn-neon {
+            border: 1px solid #00ffc8;
+            color: #00ffc8;
+            background: transparent;
+        }
+
+            .btn-neon:hover {
+                background: #00ffc8;
+                color: #121212;
+            }
 
         .clamp-3 {
             display: -webkit-box;
