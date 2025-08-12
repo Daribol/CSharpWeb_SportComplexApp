@@ -3,6 +3,7 @@ using SportComplexApp.Services.Data;
 using System;
 using SportComplexApp.Data;
 using SportComplexApp.Data.Models;
+using SportComplexApp.Web.ViewModels.Tournament;
 
 namespace SportComplexApp.Tests;
 
@@ -613,6 +614,186 @@ public class TournamentServiceTests
 
         // Assert
         Assert.IsTrue(result);
+    }
+
+    [Test]
+    public async Task AddAsync_IncreasesCountByOne()
+    {
+        var before = await _context.Tournaments.CountAsync();
+
+        await _service.AddAsync(new AddTournamentViewModel
+        {
+            Name = "New Cup",
+            Description = "Desc",
+            StartDate = new DateTime(2026, 9, 1),
+            EndDate = new DateTime(2026, 9, 10),
+            SportId = 1
+        });
+
+        var after = await _context.Tournaments.CountAsync();
+        Assert.That(after, Is.EqualTo(before + 1));
+    }
+
+    [Test]
+    public async Task ExistsAsync_ReturnsTrue_ForExistingActiveName()
+    {
+        var exists = await _service.ExistsAsync("Champions League");
+        Assert.IsTrue(exists);
+    }
+
+    [Test]
+    public async Task ExistsAsync_ReturnsFalse_ForDeletedTournament()
+    {
+        var exists = await _service.ExistsAsync("Local cup"); // IsDeleted = true
+        Assert.IsFalse(exists);
+    }
+
+    [Test]
+    public async Task ExistsAsync_IsCaseSensitive_CurrentImplementation()
+    {
+        var exists = await _service.ExistsAsync("champions league");
+        Assert.IsFalse(exists);
+    }
+
+    [Test]
+    public async Task GetForEditAsync_ReturnsModel_WhenActive()
+    {
+        var vm = await _service.GetForEditAsync(1);
+
+        Assert.IsNotNull(vm);
+        Assert.That(vm!.Id, Is.EqualTo(1));
+        Assert.That(vm.Name, Is.EqualTo("Champions League"));
+        Assert.That(vm.Description, Is.EqualTo("Top clubs"));
+        Assert.That(vm.SportId, Is.EqualTo(1));
+    }
+
+    [Test]
+    public async Task GetForEditAsync_ReturnsNull_WhenDeleted()
+    {
+        var vm = await _service.GetForEditAsync(3); // deleted
+        Assert.IsNull(vm);
+    }
+
+    [Test]
+    public async Task GetForEditAsync_ReturnsNull_WhenNotFound()
+    {
+        var vm = await _service.GetForEditAsync(999);
+        Assert.IsNull(vm);
+    }
+
+    [Test]
+    public async Task EditAsync_UpdatesFields_WhenActive()
+    {
+        var model = new AddTournamentViewModel
+        {
+            Name = "Champions League Updated",
+            Description = "Top clubs ++",
+            StartDate = new DateTime(2026, 1, 5),
+            EndDate = new DateTime(2026, 6, 5),
+            SportId = 2
+        };
+
+        await _service.EditAsync(1, model);
+
+        _context.ChangeTracker.Clear();
+
+        var updated = await _context.Tournaments.SingleAsync(t => t.Id == 1);
+        Assert.That(updated.Name, Is.EqualTo("Champions League Updated"));
+        Assert.That(updated.Description, Is.EqualTo("Top clubs ++"));
+        Assert.That(updated.StartDate, Is.EqualTo(new DateTime(2026, 1, 5)));
+        Assert.That(updated.EndDate, Is.EqualTo(new DateTime(2026, 6, 5)));
+        Assert.That(updated.SportId, Is.EqualTo(2));
+    }
+
+    [Test]
+    public async Task EditAsync_DoesNothing_WhenDeleted()
+    {
+        var before = await _context.Tournaments.AsNoTracking().SingleAsync(t => t.Id == 3);
+
+        await _service.EditAsync(3, new AddTournamentViewModel
+        {
+            Name = "ShouldNotChange",
+            Description = "Nope",
+            StartDate = DateTime.UtcNow,
+            EndDate = DateTime.UtcNow.AddDays(1),
+            SportId = 1
+        });
+
+        var after = await _context.Tournaments.AsNoTracking().SingleAsync(t => t.Id == 3);
+
+        Assert.That(after.Name, Is.EqualTo(before.Name));
+        Assert.That(after.Description, Is.EqualTo(before.Description));
+        Assert.That(after.StartDate, Is.EqualTo(before.StartDate));
+        Assert.That(after.EndDate, Is.EqualTo(before.EndDate));
+        Assert.That(after.SportId, Is.EqualTo(before.SportId));
+    }
+
+    [Test]
+    public async Task EditAsync_DoesNothing_WhenNotFound()
+    {
+        var beforeCount = await _context.Tournaments.CountAsync();
+
+        await _service.EditAsync(999, new AddTournamentViewModel
+        {
+            Name = "X",
+            Description = "Y",
+            StartDate = DateTime.UtcNow,
+            EndDate = DateTime.UtcNow.AddDays(1),
+            SportId = 1
+        });
+
+        var afterCount = await _context.Tournaments.CountAsync();
+        Assert.That(afterCount, Is.EqualTo(beforeCount));
+    }
+
+    [Test]
+    public async Task GetForDeleteAsync_ReturnsModel_WithSportName_WhenActive()
+    {
+        var vm = await _service.GetForDeleteAsync(2); // Wimbledon (Tennis)
+
+        Assert.IsNotNull(vm);
+        Assert.That(vm!.Id, Is.EqualTo(2));
+        Assert.That(vm.Name, Is.EqualTo("Wimbledon"));
+        Assert.That(vm.Sport, Is.EqualTo("Tennis"));
+    }
+
+    [Test]
+    public async Task GetForDeleteAsync_ReturnsNull_WhenDeleted()
+    {
+        var vm = await _service.GetForDeleteAsync(3);
+        Assert.IsNull(vm);
+    }
+
+    [Test]
+    public async Task GetForDeleteAsync_ReturnsNull_WhenNotFound()
+    {
+        var vm = await _service.GetForDeleteAsync(999);
+        Assert.IsNull(vm);
+    }
+
+    [Test]
+    public async Task DeleteAsync_SoftDeletes_WhenActive()
+    {
+        await _service.DeleteAsync(2);
+
+        var t2 = await _context.Tournaments.FindAsync(2);
+        Assert.IsNotNull(t2);
+        Assert.IsTrue(t2!.IsDeleted);
+    }
+
+    [Test]
+    public async Task DeleteAsync_DoesNothing_WhenDeletedOrNotFound()
+    {
+        // already deleted
+        await _service.DeleteAsync(3);
+        var t3 = await _context.Tournaments.FindAsync(3);
+        Assert.IsTrue(t3!.IsDeleted);
+
+        // not found
+        var before = await _context.Tournaments.CountAsync();
+        await _service.DeleteAsync(999);
+        var after = await _context.Tournaments.CountAsync();
+        Assert.That(after, Is.EqualTo(before));
     }
 
     [TearDown]

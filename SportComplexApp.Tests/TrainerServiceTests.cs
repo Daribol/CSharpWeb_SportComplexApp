@@ -211,6 +211,73 @@ public class TrainerServiceTests
     }
 
     [Test]
+    public async Task GetAllPublicAsync_ReturnsAllActiveTrainers_OrderedByNameThenLastName()
+    {
+        var result = (await _service.GetAllPublicAsync(query: null, sportId: null)).ToList();
+
+        Assert.That(result.Select(r => r.Name), Is.EquivalentTo(new[] { "John", "Jane" }));
+
+        var ordered = result.OrderBy(r => r.Name).ThenBy(r => r.LastName).Select(r => (r.Name, r.LastName)).ToList();
+        Assert.That(result.Select(r => (r.Name, r.LastName)).ToList(), Is.EqualTo(ordered));
+    }
+
+    [Test]
+    public async Task GetAllPublicAsync_FiltersBySportId_ReturnsOnlyActiveTrainersLinkedToSport()
+    {
+        var result = (await _service.GetAllPublicAsync(null, 2)).ToList();
+
+        Assert.That(result.Count, Is.EqualTo(1));
+        Assert.That(result[0].Name, Is.EqualTo("Jane"));
+        Assert.That(result[0].LastName, Is.EqualTo("Smith"));
+        CollectionAssert.AreEquivalent(new[] { "Tennis" }, result[0].Sports);
+    }
+
+    [Test]
+    public async Task GetAllPublicAsync_FiltersBySportId_IncludesDeletedSportsInProjection_CurrentImplementation()
+    {
+        var result = (await _service.GetAllPublicAsync(null, 3)).ToList();
+
+        Assert.That(result.Count, Is.EqualTo(1));
+        Assert.That(result[0].Name, Is.EqualTo("John"));
+        Assert.That(result[0].Sports, Does.Contain("Swimming"));
+    }
+
+    [Test]
+    public async Task GetAllPublicAsync_FiltersBySportId_ExcludesDeletedTrainers()
+    {
+        _context.SportTrainers.Add(new SportTrainer { TrainerId = 3, SportId = 1 }); // Mike -> Football
+        await _context.SaveChangesAsync();
+
+        var result = (await _service.GetAllPublicAsync(null, 1)).ToList(); // Football
+
+        Assert.That(result.Count, Is.EqualTo(1));
+        Assert.That(result[0].Name, Is.EqualTo("John"));
+    }
+
+    [Test]
+    public async Task GetAllPublicAsync_WhenSportIdIsProvided_QueryFilterIsIgnored_CurrentImplementation()
+    {
+        var result = (await _service.GetAllPublicAsync("Jane", 1)).ToList();
+
+        Assert.That(result.Count, Is.EqualTo(1));
+        Assert.That(result[0].Name, Is.EqualTo("John"));
+    }
+
+    [Test]
+    public async Task GetAllPublicAsync_ReturnsEmpty_WhenNoMatchesForQuery()
+    {
+        var result = (await _service.GetAllPublicAsync("No Such Name", null)).ToList();
+        Assert.That(result, Is.Empty);
+    }
+
+    [Test]
+    public async Task GetAllPublicAsync_ReturnsEmpty_WhenSportIdHasNoLinkedActiveTrainers()
+    {
+        var result = (await _service.GetAllPublicAsync(null, 999)).ToList();
+        Assert.That(result, Is.Empty);
+    }
+
+    [Test]
     public async Task GetTrainerDetailsAsync_ReturnsCorrectTrainer_WhenExistsAndActive()
     {
         var result = await _service.GetTrainerDetailsAsync(1);
