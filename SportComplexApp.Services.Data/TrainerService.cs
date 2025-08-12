@@ -56,7 +56,48 @@ namespace SportComplexApp.Services.Data
                 .ToListAsync();
         }
 
+        public async Task<IEnumerable<AllTrainersViewModel>> GetAllPublicAsync(string? query, int? sportId)
+        {
+            var trainers = context.Trainers
+                .Where(t => !t.IsDeleted)
+                .Select(t => new AllTrainersViewModel
+                {
+                    Id = t.Id,
+                    Name = t.Name,
+                    LastName = t.LastName,
+                    ImageUrl = t.ImageUrl,
+                    Sports = t.SportTrainers
+                        .Select(st => st.Sport.Name)
+                        .ToList()
+                })
+                .AsQueryable();
 
+            if (!string.IsNullOrWhiteSpace(query))
+            {
+                var qLower = query.Trim().ToLower();
+                trainers = trainers.Where(t =>
+                    (t.Name + " " + t.LastName).ToLower().Contains(qLower));
+            }
+
+            if (sportId.HasValue)
+            {
+                trainers = trainers.Where(t => t.Sports.Any());
+                trainers = context.Trainers
+                    .Where(t => !t.IsDeleted && t.SportTrainers.Any(st => st.SportId == sportId))
+                    .Select(t => new AllTrainersViewModel
+                    {
+                        Id = t.Id,
+                        Name = t.Name,
+                        LastName = t.LastName,
+                        ImageUrl = t.ImageUrl,
+                        Sports = t.SportTrainers.Select(st => st.Sport.Name).ToList()
+                    });
+            }
+
+            return await trainers
+                .OrderBy(t => t.Name).ThenBy(t => t.LastName)
+                .ToListAsync();
+        }
         public async Task<TrainerDetailsViewModel?> GetTrainerDetailsAsync(int trainerId)
         {
             return await context.Trainers

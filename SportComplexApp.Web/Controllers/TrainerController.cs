@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SportComplexApp.Data;
 using SportComplexApp.Data.Models;
+using SportComplexApp.Services;
 using SportComplexApp.Services.Data.Contracts;
 
 namespace SportComplexApp.Web.Controllers
@@ -11,12 +12,14 @@ namespace SportComplexApp.Web.Controllers
     public class TrainerController : BaseController
     {
         private readonly ITrainerService trainerService;
+        private readonly ISportService sportService;
         private readonly UserManager<Client> userManager;
         private readonly SportComplexDbContext context;
 
-        public TrainerController(ITrainerService trainerService, UserManager<Client> userManager, SportComplexDbContext context)
+        public TrainerController(ITrainerService trainerService, ISportService sportService, UserManager<Client> userManager, SportComplexDbContext context)
         {
             this.trainerService = trainerService;
+            this.sportService = sportService;
             this.userManager = userManager;
             this.context = context;
         }
@@ -40,6 +43,17 @@ namespace SportComplexApp.Web.Controllers
 
             ViewBag.SportId = sportId;
             return View(trainers);
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> Browse(string? q = null, int? sportId = null)
+        {
+            var model = await trainerService.GetAllPublicAsync(q, sportId);
+            ViewBag.Sports = await sportService.GetAllAsSelectListAsync();
+            ViewBag.Query = q;
+            ViewBag.SelectedSportId = sportId;
+            return View(model);
         }
 
         [HttpGet]

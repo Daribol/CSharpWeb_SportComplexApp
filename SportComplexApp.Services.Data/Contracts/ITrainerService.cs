@@ -15,6 +15,8 @@ namespace SportComplexApp.Services.Data.Contracts
         //Client-facing
         Task<IEnumerable<AllTrainersViewModel>> GetAllAsync();
         Task<IEnumerable<TrainerHomeViewModel>> GetAllForHomeAsync();
+        Task<IEnumerable<AllTrainersViewModel>> GetAllPublicAsync(string? query, int? sportId);
+
         Task<TrainerDetailsViewModel> GetTrainerDetailsAsync(int trainerId);
         Task<int?> GetTrainerIdByUserId(string userId);
         Task<IEnumerable<AllTrainersViewModel>> GetTrainersBySportIdAsync(int sportId);
