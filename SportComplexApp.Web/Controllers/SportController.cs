@@ -17,6 +17,7 @@ namespace SportComplexApp.Web.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> All(string? searchQuery = null, int? minDuration = null, int? maxDuration = null)
         {
             var sports = await this.sportService
@@ -40,7 +41,6 @@ namespace SportComplexApp.Web.Controllers
 
         [HttpPost]
         [Authorize]
-
         public async Task<IActionResult> Reserve(SportReservationFormViewModel model)
         {
             if (!ModelState.IsValid)

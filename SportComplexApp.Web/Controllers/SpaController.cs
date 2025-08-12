@@ -16,6 +16,7 @@ namespace SportComplexApp.Web.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> All(string? searchQuery = null, int? minDuration = null, int? maxDuration = null, int page = 1)
         {
             const int spaPerPage = 9;
@@ -87,6 +88,7 @@ namespace SportComplexApp.Web.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> Details(int id)
         {
             var reservation = await spaService.GetSpaDetailsByIdAsync(id);

@@ -16,6 +16,7 @@ namespace SportComplexApp.Web.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> All(string? searchQuery = null, string? sport = null)
         {
             var tournaments = await tournamentService.GetAllAsync(searchQuery, sport);
@@ -65,6 +66,7 @@ namespace SportComplexApp.Web.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> Unregister(int id)
         {
             var userId = GetUserId();

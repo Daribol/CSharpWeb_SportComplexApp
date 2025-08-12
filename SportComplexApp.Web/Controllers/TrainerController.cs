@@ -25,13 +25,7 @@ namespace SportComplexApp.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index()
-        {
-            var trainers = await trainerService.GetAllAsync();
-            return View(trainers);
-        }
-
-        [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> All(int sportId)
         {
             var trainers = await trainerService.GetTrainersBySportIdAsync(sportId);
@@ -57,6 +51,7 @@ namespace SportComplexApp.Web.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<IActionResult> Details(int id, int sportId)
         {
             var trainer = await trainerService.GetTrainerDetailsAsync(id);
