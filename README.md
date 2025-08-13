@@ -40,10 +40,12 @@ SportComplexApp is a modern ASP.NET Core solution that helps manage sports, faci
 
 * Public **GET** endpoints for Sports:
 
-  * `GET /api/sports` — list with optional `minDuration`/`maxDuration` filters.
-  * `GET /api/sports/{id}` — details for a single sport.
+  * `GET /Tournament` — list of all tournaments.
+  * 'POST /Tournament' - create tournament.
+  * 'PUT' /Tournamet' - edit tournament.
+  * `GET /Tournament/{id}` — get tournament by id.
+  * 'DELETE /Tournament/{id}' - delete tournament
 * Swagger UI: `https://localhost:{port}/swagger`.
-* (Optional) Enable **POST/PUT/DELETE** with JWT and `[Authorize(Roles="Admin")]`.
 
 ## Technologies
 
