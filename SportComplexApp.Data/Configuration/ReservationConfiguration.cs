@@ -1,12 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SportComplexApp.Data.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static SportComplexApp.Common.EntityValidationConstants.Reservation;
 
 namespace SportComplexApp.Data.Configuration
 {
@@ -37,26 +31,6 @@ namespace SportComplexApp.Data.Configuration
                 .WithMany(t => t.Reservations)
                 .HasForeignKey(r => r.TrainerId)
                 .OnDelete(DeleteBehavior.Restrict);
-
-            builder.HasData(SeedReservations());
-        }
-
-        private List<Reservation> SeedReservations()
-        {
-            List<Reservation> reservations = new List<Reservation>()
-            {
-                new Reservation
-                {
-                    Id = 1,
-                    ClientId = "1",
-                    SportId = 1,
-                    TrainerId = 1,
-                    ReservationDateTime = DateTime.Now.AddDays(1),
-                    NumberOfPeople = 2
-                },
-            };
-
-            return reservations;
         }
     }
 }

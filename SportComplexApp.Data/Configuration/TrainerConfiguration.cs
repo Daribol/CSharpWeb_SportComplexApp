@@ -1,13 +1,6 @@
-﻿using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using SportComplexApp.Common;
 using SportComplexApp.Data.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using static SportComplexApp.Common.EntityValidationConstants.Trainer;
 
 namespace SportComplexApp.Data.Configuration
@@ -53,35 +46,6 @@ namespace SportComplexApp.Data.Configuration
                 .WithOne(r => r.Trainer)
                 .HasForeignKey(r => r.TrainerId)
                 .OnDelete(DeleteBehavior.Restrict);
-
-            builder.HasData(SeedTrainers());
-        }
-
-        private List<Trainer> SeedTrainers()
-        {
-            List<Trainer> trainers = new List<Trainer>()
-            {
-                new Trainer
-                {
-                    Id = 1,
-                    Name = "John",
-                    LastName = "Doe",
-                    Bio = "Experienced fitness trainer with a passion for helping clients achieve their goals.",
-                    ImageUrl = "/images/JohnDoe.jpg",
-                    ClientId = "1"
-                },
-                new Trainer
-                {
-                    Id = 2,
-                    Name = "Jane",
-                    LastName = "Smith",
-                    Bio = "Certified yoga instructor with over 5 years of experience.",
-                    ImageUrl = "/images/JaneSmith.jpg",
-                    ClientId = "2"
-                },
-            };
-
-            return trainers;
         }
     }
 }

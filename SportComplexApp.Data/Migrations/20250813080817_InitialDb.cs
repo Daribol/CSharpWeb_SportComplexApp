@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace SportComplexApp.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class InitialDb : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -204,7 +204,7 @@ namespace SportComplexApp.Data.Migrations
                     Bio = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
                     ImageUrl = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),
-                    ClientId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    ClientId = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -213,8 +213,7 @@ namespace SportComplexApp.Data.Migrations
                         name: "FK_Trainers_AspNetUsers_ClientId",
                         column: x => x.ClientId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -403,50 +402,24 @@ namespace SportComplexApp.Data.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "AspNetUsers",
-                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "FirstName", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[,]
-                {
-                    { "1", 0, "6ae57139-bf7c-4890-b26a-4f9fce7e8d0a", null, false, "John", "Doe", false, null, null, null, null, null, false, "3545be0b-2098-4568-951a-bd3d206baac6", false, null },
-                    { "2", 0, "18006d7e-7c53-4fc9-badd-1e6de5bc6cd9", null, false, "Jane", "Smith", false, null, null, null, null, null, false, "fbdc526a-9170-4eba-aa25-df7e5a82addf", false, null }
-                });
-
-            migrationBuilder.InsertData(
                 table: "Facilities",
                 columns: new[] { "Id", "IsDeleted", "Name" },
                 values: new object[,]
                 {
-                    { 1, false, "Main Hall" },
-                    { 2, false, "Swimming Pool" },
-                    { 3, false, "Tennis Court" }
+                    { 1, false, "Indoor Arena" },
+                    { 2, false, "Tennis Center" },
+                    { 3, false, "Aquatics & Spa" },
+                    { 4, false, "Fitness Studio" }
                 });
 
             migrationBuilder.InsertData(
                 table: "SpaServices",
-                columns: new[] { "Id", "Description", "ImageUrl", "IsDeleted", "Name", "Price", "ProcedureDetails" },
+                columns: new[] { "Id", "Description", "Duration", "ImageUrl", "IsDeleted", "Name", "Price", "ProcedureDetails" },
                 values: new object[,]
                 {
-                    { 1, "A soothing massage to relieve stress and tension.", "/images/RelaxingMassage.jpg", false, "Relaxing Massage", 50.00m, "This massage focuses on relaxation and stress relief, using gentle techniques to soothe the body and mind." },
-                    { 2, "A rejuvenating facial to enhance your skin's glow.", "/images/FacialTreatment.jpg", false, "Facial Treatment", 70.00m, "This facial treatment includes cleansing, exfoliation, and moisturizing to improve skin texture and appearance." }
-                });
-
-            migrationBuilder.InsertData(
-                table: "SpaReservations",
-                columns: new[] { "Id", "ClientId", "NumberOfPeople", "ReservationDateTime", "SpaServiceId" },
-                values: new object[,]
-                {
-                    { 1, "1", 2, new DateTime(2025, 8, 2, 11, 7, 42, 59, DateTimeKind.Local).AddTicks(7814), 1 },
-                    { 2, "2", 3, new DateTime(2025, 8, 3, 11, 7, 42, 59, DateTimeKind.Local).AddTicks(7869), 2 }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Sports",
-                columns: new[] { "Id", "Duration", "FacilityId", "ImageUrl", "IsDeleted", "MaxPeople", "MinPeople", "Name", "Price" },
-                values: new object[,]
-                {
-                    { 1, 60, 3, "/images/Tennis.jpg", false, 0, 0, "Tennis", 20.00m },
-                    { 2, 45, 2, "/images/swimming.jpg", false, 0, 0, "Swimming", 15.00m },
-                    { 3, 45, 1, "/images/football.jpg", false, 0, 0, "Football", 10.00m }
+                    { 1, "Relaxing full-body massage with essential oils.", 60, "https://images.unsplash.com/photo-1620050382792-434b5828873d?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8Q2xhc3NpYyUyMEZ1bGwlMjBCb2R5JTIwTWFzc2FnZXxlbnwwfDB8MHx8fDI%3D", false, "Classic Full-Body Massage", 55.00m, "Mild to medium pressure, lavender-almond oil." },
+                    { 2, "Warm volcanic stones to soothe deep muscle tension.", 70, "https://images.unsplash.com/photo-1610402601271-5b4bd5b3eba4?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8SG90JTIwU3RvbmUlMjBUaGVyYXB5fGVufDB8MHwwfHx8Mg%3D%3D", false, "Hot Stone Therapy", 75.00m, "Progressive heating and placement along energy meridians." },
+                    { 3, "Combined access to sauna and steam room.", 60, "https://images.unsplash.com/photo-1712659604528-b179a3634560?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8U2F1bmF8ZW58MHwwfDB8fHwy", false, "Sauna + Steam Room Package", 25.00m, "30 min sauna + 20 min steam, plus hydration." }
                 });
 
             migrationBuilder.InsertData(
@@ -454,14 +427,25 @@ namespace SportComplexApp.Data.Migrations
                 columns: new[] { "Id", "Bio", "ClientId", "ImageUrl", "IsDeleted", "LastName", "Name" },
                 values: new object[,]
                 {
-                    { 1, "Experienced fitness trainer with a passion for helping clients achieve their goals.", "1", "/images/JohnDoe.jpg", false, "Doe", "John" },
-                    { 2, "Certified yoga instructor with over 5 years of experience.", "2", "/images/JaneSmith.jpg", false, "Smith", "Jane" }
+                    { 1, "Certified basketball coach with 8+ years of experience.", null, "https://nutrigen.bg/_cms/wp-content/uploads/2019/11/Kiril-Raykov-profile-pic-702x1024.jpg", false, "Raikov", "Kiril" },
+                    { 2, "Yoga & Pilates instructor focused on mobility and mindfulness.", null, "https://static.dir.bg/uploads/images/2015/08/03/691218/orig.jpg?_=1526561264", false, "Markovska", "Vili" },
+                    { 3, "CrossFit coach, competition-level conditioning specialist.", null, "https://toppresa.com/318883/%D0%BA%D0%BE%D1%81%D1%82%D0%B0%D0%B4%D0%B8%D0%BD-%D0%BB%D0%B5%D1%84%D1%82%D0%B5%D1%80%D0%BE%D0%B2-%D0%BE%D1%82-%D0%B3%D0%BE%D1%86%D0%B5-%D0%B4%D0%B5%D0%BB%D1%87%D0%B5%D0%B2-%D0%B5%D0%B4%D0%BD%D0%B0", false, "Lefterov", "Kostadin" },
+                    { 4, "Swimming coach—technique and endurance for all levels.", null, "https://www.pluvane.com/wp-content/uploads/2021/02/coach_13.jpg", false, "Mollov", "Nikolai" },
+                    { 5, "Tennis training: technique, tactics, and matchplay.", null, "https://www.google.com/url?sa=i&url=https%3A%2F%2Fbg.wikipedia.org%2Fwiki%2F%25D0%2593%25D1%2580%25D0%25B8%25D0%25B3%25D0%25BE%25D1%2580_%25D0%2594%25D0%25B8%25D0%25BC%25D0%25B8%25D1%2582%25D1%2580%25D0%25BE%25D0%25B2&psig=AOvVaw3qECx0GFabpMtQcgCFtLWW&ust=1755155485839000&source=images&cd=vfe&opi=89978449&ved=2ahUKEwj13avrnYePAxWcb_EDHVP9G7EQjRx6BAgAEBo", false, "Dimitrov", "Grigor" }
                 });
 
             migrationBuilder.InsertData(
-                table: "Reservations",
-                columns: new[] { "Id", "ClientId", "Duration", "NumberOfPeople", "ReservationDateTime", "SportId", "TrainerId" },
-                values: new object[] { 1, "1", 0, 2, new DateTime(2025, 8, 2, 11, 7, 42, 59, DateTimeKind.Local).AddTicks(3007), 1, 1 });
+                table: "Sports",
+                columns: new[] { "Id", "Duration", "FacilityId", "ImageUrl", "IsDeleted", "MaxPeople", "MinPeople", "Name", "Price" },
+                values: new object[,]
+                {
+                    { 1, 60, 1, "https://images.unsplash.com/photo-1519766304817-4f37bda74a26?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fGJhc2tldGJhbGx8ZW58MHwwfDB8fHwy", false, 10, 2, "Basketball", 30.00m },
+                    { 2, 60, 2, "https://images.unsplash.com/flagged/photo-1576972405668-2d020a01cbfa?q=80&w=1174&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", false, 4, 2, "Tennis", 25.00m },
+                    { 3, 45, 3, "https://images.unsplash.com/photo-1600965962102-9d260a71890d?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8c3dpbW1pbmd8ZW58MHwwfDB8fHwy", false, 1, 1, "Swimming (individual)", 20.00m },
+                    { 4, 60, 4, "https://images.unsplash.com/photo-1588286840104-8957b019727f?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8eW9nYXxlbnwwfDB8MHx8fDI%3D", false, 20, 4, "Yoga (group session)", 10.00m },
+                    { 5, 50, 4, "https://images.unsplash.com/photo-1547226238-e53e98a8e59d?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTc3fHxjcm9zc0ZpdHxlbnwwfDB8MHx8fDI%3D", false, 16, 4, "CrossFit (group session)", 15.00m },
+                    { 6, 60, 1, "https://images.unsplash.com/photo-1659303388053-6078a001ea21?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MzV8fHRhYmxlJTIwdGVubmlzfGVufDB8MHwwfHx8Mg%3D%3D", false, 4, 2, "Table tennis", 10.00m }
+                });
 
             migrationBuilder.InsertData(
                 table: "SportTrainers",
@@ -469,7 +453,11 @@ namespace SportComplexApp.Data.Migrations
                 values: new object[,]
                 {
                     { 1, 1 },
-                    { 2, 2 }
+                    { 2, 5 },
+                    { 3, 4 },
+                    { 4, 2 },
+                    { 4, 3 },
+                    { 5, 3 }
                 });
 
             migrationBuilder.InsertData(
@@ -477,17 +465,9 @@ namespace SportComplexApp.Data.Migrations
                 columns: new[] { "Id", "Description", "EndDate", "IsDeleted", "Name", "SportId", "StartDate" },
                 values: new object[,]
                 {
-                    { 1, "Annual summer tournament for all skill levels.", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), false, "Summer Cup", 1, new DateTime(2025, 9, 1, 11, 7, 42, 61, DateTimeKind.Local).AddTicks(4218) },
-                    { 2, "Competitive winter tournament with prizes.", new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), false, "Winter Championship", 2, new DateTime(2025, 11, 1, 11, 7, 42, 61, DateTimeKind.Local).AddTicks(4268) }
-                });
-
-            migrationBuilder.InsertData(
-                table: "TrainerSessions",
-                columns: new[] { "Id", "EndTime", "StartTime", "TrainerId" },
-                values: new object[,]
-                {
-                    { 1, new DateTime(2025, 8, 1, 13, 7, 42, 62, DateTimeKind.Local).AddTicks(1857), new DateTime(2025, 8, 1, 12, 7, 42, 62, DateTimeKind.Local).AddTicks(1822), 1 },
-                    { 2, new DateTime(2025, 8, 1, 15, 7, 42, 62, DateTimeKind.Local).AddTicks(1863), new DateTime(2025, 8, 1, 14, 7, 42, 62, DateTimeKind.Local).AddTicks(1861), 2 }
+                    { 1, "Amateur tennis tournament with group stages and knockouts.", new DateTime(2025, 9, 14, 0, 0, 0, 0, DateTimeKind.Unspecified), false, "City Cup – Tennis", 2, new DateTime(2025, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 2, "Fast-paced 3-on-3 format, open for mixed teams.", new DateTime(2025, 10, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), false, "Basket 3-on-3 Open", 1, new DateTime(2025, 10, 4, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 3, "Sprint races across age groups.", new DateTime(2025, 11, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), false, "Swim Sprint Challenge", 3, new DateTime(2025, 11, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) }
                 });
 
             migrationBuilder.CreateIndex(

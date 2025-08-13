@@ -228,34 +228,6 @@ namespace SportComplexApp.Data.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "1",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "7ff94d81-f45f-4901-9e07-d9b457d4694e",
-                            EmailConfirmed = false,
-                            FirstName = "John",
-                            LastName = "Doe",
-                            LockoutEnabled = false,
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "dc67308f-ae97-4e27-b4e4-97f731c96d8a",
-                            TwoFactorEnabled = false
-                        },
-                        new
-                        {
-                            Id = "2",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "9d1528ea-754c-45a9-83da-bd1fe4dd1fb5",
-                            EmailConfirmed = false,
-                            FirstName = "Jane",
-                            LastName = "Smith",
-                            LockoutEnabled = false,
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "49d3e591-0044-4d10-934a-cf09c8f56d31",
-                            TwoFactorEnabled = false
-                        });
                 });
 
             modelBuilder.Entity("SportComplexApp.Data.Models.Facility", b =>
@@ -283,19 +255,25 @@ namespace SportComplexApp.Data.Migrations
                         {
                             Id = 1,
                             IsDeleted = false,
-                            Name = "Main Hall"
+                            Name = "Indoor Arena"
                         },
                         new
                         {
                             Id = 2,
                             IsDeleted = false,
-                            Name = "Swimming Pool"
+                            Name = "Tennis Center"
                         },
                         new
                         {
                             Id = 3,
                             IsDeleted = false,
-                            Name = "Tennis Court"
+                            Name = "Aquatics & Spa"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            IsDeleted = false,
+                            Name = "Fitness Studio"
                         });
                 });
 
@@ -337,18 +315,6 @@ namespace SportComplexApp.Data.Migrations
                     b.HasIndex("TrainerId");
 
                     b.ToTable("Reservations");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            ClientId = "1",
-                            Duration = 0,
-                            NumberOfPeople = 2,
-                            ReservationDateTime = new DateTime(2025, 8, 12, 14, 55, 8, 649, DateTimeKind.Local).AddTicks(9307),
-                            SportId = 1,
-                            TrainerId = 1
-                        });
                 });
 
             modelBuilder.Entity("SportComplexApp.Data.Models.SpaReservation", b =>
@@ -381,24 +347,6 @@ namespace SportComplexApp.Data.Migrations
                     b.HasIndex("SpaServiceId");
 
                     b.ToTable("SpaReservations");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            ClientId = "1",
-                            NumberOfPeople = 2,
-                            ReservationDateTime = new DateTime(2025, 8, 12, 14, 55, 8, 650, DateTimeKind.Local).AddTicks(4566),
-                            SpaServiceId = 1
-                        },
-                        new
-                        {
-                            Id = 2,
-                            ClientId = "2",
-                            NumberOfPeople = 3,
-                            ReservationDateTime = new DateTime(2025, 8, 13, 14, 55, 8, 650, DateTimeKind.Local).AddTicks(4679),
-                            SpaServiceId = 2
-                        });
                 });
 
             modelBuilder.Entity("SportComplexApp.Data.Models.SpaService", b =>
@@ -447,24 +395,35 @@ namespace SportComplexApp.Data.Migrations
                         new
                         {
                             Id = 1,
-                            Description = "A soothing massage to relieve stress and tension.",
-                            Duration = 0,
-                            ImageUrl = "/images/RelaxingMassage.jpg",
+                            Description = "Relaxing full-body massage with essential oils.",
+                            Duration = 60,
+                            ImageUrl = "https://images.unsplash.com/photo-1620050382792-434b5828873d?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8Q2xhc3NpYyUyMEZ1bGwlMjBCb2R5JTIwTWFzc2FnZXxlbnwwfDB8MHx8fDI%3D",
                             IsDeleted = false,
-                            Name = "Relaxing Massage",
-                            Price = 50.00m,
-                            ProcedureDetails = "This massage focuses on relaxation and stress relief, using gentle techniques to soothe the body and mind."
+                            Name = "Classic Full-Body Massage",
+                            Price = 55.00m,
+                            ProcedureDetails = "Mild to medium pressure, lavender-almond oil."
                         },
                         new
                         {
                             Id = 2,
-                            Description = "A rejuvenating facial to enhance your skin's glow.",
-                            Duration = 0,
-                            ImageUrl = "/images/FacialTreatment.jpg",
+                            Description = "Warm volcanic stones to soothe deep muscle tension.",
+                            Duration = 70,
+                            ImageUrl = "https://images.unsplash.com/photo-1610402601271-5b4bd5b3eba4?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8SG90JTIwU3RvbmUlMjBUaGVyYXB5fGVufDB8MHwwfHx8Mg%3D%3D",
                             IsDeleted = false,
-                            Name = "Facial Treatment",
-                            Price = 70.00m,
-                            ProcedureDetails = "This facial treatment includes cleansing, exfoliation, and moisturizing to improve skin texture and appearance."
+                            Name = "Hot Stone Therapy",
+                            Price = 75.00m,
+                            ProcedureDetails = "Progressive heating and placement along energy meridians."
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Description = "Combined access to sauna and steam room.",
+                            Duration = 60,
+                            ImageUrl = "https://images.unsplash.com/photo-1712659604528-b179a3634560?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8U2F1bmF8ZW58MHwwfDB8fHwy",
+                            IsDeleted = false,
+                            Name = "Sauna + Steam Room Package",
+                            Price = 25.00m,
+                            ProcedureDetails = "30 min sauna + 20 min steam, plus hydration."
                         });
                 });
 
@@ -515,36 +474,72 @@ namespace SportComplexApp.Data.Migrations
                         {
                             Id = 1,
                             Duration = 60,
-                            FacilityId = 3,
-                            ImageUrl = "/images/Tennis.jpg",
+                            FacilityId = 1,
+                            ImageUrl = "https://images.unsplash.com/photo-1519766304817-4f37bda74a26?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fGJhc2tldGJhbGx8ZW58MHwwfDB8fHwy",
                             IsDeleted = false,
-                            MaxPeople = 0,
-                            MinPeople = 0,
-                            Name = "Tennis",
-                            Price = 20.00m
+                            MaxPeople = 10,
+                            MinPeople = 2,
+                            Name = "Basketball",
+                            Price = 30.00m
                         },
                         new
                         {
                             Id = 2,
-                            Duration = 45,
+                            Duration = 60,
                             FacilityId = 2,
-                            ImageUrl = "/images/swimming.jpg",
+                            ImageUrl = "https://images.unsplash.com/flagged/photo-1576972405668-2d020a01cbfa?q=80&w=1174&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
                             IsDeleted = false,
-                            MaxPeople = 0,
-                            MinPeople = 0,
-                            Name = "Swimming",
-                            Price = 15.00m
+                            MaxPeople = 4,
+                            MinPeople = 2,
+                            Name = "Tennis",
+                            Price = 25.00m
                         },
                         new
                         {
                             Id = 3,
                             Duration = 45,
-                            FacilityId = 1,
-                            ImageUrl = "/images/football.jpg",
+                            FacilityId = 3,
+                            ImageUrl = "https://images.unsplash.com/photo-1600965962102-9d260a71890d?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8c3dpbW1pbmd8ZW58MHwwfDB8fHwy",
                             IsDeleted = false,
-                            MaxPeople = 0,
-                            MinPeople = 0,
-                            Name = "Football",
+                            MaxPeople = 1,
+                            MinPeople = 1,
+                            Name = "Swimming (individual)",
+                            Price = 20.00m
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Duration = 60,
+                            FacilityId = 4,
+                            ImageUrl = "https://images.unsplash.com/photo-1588286840104-8957b019727f?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8eW9nYXxlbnwwfDB8MHx8fDI%3D",
+                            IsDeleted = false,
+                            MaxPeople = 20,
+                            MinPeople = 4,
+                            Name = "Yoga (group session)",
+                            Price = 10.00m
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Duration = 50,
+                            FacilityId = 4,
+                            ImageUrl = "https://images.unsplash.com/photo-1547226238-e53e98a8e59d?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTc3fHxjcm9zc0ZpdHxlbnwwfDB8MHx8fDI%3D",
+                            IsDeleted = false,
+                            MaxPeople = 16,
+                            MinPeople = 4,
+                            Name = "CrossFit (group session)",
+                            Price = 15.00m
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Duration = 60,
+                            FacilityId = 1,
+                            ImageUrl = "https://images.unsplash.com/photo-1659303388053-6078a001ea21?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MzV8fHRhYmxlJTIwdGVubmlzfGVufDB8MHwwfHx8Mg%3D%3D",
+                            IsDeleted = false,
+                            MaxPeople = 4,
+                            MinPeople = 2,
+                            Name = "Table tennis",
                             Price = 10.00m
                         });
                 });
@@ -572,7 +567,27 @@ namespace SportComplexApp.Data.Migrations
                         new
                         {
                             SportId = 2,
+                            TrainerId = 5
+                        },
+                        new
+                        {
+                            SportId = 3,
+                            TrainerId = 4
+                        },
+                        new
+                        {
+                            SportId = 4,
                             TrainerId = 2
+                        },
+                        new
+                        {
+                            SportId = 5,
+                            TrainerId = 3
+                        },
+                        new
+                        {
+                            SportId = 4,
+                            TrainerId = 3
                         });
                 });
 
@@ -616,22 +631,32 @@ namespace SportComplexApp.Data.Migrations
                         new
                         {
                             Id = 1,
-                            Description = "Annual summer tournament for all skill levels.",
-                            EndDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Amateur tennis tournament with group stages and knockouts.",
+                            EndDate = new DateTime(2025, 9, 14, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
-                            Name = "Summer Cup",
-                            SportId = 1,
-                            StartDate = new DateTime(2025, 9, 11, 14, 55, 8, 652, DateTimeKind.Local).AddTicks(6879)
+                            Name = "City Cup – Tennis",
+                            SportId = 2,
+                            StartDate = new DateTime(2025, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
                             Id = 2,
-                            Description = "Competitive winter tournament with prizes.",
-                            EndDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Fast-paced 3-on-3 format, open for mixed teams.",
+                            EndDate = new DateTime(2025, 10, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsDeleted = false,
-                            Name = "Winter Championship",
-                            SportId = 2,
-                            StartDate = new DateTime(2025, 11, 11, 14, 55, 8, 652, DateTimeKind.Local).AddTicks(6954)
+                            Name = "Basket 3-on-3 Open",
+                            SportId = 1,
+                            StartDate = new DateTime(2025, 10, 4, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Description = "Sprint races across age groups.",
+                            EndDate = new DateTime(2025, 11, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            Name = "Swim Sprint Challenge",
+                            SportId = 3,
+                            StartDate = new DateTime(2025, 11, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         });
                 });
 
@@ -701,22 +726,47 @@ namespace SportComplexApp.Data.Migrations
                         new
                         {
                             Id = 1,
-                            Bio = "Experienced fitness trainer with a passion for helping clients achieve their goals.",
-                            ClientId = "1",
-                            ImageUrl = "/images/JohnDoe.jpg",
+                            Bio = "Certified basketball coach with 8+ years of experience.",
+                            ImageUrl = "https://nutrigen.bg/_cms/wp-content/uploads/2019/11/Kiril-Raykov-profile-pic-702x1024.jpg",
                             IsDeleted = false,
-                            LastName = "Doe",
-                            Name = "John"
+                            LastName = "Raikov",
+                            Name = "Kiril"
                         },
                         new
                         {
                             Id = 2,
-                            Bio = "Certified yoga instructor with over 5 years of experience.",
-                            ClientId = "2",
-                            ImageUrl = "/images/JaneSmith.jpg",
+                            Bio = "Yoga & Pilates instructor focused on mobility and mindfulness.",
+                            ImageUrl = "https://static.dir.bg/uploads/images/2015/08/03/691218/orig.jpg?_=1526561264",
                             IsDeleted = false,
-                            LastName = "Smith",
-                            Name = "Jane"
+                            LastName = "Markovska",
+                            Name = "Vili"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Bio = "CrossFit coach, competition-level conditioning specialist.",
+                            ImageUrl = "https://toppresa.com/318883/%D0%BA%D0%BE%D1%81%D1%82%D0%B0%D0%B4%D0%B8%D0%BD-%D0%BB%D0%B5%D1%84%D1%82%D0%B5%D1%80%D0%BE%D0%B2-%D0%BE%D1%82-%D0%B3%D0%BE%D1%86%D0%B5-%D0%B4%D0%B5%D0%BB%D1%87%D0%B5%D0%B2-%D0%B5%D0%B4%D0%BD%D0%B0",
+                            IsDeleted = false,
+                            LastName = "Lefterov",
+                            Name = "Kostadin"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Bio = "Swimming coach—technique and endurance for all levels.",
+                            ImageUrl = "https://www.pluvane.com/wp-content/uploads/2021/02/coach_13.jpg",
+                            IsDeleted = false,
+                            LastName = "Mollov",
+                            Name = "Nikolai"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Bio = "Tennis training: technique, tactics, and matchplay.",
+                            ImageUrl = "https://www.google.com/url?sa=i&url=https%3A%2F%2Fbg.wikipedia.org%2Fwiki%2F%25D0%2593%25D1%2580%25D0%25B8%25D0%25B3%25D0%25BE%25D1%2580_%25D0%2594%25D0%25B8%25D0%25BC%25D0%25B8%25D1%2582%25D1%2580%25D0%25BE%25D0%25B2&psig=AOvVaw3qECx0GFabpMtQcgCFtLWW&ust=1755155485839000&source=images&cd=vfe&opi=89978449&ved=2ahUKEwj13avrnYePAxWcb_EDHVP9G7EQjRx6BAgAEBo",
+                            IsDeleted = false,
+                            LastName = "Dimitrov",
+                            Name = "Grigor"
                         });
                 });
 
@@ -742,22 +792,6 @@ namespace SportComplexApp.Data.Migrations
                     b.HasIndex("TrainerId");
 
                     b.ToTable("TrainerSessions");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            EndTime = new DateTime(2025, 8, 11, 16, 55, 8, 653, DateTimeKind.Local).AddTicks(9908),
-                            StartTime = new DateTime(2025, 8, 11, 15, 55, 8, 653, DateTimeKind.Local).AddTicks(9807),
-                            TrainerId = 1
-                        },
-                        new
-                        {
-                            Id = 2,
-                            EndTime = new DateTime(2025, 8, 11, 18, 55, 8, 653, DateTimeKind.Local).AddTicks(9915),
-                            StartTime = new DateTime(2025, 8, 11, 17, 55, 8, 653, DateTimeKind.Local).AddTicks(9913),
-                            TrainerId = 2
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
