@@ -1,10 +1,8 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using SportComplexApp.Data;
 using SportComplexApp.Data.Models;
-using SportComplexApp.Data.Repository.Interfaces;
 using SportComplexApp.Services.Data.Contracts;
 using SportComplexApp.Services;
 using SportComplexApp.Services.Mapping;
@@ -62,7 +60,7 @@ using (var scope = app.Services.CreateScope())
     DatabaseSeeder.AssignAdminRole(services);
 }
 
-    AutoMapperConfig.RegisterMappings(typeof(ErrorViewModel).Assembly);
+AutoMapperConfig.RegisterMappings(typeof(ErrorViewModel).Assembly);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

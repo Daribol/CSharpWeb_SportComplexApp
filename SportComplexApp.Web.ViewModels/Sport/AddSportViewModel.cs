@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Newtonsoft.Json;
 using static SportComplexApp.Common.ErrorMessages.Sport;
 
 namespace SportComplexApp.Web.ViewModels.Sport
@@ -35,6 +37,8 @@ namespace SportComplexApp.Web.ViewModels.Sport
         [Display(Name = "Facility")]
         public int FacilityId { get; set; }
 
+        [JsonIgnore]
+        [BindNever]
         public IEnumerable<SelectListItem> Facilities { get; set; } = new List<SelectListItem>();
     }
 }
