@@ -5,6 +5,7 @@ using SportComplexApp.Data.Models;
 using SportComplexApp.Services.Data.Contracts;
 using SportComplexApp.Services.Data;
 using SportComplexApp.Services;
+using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace SportComplexApp.WebAPI
 {
@@ -22,18 +23,9 @@ namespace SportComplexApp.WebAPI
 
             builder.Services.AddAuthorization();
             builder.Services
-                .AddIdentity<Client, IdentityRole>(option =>
-                {
-                    option.SignIn.RequireConfirmedAccount = false;
-                    option.Password.RequireDigit = true;
-                    option.Password.RequiredLength = 6;
-                    option.Password.RequireNonAlphanumeric = false;
-                    option.Password.RequireUppercase = true;
-                    option.Password.RequireLowercase = true;
-                    option.User.RequireUniqueEmail = true;
-                })
-                .AddEntityFrameworkStores<SportComplexDbContext>()
-                .AddDefaultTokenProviders();
+                .AddIdentityApiEndpoints<Client>()
+                .AddRoles<IdentityRole>()
+                .AddEntityFrameworkStores<SportComplexDbContext>();
 
             builder.Services.AddScoped<ISportService, SportService>();
             builder.Services.AddScoped<ISpaService, SportComplexApp.Services.Data.SpaService>();
@@ -41,6 +33,17 @@ namespace SportComplexApp.WebAPI
             builder.Services.AddScoped<ITrainerService, TrainerService>();
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IFacilityService, FacilityService>();
+
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAllOrigins", policy =>
+                {
+                    policy.WithOrigins("https://localhost:7226")
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .AllowCredentials();
+                });
+            });
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -59,8 +62,10 @@ namespace SportComplexApp.WebAPI
 
             app.UseHttpsRedirection();
 
-            app.UseAuthentication();
+            app.UseCors("AllowAllOrigins");
+
             app.UseAuthorization();
+            app.MapIdentityApi<Client>();
 
             app.MapControllers();
 
