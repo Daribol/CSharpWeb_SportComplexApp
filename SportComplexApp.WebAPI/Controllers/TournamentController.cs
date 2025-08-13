@@ -7,7 +7,7 @@ using SportComplexApp.Web.ViewModels.Tournament;
 namespace SportComplexApp.WebAPI.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     public class TournamentController : ControllerBase
     {
         private readonly ITournamentService _tournament;
