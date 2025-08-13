@@ -51,7 +51,7 @@
                             <td><span class="badge sc-badge-soft">@reservation.Duration min</span></td>
                             <td><span class="badge sc-badge-soft">@reservation.NumberOfPeople</span></td>
                             <td>@(string.IsNullOrEmpty(reservation.TrainerName) ? "-" : reservation.TrainerName)</td>
-                            <td>@reservation.TotalPrice.ToString("F2") лв</td>
+                            <td>@reservation.TotalPrice.ToString("F2") BGN</td>
                             <td class="text-center">
                                 <form asp-action="Cancel" method="post" asp-route-id="@reservation.Id"
                                       onsubmit="return confirm('Are you sure you want to cancel this reservation?');"

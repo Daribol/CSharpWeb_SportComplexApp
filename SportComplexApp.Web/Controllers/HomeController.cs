@@ -1,7 +1,5 @@
-using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using SportComplexApp.Services.Data.Contracts;
-using SportComplexApp.Web.ViewModels;
 using SportComplexApp.Web.ViewModels.Home;
 
 namespace SportComplexApp.Web.Controllers;

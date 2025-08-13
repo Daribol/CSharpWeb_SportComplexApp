@@ -42,7 +42,7 @@
                             <td class="fw-semibold">@reservation.SpaServiceName</td>
                             <td>@reservation.DateTime.ToString("f")</td>
                             <td>@reservation.Duration minutes</td>
-                            <td>@reservation.TotalPrice.ToString("F2") лв</td>
+                            <td>@reservation.TotalPrice.ToString("F2") BGN</td>
                             <td>@reservation.People</td>
                             <td class="text-center">
                                 <form asp-action="Cancel" asp-route-id="@reservation.Id" method="post"

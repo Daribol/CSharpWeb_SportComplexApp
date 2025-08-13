@@ -1,4 +1,5 @@
-﻿@using SportComplexApp.Web.ViewModels.Home
+﻿@using SportComplexApp.Common
+@using SportComplexApp.Web.ViewModels.Home
 @model HomePageViewModel
 @{
     ViewData["Title"] = "Welcome to the Sport Complex";
@@ -19,6 +20,17 @@
             </a>
         </div>
     </div>
+    
+    <!-- Working hours -->
+    <section class="container my-5 text-center">
+        <h3 class="mb-3">
+            <i class="bi bi-clock"></i> Working Hours
+        </h3>
+        <p class="lead">
+            @ApplicationConstants.OpeningTime.ToString(@"hh\:mm") -
+            @ApplicationConstants.ClosingTime.ToString(@"hh\:mm")
+        </p>
+    </section>
 
     <!-- EXPLORE -->
     <h2 class="mb-4 text-center" style="color:#00ffc8;">Explore Our Services</h2>
