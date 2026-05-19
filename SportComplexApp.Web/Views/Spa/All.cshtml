@@ -9,23 +9,22 @@
     <h2 class="mb-3 text-center" style="color:#00ffc8;">Available Spa Services</h2>
     <hr class="mb-4" style="border-color: rgba(255,255,255,.08);" />
 
-    <!-- FILTERS -->
     <div class="card card-dark border-0 shadow-sm mb-4">
         <div class="card-body">
             <form method="get" asp-controller="Spa" asp-action="All" class="mb-2">
                 <div class="row g-3 align-items-end">
-                    <div class="col-md-4">
-                        <label for="searchQuery" class="form-label">Search Spa Services</label>
+                    <div class="col-md-3">
+                        <label for="searchQuery" class="form-label">Search Services</label>
                         <div class="input-group neon-input">
                             <span class="input-group-text neon-icon"><i class="bi bi-search"></i></span>
                             <input type="text" name="searchQuery" id="searchQuery" class="form-control"
-                                   placeholder="e.g. Massage, Sauna..."
+                                   placeholder="e.g. Massage..."
                                    value="@Model.SearchQuery" />
                         </div>
                     </div>
 
-                    <div class="col-md-3">
-                        <label for="minDuration" class="form-label">Min Duration (min)</label>
+                    <div class="col-md-2">
+                        <label for="minDuration" class="form-label">Min (min)</label>
                         <div class="input-group neon-input">
                             <span class="input-group-text neon-icon"><i class="bi bi-hourglass-split"></i></span>
                             <input type="number" name="minDuration" id="minDuration" class="form-control"
@@ -33,12 +32,26 @@
                         </div>
                     </div>
 
-                    <div class="col-md-3">
-                        <label for="maxDuration" class="form-label">Max Duration (min)</label>
+                    <div class="col-md-2">
+                        <label for="maxDuration" class="form-label">Max (min)</label>
                         <div class="input-group neon-input">
                             <span class="input-group-text neon-icon"><i class="bi bi-hourglass"></i></span>
                             <input type="number" name="maxDuration" id="maxDuration" class="form-control"
                                    value="@(Model.MaxDuration?.ToString())" />
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-3">
+                        <label for="sortBy" class="form-label">Sort By</label>
+                        <div class="input-group neon-input">
+                            <span class="input-group-text neon-icon"><i class="bi bi-sort-down"></i></span>
+                            <select name="sortBy" id="sortBy" class="form-select">
+                                <option value="">-- Default --</option>
+                                <option value="name_asc" selected="@(Model.SortBy == "name_asc")">Name (A-Z)</option>
+                                <option value="name_desc" selected="@(Model.SortBy == "name_desc")">Name (Z-A)</option>
+                                <option value="price_asc" selected="@(Model.SortBy == "price_asc")">Price (Lowest)</option>
+                                <option value="price_desc" selected="@(Model.SortBy == "price_desc")">Price (Highest)</option>
+                            </select>
                         </div>
                     </div>
 
@@ -58,7 +71,6 @@
         </div>
     </div>
 
-    <!-- GRID -->
     @if (Model.SpaServices == null || !Model.SpaServices.Any())
     {
         <div class="card card-dark p-5 text-center border-0">
@@ -114,7 +126,6 @@
         </div>
     }
 
-    <!-- PAGINATION -->
     @if (Model.TotalPages > 1)
     {
         <nav class="mt-4">
@@ -127,7 +138,8 @@
                            asp-route-page="@i"
                            asp-route-searchQuery="@Model.SearchQuery"
                            asp-route-minDuration="@Model.MinDuration"
-                           asp-route-maxDuration="@Model.MaxDuration">@i</a>
+                           asp-route-maxDuration="@Model.MaxDuration"
+                           asp-route-sortBy="@Model.SortBy">@i</a>
                     </li>
                 }
             </ul>

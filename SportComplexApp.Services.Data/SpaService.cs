@@ -20,20 +20,35 @@ namespace SportComplexApp.Services.Data
             this.time = timeProvider ?? TimeProvider.System;
         }
 
-        public async Task<IEnumerable<SpaServiceViewModel>> GetAllSpaServicesAsync()
+        public async Task<IEnumerable<SpaServiceViewModel>> GetAllSpaServicesAsync(string? searchQuery = null, string? sortBy = null)
         {
-            return await context.SpaServices
-                .Where(s => !s.IsDeleted)
+            var query = this.context.SpaServices
+                .Where(s => s.IsDeleted == false)
+                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(searchQuery))
+            {
+                query = query.Where(s => s.Name.ToLower().Contains(searchQuery.ToLower()));
+            }
+
+            query = sortBy switch
+            {
+                "name_desc" => query.OrderByDescending(s => s.Name),
+                "name_asc" => query.OrderBy(s => s.Name),
+                "price_desc" => query.OrderByDescending(s => s.Price),
+                "price_asc" => query.OrderBy(s => s.Price),
+                _ => query.OrderBy(s => s.Id)
+            };
+
+            return await query
                 .Select(s => new SpaServiceViewModel
                 {
                     Id = s.Id,
                     Name = s.Name,
-                    Description = s.Description,
-                    Duration = s.Duration,
                     Price = s.Price,
+                    Duration = s.Duration,
                     ImageUrl = s.ImageUrl
                 })
-                .AsNoTracking()
                 .ToListAsync();
         }
 
@@ -42,6 +57,7 @@ namespace SportComplexApp.Services.Data
             string? searchQuery = null, 
             int? minDuration = null, 
             int? maxDuration = null,
+            string? sortBy = null,
             int currentPage = 1,
             int spaPerPage = 9,
             int maxPages = 3)
@@ -68,6 +84,15 @@ namespace SportComplexApp.Services.Data
                 query = query
                     .Where(s => s.Duration <= maxDuration.Value);
             }
+
+            query = sortBy switch
+            {
+                "name_desc" => query.OrderByDescending(s => s.Name),
+                "name_asc" => query.OrderBy(s => s.Name),
+                "price_desc" => query.OrderByDescending(s => s.Price),
+                "price_asc" => query.OrderBy(s => s.Price),
+                _ => query.OrderBy(s => s.Id)
+            };
 
             var totalCount = await query.CountAsync();
 
@@ -100,6 +125,7 @@ namespace SportComplexApp.Services.Data
                 CurrentPage = currentPage,
                 TotalPages = totalPages,
                 SearchQuery = searchQuery,
+                SortBy = sortBy,
                 MinDuration = minDuration,
                 MaxDuration = maxDuration,
                 PageSize = spaPerPage

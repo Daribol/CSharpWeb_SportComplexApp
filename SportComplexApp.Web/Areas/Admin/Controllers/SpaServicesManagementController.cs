@@ -20,9 +20,9 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
             this.spaService = spaService;
         }
 
-        public async Task<IActionResult> All()
+        public async Task<IActionResult> All(string? searchQuery = null, string? sortBy = null)
         {
-            var model = await spaService.GetAllSpaServicesAsync();
+            var model = await spaService.GetAllSpaServicesAsync(searchQuery, sortBy);
             return View(model);
         }
 
