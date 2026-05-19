@@ -37,6 +37,8 @@ cfg.LoginPath = "/Identity/Account/Login");
 
 builder.Services.AddSingleton<TimeProvider>(TimeProvider.System);
 
+builder.Services.AddMemoryCache();
+
 builder.Services.AddRazorPages();
 builder.Services.AddControllersWithViews(cfg =>
 {
@@ -82,7 +84,7 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.UseStatusCodePagesWithRedirects("/Home/Error/{0}");
+app.UseStatusCodePagesWithReExecute("/Home/Error", "?statusCode={0}");
 
 app.MapControllerRoute(
     name: "areas",
