@@ -23,28 +23,46 @@
         <div class="card-body">
             <form method="get" asp-controller="Tournament" asp-action="All" class="mb-2">
                 <div class="row g-3 align-items-end">
-                    <div class="col-md-5">
-                        <label for="searchQuery" class="form-label text-light">Search by Name</label>
-                        <input type="text" name="searchQuery" id="searchQuery" class="form-control neon-input" placeholder="E.g. Summer Cup..." />
+                    <div class="col-md-3">
+                        <label for="searchQuery" class="form-label text-light">Search Name</label>
+                        <div class="input-group neon-input">
+                            <span class="input-group-text neon-icon"><i class="bi bi-search"></i></span>
+                            <input type="text" name="searchQuery" id="searchQuery" class="form-control" placeholder="E.g. Summer Cup..." value="@Context.Request.Query["searchQuery"]" />
+                        </div>
                     </div>
 
-                    <div class="col-md-5">
+                    <div class="col-md-3">
                         <label for="sport" class="form-label text-light">Filter by Sport</label>
-                        <input type="text" name="sport" id="sport" class="form-control neon-input" placeholder="E.g. Football" />
+                        <div class="input-group neon-input">
+                            <span class="input-group-text neon-icon"><i class="bi bi-dribbble"></i></span>
+                            <input type="text" name="sport" id="sport" class="form-control" placeholder="E.g. Football" value="@Context.Request.Query["sport"]" />
+                        </div>
                     </div>
 
-                    <div class="col-md-2 d-grid">
-                        <button type="submit" class="btn btn-outline-neon">
+                    <div class="col-md-3">
+                        <label for="sortBy" class="form-label text-light">Sort By</label>
+                        <div class="input-group neon-input">
+                            <span class="input-group-text neon-icon"><i class="bi bi-sort-down"></i></span>
+                            <select name="sortBy" id="sortBy" class="form-select">
+                                <option value="">-- Default --</option>
+                                <option value="name_asc" selected="@(Context.Request.Query["sortBy"] == "name_asc")">Name (A-Z)</option>
+                                <option value="name_desc" selected="@(Context.Request.Query["sortBy"] == "name_desc")">Name (Z-A)</option>
+                                <option value="date_asc" selected="@(Context.Request.Query["sortBy"] == "date_asc")">Date (Earliest)</option>
+                                <option value="date_desc" selected="@(Context.Request.Query["sortBy"] == "date_desc")">Date (Latest)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3 d-flex gap-2">
+                        <button type="submit" class="btn btn-outline-neon flex-grow-1">
                             <i class="bi bi-funnel-fill"></i> Filter
                         </button>
+                        <a asp-action="All" class="btn btn-outline-neon">
+                            <i class="bi bi-x-circle"></i> Clear
+                        </a>
                     </div>
                 </div>
             </form>
-            <div class="d-flex justify-content-end">
-                <a asp-controller="Tournament" asp-action="All" class="btn btn-outline-neon btn-sm">
-                    <i class="bi bi-x-circle"></i> Clear
-                </a>
-            </div>
         </div>
     </div>
 

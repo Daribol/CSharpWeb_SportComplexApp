@@ -22,9 +22,9 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
             this.sportService = sportService;
         }
 
-        public async Task<IActionResult> All()
+        public async Task<IActionResult> All(string? searchQuery = null, string? sport = null, string? sortBy = null)
         {
-            var tournaments = await tournamentService.GetAllAsync();
+            var tournaments = await tournamentService.GetAllAsync(searchQuery, sport, sortBy);
             return View(tournaments.Where(t => !t.IsDeleted));
         }
 

@@ -21,6 +21,48 @@
     </div>
 }
 
+<form method="get" asp-action="All" class="mb-4">
+    <div class="row g-3 align-items-end">
+        <div class="col-md-3">
+            <label for="searchQuery" class="form-label text-light">Search Name</label>
+            <div class="input-group neon-input">
+                <span class="input-group-text neon-icon"><i class="bi bi-search"></i></span>
+                <input type="text" name="searchQuery" id="searchQuery" class="form-control" placeholder="E.g. Summer Cup..." value="@Context.Request.Query["searchQuery"]" />
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <label for="sport" class="form-label text-light">Filter by Sport</label>
+            <div class="input-group neon-input">
+                <span class="input-group-text neon-icon"><i class="bi bi-dribbble"></i></span>
+                <input type="text" name="sport" id="sport" class="form-control" placeholder="E.g. Tennis..." value="@Context.Request.Query["sport"]" />
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <label for="sortBy" class="form-label text-light">Sort By</label>
+            <div class="input-group neon-input">
+                <span class="input-group-text neon-icon"><i class="bi bi-sort-down"></i></span>
+                <select name="sortBy" id="sortBy" class="form-select">
+                    <option value="">-- Default --</option>
+                    <option value="name_asc" selected="@(Context.Request.Query["sortBy"] == "name_asc")">Name (A-Z)</option>
+                    <option value="name_desc" selected="@(Context.Request.Query["sortBy"] == "name_desc")">Name (Z-A)</option>
+                    <option value="date_asc" selected="@(Context.Request.Query["sortBy"] == "date_asc")">Date (Earliest)</option>
+                    <option value="date_desc" selected="@(Context.Request.Query["sortBy"] == "date_desc")">Date (Latest)</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="col-md-3 d-flex gap-2">
+            <button type="submit" class="btn btn-outline-neon flex-grow-1">
+                <i class="bi bi-funnel-fill"></i> Filter
+            </button>
+            <a asp-action="All" class="btn btn-outline-neon">
+                <i class="bi bi-x-circle"></i> Clear
+            </a>
+        </div>
+    </div>
+</form>
 @if (!Model.Any())
 {
     <div class="card card-dark text-center p-5 rounded-4 border-0">
@@ -40,7 +82,6 @@ else
             var status = t.EndDate < now ? "Finished" : (t.StartDate > now ? "Upcoming" : "Ongoing");
             var durationDays = Math.Max(1, (t.EndDate.Date - t.StartDate.Date).Days + 1);
 
-            // опция за ImageUrl през reflection, ако свойството е динамично
             var imageProp = t.GetType().GetProperty("ImageUrl");
             var imageUrl = imageProp?.GetValue(t)?.ToString();
 
@@ -93,7 +134,7 @@ else
                             </li>
                         </ul>
                         
-                         <p class="text-light-50 clamp-3 mb-3">@t.Description</p> 
+                        <p class="text-light-50 clamp-3 mb-3">@t.Description</p>
 
                         <div class="mt-auto d-flex gap-2">
                             <a asp-action="Edit" asp-route-id="@t.Id" class="btn btn-outline-neon btn-sm">

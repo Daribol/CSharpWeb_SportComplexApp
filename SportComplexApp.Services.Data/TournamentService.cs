@@ -20,7 +20,7 @@ namespace SportComplexApp.Services.Data
             this.context = context;
         }
 
-        public async Task<IEnumerable<TournamentViewModel>> GetAllAsync(string? searchQuery = null, string? sport = null)
+        public async Task<IEnumerable<TournamentViewModel>> GetAllAsync(string? searchQuery = null, string? sport = null, string? sortBy = null)
         {
             var query = context.Tournaments
                 .Where(t => !t.IsDeleted)
@@ -39,6 +39,15 @@ namespace SportComplexApp.Services.Data
                 query = query
                     .Where(t => t.Sport.Name.ToLower().Trim() == sport.ToLower().Trim());
             }
+
+            query = sortBy switch
+            {
+                "name_asc" => query.OrderBy(t => t.Name),
+                "name_desc" => query.OrderByDescending(t => t.Name),
+                "date_asc" => query.OrderBy(t => t.StartDate),
+                "date_desc" => query.OrderByDescending(t => t.StartDate),
+                _ => query.OrderBy(t => t.StartDate)
+            };
 
             return await query
                 .Where(t => !t.IsDeleted)

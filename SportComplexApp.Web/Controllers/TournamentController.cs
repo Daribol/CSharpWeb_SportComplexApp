@@ -17,9 +17,9 @@ namespace SportComplexApp.Web.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> All(string? searchQuery = null, string? sport = null)
+        public async Task<IActionResult> All(string? searchQuery = null, string? sport = null, string? sortBy = null)
         {
-            var tournaments = await tournamentService.GetAllAsync(searchQuery, sport);
+            var tournaments = await tournamentService.GetAllAsync(searchQuery, sport, sortBy);
             return View(tournaments);
         }
 
