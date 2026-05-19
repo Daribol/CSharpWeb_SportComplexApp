@@ -23,7 +23,7 @@ namespace SportComplexApp.Services
             this.time = timeProvider ?? TimeProvider.System;
         }
 
-        public async Task<IEnumerable<AllSportsViewModel>> GetAllSportsAsync(string? searchQuery = null, int? minDuration = null, int? maxDuration = null, string? sortBy = null)
+        public async Task<IEnumerable<AllSportsViewModel>> GetAllSportsAsync(string? searchQuery = null, int? minDuration = null, int? maxDuration = null, string? sortBy = null, int? trainerId = null)
         {
             var query = context.Sports
                 .Where(s => !s.IsDeleted && !s.Facility.IsDeleted)
@@ -43,6 +43,11 @@ namespace SportComplexApp.Services
             if (maxDuration.HasValue)
             {
                 query = query.Where(s => s.Duration <= maxDuration.Value);
+            }
+
+            if (trainerId.HasValue && trainerId.Value > 0)
+            {
+                query = query.Where(s => s.SportTrainers.Any(st => st.TrainerId == trainerId.Value));
             }
 
             query = sortBy switch

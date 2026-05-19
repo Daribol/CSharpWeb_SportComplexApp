@@ -53,7 +53,7 @@ namespace SportComplexApp.Web.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> Details(int id, int sportId)
+        public async Task<IActionResult> Details(int id, int? sportId = null)
         {
             var trainer = await trainerService.GetTrainerDetailsAsync(id);
             if (trainer == null)
