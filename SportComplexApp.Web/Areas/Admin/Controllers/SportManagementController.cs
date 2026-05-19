@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SportComplexApp.Services.Data.Contracts;
 using SportComplexApp.Web.Controllers;
 using SportComplexApp.Web.ViewModels.Sport;
@@ -20,9 +21,16 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> All()
+        public async Task<IActionResult> All(string? searchQuery = null, int? minDuration = null, int? maxDuration = null, string? sortBy = null)
         {
-            var sports = await sportService.GetAllSportsAsync();
+            var sports = await this.sportService
+                .GetAllSportsAsync(searchQuery, minDuration, maxDuration, sortBy);
+
+            ViewBag.SearchQuery = searchQuery;
+            ViewBag.MinDuration = minDuration;
+            ViewBag.MaxDuration = maxDuration;
+            ViewBag.SortBy = sortBy;
+
             return View(sports);
         }
 
@@ -85,9 +93,18 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
                 return View(model);
             }
 
-            await sportService.EditAsync(id, model);
-            TempData["SuccessMessage"] = SportUpdated;
-            return RedirectToAction(nameof(All));
+            try
+            {
+                await sportService.EditAsync(id, model);
+                TempData["SuccessMessage"] = SportUpdated;
+                return RedirectToAction(nameof(All));
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                ModelState.AddModelError(string.Empty, "Конфликт: Данните за този спорт бяха променени от друг администратор. Моля, презаредете страницата.");
+                model.Facilities = await sportService.GetFacilitiesSelectListAsync();
+                return View(model);
+            }
         }
 
         [HttpGet]

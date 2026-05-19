@@ -18,10 +18,16 @@ namespace SportComplexApp.Web.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> All(string? searchQuery = null, int? minDuration = null, int? maxDuration = null)
+        public async Task<IActionResult> All(string? searchQuery = null, int? minDuration = null, int? maxDuration = null, string? sortBy = null)
         {
             var sports = await this.sportService
-                .GetAllSportsAsync(searchQuery, minDuration, maxDuration);
+                .GetAllSportsAsync(searchQuery, minDuration, maxDuration, sortBy);
+
+            ViewBag.SearchQuery = searchQuery;
+            ViewBag.MinDuration = minDuration;
+            ViewBag.MaxDuration = maxDuration;
+            ViewBag.SortBy = sortBy;
+
             return View(sports);
         }
 

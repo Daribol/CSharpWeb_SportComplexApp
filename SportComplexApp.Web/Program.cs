@@ -57,7 +57,7 @@ using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
     DatabaseSeeder.SeedRoles(services);
-    DatabaseSeeder.AssignAdminRole(services);
+    DatabaseSeeder.SeedUsers(services);
 }
 
 AutoMapperConfig.RegisterMappings(typeof(ErrorViewModel).Assembly);

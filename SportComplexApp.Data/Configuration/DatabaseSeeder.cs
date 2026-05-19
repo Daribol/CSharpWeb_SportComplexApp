@@ -32,35 +32,36 @@ namespace SportComplexApp.Data.Configuration
             }
         }
 
-        public static void AssignAdminRole(IServiceProvider serviceProvider)
+        public static void SeedUsers(IServiceProvider serviceProvider)
         {
             var userManager = serviceProvider.GetRequiredService<UserManager<Client>>();
             var configuration = serviceProvider.GetRequiredService<IConfiguration>();
 
-            string adminEmail = configuration["AdminSettings:Username"];
-            string adminPassword = configuration["AdminSettings:Password"];
+            string adminEmail = configuration["AdminSettings:Username"] ?? "admin@sport.com";
+            string adminPassword = configuration["AdminSettings:Password"] ?? "Admin123!";
+            CreateUserWithRole(userManager, adminEmail, adminPassword, "Admin", "Admin", "User");
 
-            var existingAdmin = userManager.FindByEmailAsync(adminEmail!).GetAwaiter().GetResult();
+            CreateUserWithRole(userManager, "trainer@sport.com", "Trainer123!", "Trainer", "Ivan", "Ivanov");
 
-            if (existingAdmin == null)
+            CreateUserWithRole(userManager, "client@sport.com", "Client123!", "Client", "Petar", "Petrov");
+        }
+
+        private static void CreateUserWithRole(UserManager<Client> userManager, string email, string password, string role, string firstName, string lastName)
+        {
+            if (userManager.FindByEmailAsync(email).GetAwaiter().GetResult() == null)
             {
-                var adminUser = new Client
+                var user = new Client
                 {
-                    UserName = adminEmail,
-                    Email = adminEmail,
-                    FirstName = "Admin",
-                    LastName = "User"
+                    UserName = email,
+                    Email = email,
+                    FirstName = firstName,
+                    LastName = lastName
                 };
 
-                var result = userManager.CreateAsync(adminUser, adminPassword!).GetAwaiter().GetResult();
-
+                var result = userManager.CreateAsync(user, password).GetAwaiter().GetResult();
                 if (result.Succeeded)
                 {
-                    userManager.AddToRoleAsync(adminUser, "Admin").GetAwaiter().GetResult();
-                }
-                else
-                {
-                    throw new Exception($"Failed to create admin user: {string.Join(", ", result.Errors.Select(e => e.Description))}");
+                    userManager.AddToRoleAsync(user, role).GetAwaiter().GetResult();
                 }
             }
         }

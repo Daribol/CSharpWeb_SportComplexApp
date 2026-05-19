@@ -22,7 +22,7 @@ namespace SportComplexApp.Services
             this.time = timeProvider ?? TimeProvider.System;
         }
 
-        public async Task<IEnumerable<AllSportsViewModel>> GetAllSportsAsync(string? searchQuery = null, int? minDuration = null, int? maxDuration = null)
+        public async Task<IEnumerable<AllSportsViewModel>> GetAllSportsAsync(string? searchQuery = null, int? minDuration = null, int? maxDuration = null, string? sortBy = null)
         {
             var query = context.Sports
                 .Where(s => !s.IsDeleted && !s.Facility.IsDeleted)
@@ -44,7 +44,16 @@ namespace SportComplexApp.Services
                 query = query.Where(s => s.Duration <= maxDuration.Value);
             }
 
-                return await query
+            query = sortBy switch
+            {
+                "name_desc" => query.OrderByDescending(s => s.Name),
+                "name_asc" => query.OrderBy(s => s.Name),
+                "duration_desc" => query.OrderByDescending(s => s.Duration),
+                "duration_asc" => query.OrderBy(s => s.Duration),
+                _ => query.OrderBy(s => s.Id)
+            };
+
+            return await query
                 .Select(s => new AllSportsViewModel
                 {
                     Id = s.Id,

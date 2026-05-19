@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SportComplexApp.Data.Models
 {
-    public class Tournament
+    public class Tournament : BaseEntity
     {
         public int Id { get; set; }
 

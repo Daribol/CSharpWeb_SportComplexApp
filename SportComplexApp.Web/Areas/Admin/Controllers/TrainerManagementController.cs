@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SportComplexApp.Services.Data.Contracts;
 using SportComplexApp.Web.Controllers;
 using SportComplexApp.Web.ViewModels.Trainer;
@@ -83,9 +84,18 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
                 return View(model);
             }
 
-            await trainerService.EditAsync(id, model);
-            TempData["SuccessMessage"] = TrainerUpdated;
-            return RedirectToAction(nameof(All));
+            try
+            {
+                await trainerService.EditAsync(id, model);
+                TempData["SuccessMessage"] = TrainerUpdated;
+                return RedirectToAction(nameof(All));
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                ModelState.AddModelError(string.Empty, "Конфликт: Данните за този треньор бяха променени от друг администратор. Моля, презаредете страницата.");
+                model.AvailableSports = await trainerService.GetSportsAsSelectListAsync();
+                return View(model);
+            }
         }
 
         [HttpGet]

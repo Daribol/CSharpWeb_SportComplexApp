@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SportComplexApp.Services.Data.Contracts;
 using SportComplexApp.Web.Controllers;
 using SportComplexApp.Web.ViewModels.Spa;
-using static SportComplexApp.Common.SuccessfulValidationMessages.SpaService;
 using static SportComplexApp.Common.ErrorMessages.SpaService;
+using static SportComplexApp.Common.SuccessfulValidationMessages.SpaService;
 
 namespace SportComplexApp.Web.Areas.Admin.Controllers
 {
@@ -67,9 +68,17 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
             if (!ModelState.IsValid)
                 return View(model);
 
-            await spaService.EditAsync(id, model);
-            TempData["SuccessMessage"] = SpaServiceUpdated;
-            return RedirectToAction(nameof(All));
+            try
+            {
+                await spaService.EditAsync(id, model);
+                TempData["SuccessMessage"] = SpaServiceUpdated;
+                return RedirectToAction(nameof(All));
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                ModelState.AddModelError(string.Empty, "Данните бяха променени от друг потребител, докато вие ги редактирахте. Моля, върнете се назад и опитайте отново.");
+                return View(model);
+            }
         }
 
         [HttpGet]

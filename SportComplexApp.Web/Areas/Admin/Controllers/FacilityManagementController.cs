@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SportComplexApp.Services.Data.Contracts;
 using SportComplexApp.Web.Controllers;
 using SportComplexApp.Web.ViewModels.Facility;
-using static SportComplexApp.Common.SuccessfulValidationMessages.Facility;
 using static SportComplexApp.Common.ErrorMessages.Facility;
+using static SportComplexApp.Common.SuccessfulValidationMessages.Facility;
 
 namespace SportComplexApp.Web.Areas.Admin.Controllers
 {
@@ -63,6 +64,7 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, AddFacilityViewModel model)
         {
             if (!ModelState.IsValid)
@@ -70,9 +72,23 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
                 return View(model);
             }
 
-            await facilityService.EditAsync(id, model);
-            TempData["SuccessMessage"] = FacilityUpdated;
-            return RedirectToAction(nameof(All));
+            try
+            {
+                // Тук извиквате вашия сървис за запазване на промените
+                await facilityService.EditAsync(id, model);
+                return RedirectToAction(nameof(All));
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                // Това е грешката, която EF Core хвърля при конфликт!
+                ModelState.AddModelError(string.Empty, "Данните бяха променени от друг потребител, докато вие ги редактирахте. Моля, презаредете страницата и опитайте отново.");
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, "Възникна неочаквана грешка: " + ex.Message);
+                return View(model);
+            }
         }
 
         [HttpGet]

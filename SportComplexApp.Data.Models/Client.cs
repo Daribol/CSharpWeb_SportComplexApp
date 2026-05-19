@@ -10,6 +10,7 @@ namespace SportComplexApp.Data.Models
 {
     public class Client : IdentityUser
     {
+        public DateTime LastModified_22180008 { get; set; }
         public string FirstName { get; set; } = null!;
 
         public string LastName { get; set; } = null!;

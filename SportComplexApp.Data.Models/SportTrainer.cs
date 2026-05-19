@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SportComplexApp.Data.Models
 {
-    public class SportTrainer
+    public class SportTrainer :BaseEntity
     {
         public int SportId { get; set; }
         public Sport Sport { get; set; } = null!;
