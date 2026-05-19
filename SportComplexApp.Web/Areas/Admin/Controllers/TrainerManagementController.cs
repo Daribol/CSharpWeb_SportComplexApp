@@ -21,9 +21,9 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> All()
+        public async Task<IActionResult> All(string? query = null, string? sortBy = null)
         {
-            var trainers = await trainerService.GetAllAsync();
+            var trainers = await trainerService.GetAllAsync(query, sortBy);
             return View(trainers);
         }
 

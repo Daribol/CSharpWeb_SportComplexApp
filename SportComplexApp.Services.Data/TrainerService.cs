@@ -23,12 +23,26 @@ namespace SportComplexApp.Services.Data
         }
 
         // Client-facing methods
-        public async Task<IEnumerable<AllTrainersViewModel>> GetAllAsync()
+        public async Task<IEnumerable<AllTrainersViewModel>> GetAllAsync(string? query = null, string? sortBy = null)
         {
-            return await context.Trainers
+            var trainersQuery = context.Trainers
                 .Where(t => !t.IsDeleted)
-                .Include(t => t.SportTrainers)
-                .ThenInclude(st => st.Sport)
+                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(query))
+            {
+                var qLower = query.Trim().ToLower();
+                trainersQuery = trainersQuery.Where(t => (t.Name + " " + t.LastName).ToLower().Contains(qLower));
+            }
+
+            trainersQuery = sortBy switch
+            {
+                "name_desc" => trainersQuery.OrderByDescending(t => t.Name).ThenByDescending(t => t.LastName),
+                "name_asc" => trainersQuery.OrderBy(t => t.Name).ThenBy(t => t.LastName),
+                _ => trainersQuery.OrderBy(t => t.Id)
+            };
+
+            return await trainersQuery
                 .Select(t => new AllTrainersViewModel
                 {
                     Id = t.Id,
@@ -56,46 +70,39 @@ namespace SportComplexApp.Services.Data
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<AllTrainersViewModel>> GetAllPublicAsync(string? query, int? sportId)
+        public async Task<IEnumerable<AllTrainersViewModel>> GetAllPublicAsync(string? query = null, int? sportId = null, string? sortBy = null)
         {
-            var trainers = context.Trainers
+            var trainersQuery = context.Trainers
                 .Where(t => !t.IsDeleted)
+                .AsQueryable();
+
+            if (sportId.HasValue && sportId.Value > 0)
+            {
+                trainersQuery = trainersQuery.Where(t => t.SportTrainers.Any(st => st.SportId == sportId.Value));
+            }
+
+            if (!string.IsNullOrWhiteSpace(query))
+            {
+                var qLower = query.Trim().ToLower();
+                trainersQuery = trainersQuery.Where(t => (t.Name + " " + t.LastName).ToLower().Contains(qLower));
+            }
+
+            trainersQuery = sortBy switch
+            {
+                "name_desc" => trainersQuery.OrderByDescending(t => t.Name).ThenByDescending(t => t.LastName),
+                "name_asc" => trainersQuery.OrderBy(t => t.Name).ThenBy(t => t.LastName),
+                _ => trainersQuery.OrderBy(t => t.Id)
+            };
+
+            return await trainersQuery
                 .Select(t => new AllTrainersViewModel
                 {
                     Id = t.Id,
                     Name = t.Name,
                     LastName = t.LastName,
                     ImageUrl = t.ImageUrl,
-                    Sports = t.SportTrainers
-                        .Select(st => st.Sport.Name)
-                        .ToList()
+                    Sports = t.SportTrainers.Select(st => st.Sport.Name).ToList()
                 })
-                .AsQueryable();
-
-            if (!string.IsNullOrWhiteSpace(query))
-            {
-                var qLower = query.Trim().ToLower();
-                trainers = trainers.Where(t =>
-                    (t.Name + " " + t.LastName).ToLower().Contains(qLower));
-            }
-
-            if (sportId.HasValue)
-            {
-                trainers = trainers.Where(t => t.Sports.Any());
-                trainers = context.Trainers
-                    .Where(t => !t.IsDeleted && t.SportTrainers.Any(st => st.SportId == sportId))
-                    .Select(t => new AllTrainersViewModel
-                    {
-                        Id = t.Id,
-                        Name = t.Name,
-                        LastName = t.LastName,
-                        ImageUrl = t.ImageUrl,
-                        Sports = t.SportTrainers.Select(st => st.Sport.Name).ToList()
-                    });
-            }
-
-            return await trainers
-                .OrderBy(t => t.Name).ThenBy(t => t.LastName)
                 .ToListAsync();
         }
         public async Task<TrainerDetailsViewModel?> GetTrainerDetailsAsync(int trainerId)

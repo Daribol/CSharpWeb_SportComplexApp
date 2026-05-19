@@ -41,12 +41,13 @@ namespace SportComplexApp.Web.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> Browse(string? q = null, int? sportId = null)
+        public async Task<IActionResult> Browse(string? q = null, int? sportId = null, string? sortBy = null)
         {
-            var model = await trainerService.GetAllPublicAsync(q, sportId);
+            var model = await trainerService.GetAllPublicAsync(q, sportId, sortBy);
             ViewBag.Sports = await sportService.GetAllAsSelectListAsync();
             ViewBag.Query = q;
             ViewBag.SelectedSportId = sportId;
+            ViewBag.SortBy = sortBy;
             return View(model);
         }
 
