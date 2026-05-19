@@ -1,4 +1,5 @@
 ﻿using SportComplexApp.Web.ViewModels.Home;
+using SportComplexApp.Web.ViewModels.Report;
 using SportComplexApp.Web.ViewModels.Spa;
 using System;
 using System.Collections.Generic;
@@ -35,5 +36,7 @@ namespace SportComplexApp.Services.Data.Contracts
         Task EditAsync(int id, AddSpaServiceViewModel model);
         Task<DeleteSpaServiceViewModel?> GetForDeleteAsync(int id);
         Task DeleteAsync(int id);
+
+        Task<IEnumerable<SpaReportViewModel>> GetSpaReservationsReportAsync();
     }
 }

@@ -5,6 +5,7 @@ using SportComplexApp.Data;
 using SportComplexApp.Data.Models;
 using SportComplexApp.Services.Data.Contracts;
 using SportComplexApp.Web.ViewModels.Home;
+using SportComplexApp.Web.ViewModels.Report;
 using SportComplexApp.Web.ViewModels.Sport;
 using static SportComplexApp.Common.ErrorMessages.Reservation;
 using static SportComplexApp.Common.ErrorMessages.Sport;
@@ -414,6 +415,22 @@ namespace SportComplexApp.Services
                 .ToListAsync();
         }
 
+        public async Task<IEnumerable<SportReportViewModel>> GetSportReservationsReportAsync()
+        {
+            var report = await context.Reservations
+                .GroupBy(r => new { r.Sport.Name, r.Sport.Price })
+                .Select(g => new SportReportViewModel
+                {
+                    SportName = g.Key.Name,
+                    TotalReservations = g.Count(),
+                    TotalPeople = g.Sum(r => r.NumberOfPeople),
+                    TotalRevenue = g.Sum(r => r.NumberOfPeople * g.Key.Price)
+                })
+                .OrderByDescending(r => r.TotalRevenue)
+                .ToListAsync();
+
+            return report;
+        }
     }
 }
 

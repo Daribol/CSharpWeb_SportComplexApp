@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using SportComplexApp.Web.ViewModels.Home;
+using SportComplexApp.Web.ViewModels.Report;
 using SportComplexApp.Web.ViewModels.Sport;
 using System;
 using System.Collections.Generic;
@@ -30,5 +31,6 @@ namespace SportComplexApp.Services.Data.Contracts
         Task DeleteAsync(int id);
         Task<IEnumerable<SelectListItem>> GetAllAsSelectListAsync();
 
+        Task<IEnumerable<SportReportViewModel>> GetSportReservationsReportAsync();
     }
 }
