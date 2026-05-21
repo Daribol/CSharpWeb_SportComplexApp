@@ -9,7 +9,6 @@ namespace SportComplexApp.Services.Data.Contracts
 {
     public interface IFacilityService
     {
-        Task<IEnumerable<AllFacilitiesViewModel>> GetAllAsync();
         Task<IEnumerable<FacilityMasterViewModel>> GetAllFacilitiesWithSportsAsync();
         Task AddAsync(AddFacilityViewModel model);
         Task<bool> ExistsAsync(string name);

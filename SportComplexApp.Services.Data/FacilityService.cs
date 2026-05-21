@@ -20,20 +20,6 @@ namespace SportComplexApp.Services.Data
             _sharedLocalizer = sharedLocalizer;
         }
 
-        public async Task<IEnumerable<AllFacilitiesViewModel>> GetAllAsync()
-        {
-            return await context.Facilities
-                .Where(f => !f.IsDeleted)
-                .Include(f => f.Sports.Where(s => !s.IsDeleted))
-                .Select(f => new AllFacilitiesViewModel
-                {
-                    Id = f.Id,
-                    Name = f.Name,
-                    SportCount = f.Sports.Count(s => !s.IsDeleted)
-                })
-                .ToListAsync();
-        }
-
         public async Task<IEnumerable<FacilityMasterViewModel>> GetAllFacilitiesWithSportsAsync()
         {
             var facilities = await context.Facilities
