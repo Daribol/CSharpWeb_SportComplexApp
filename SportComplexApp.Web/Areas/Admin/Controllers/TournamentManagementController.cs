@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
+using SportComplexApp.Common;
 using SportComplexApp.Services.Data.Contracts;
 using SportComplexApp.Web.Controllers;
 using SportComplexApp.Web.ViewModels.Tournament;
@@ -15,11 +17,13 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
     {
         private readonly ITournamentService tournamentService;
         private readonly ISportService sportService;
+        private readonly IStringLocalizer<SharedResource> sharedLocalizer;
 
-        public TournamentManagementController(ITournamentService tournamentService, ISportService sportService)
+        public TournamentManagementController(ITournamentService tournamentService, ISportService sportService, IStringLocalizer<SharedResource> sharedLocalizer)
         {
             this.tournamentService = tournamentService;
             this.sportService = sportService;
+            this.sharedLocalizer = sharedLocalizer;
         }
 
         public async Task<IActionResult> All(string? searchQuery = null, string? sport = null, string? sortBy = null)
@@ -46,11 +50,11 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
         {
             if (model.StartDate <= DateTime.Now)
             {
-                ModelState.AddModelError(nameof(model.StartDate), TournamentStartInPast);
+                ModelState.AddModelError(nameof(model.StartDate), sharedLocalizer[TournamentStartInPast]);
             }
             if (model.EndDate <= model.StartDate)
             {
-                ModelState.AddModelError(nameof(model.EndDate), TournamentEndBeforeStart);
+                ModelState.AddModelError(nameof(model.EndDate), sharedLocalizer[TournamentEndBeforeStart]);
             }
 
             if (!ModelState.IsValid)
@@ -61,13 +65,13 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
 
             if (await tournamentService.ExistsAsync(model.Name))
             {
-                TempData["ErrorMessage"] = TournamentAlreadyExists;
+                TempData["ErrorMessage"] = sharedLocalizer[TournamentAlreadyExists].Value;
                 model.Sports = await sportService.GetAllAsSelectListAsync();
                 return View(model);
             }
 
             await tournamentService.AddAsync(model);
-            TempData["SuccessMessage"] = TournamentCreated;
+            TempData["SuccessMessage"] = sharedLocalizer[TournamentCreated].Value;
             return RedirectToAction(nameof(All));
         }
 
@@ -89,11 +93,11 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
         {
             if (model.StartDate <= DateTime.Now)
             {
-                ModelState.AddModelError(nameof(model.StartDate), TournamentStartInPast);
+                ModelState.AddModelError(nameof(model.StartDate), sharedLocalizer[TournamentStartInPast]);
             }
             if (model.EndDate <= model.StartDate)
             {
-                ModelState.AddModelError(nameof(model.EndDate), TournamentEndBeforeStart);
+                ModelState.AddModelError(nameof(model.EndDate), sharedLocalizer[TournamentEndBeforeStart]);
             }
 
             if (!ModelState.IsValid)
@@ -105,12 +109,12 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
             try
             {
                 await tournamentService.EditAsync(id, model);
-                TempData["SuccessMessage"] = TournamentUpdated;
+                TempData["SuccessMessage"] = sharedLocalizer[TournamentUpdated].Value;
                 return RedirectToAction(nameof(All));
             }
             catch (DbUpdateConcurrencyException)
             {
-                ModelState.AddModelError(string.Empty, "Конфликт: Данните за този турнир бяха променени от друг администратор. Моля, презаредете страницата.");
+                ModelState.AddModelError(string.Empty, sharedLocalizer["ConcurrencyError"]);
                 model.Sports = await sportService.GetAllAsSelectListAsync();
                 return View(model);
             }
@@ -132,7 +136,7 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             await tournamentService.DeleteAsync(id);
-            TempData["SuccessMessage"] = TournamentDeleted;
+            TempData["SuccessMessage"] = sharedLocalizer[TournamentDeleted].Value;
             return RedirectToAction(nameof(All));
         }
     }

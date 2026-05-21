@@ -1,5 +1,8 @@
-﻿@{
-    ViewData["Title"] = "Admin Dashboard";
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+@{
+    ViewData["Title"] = Localizer["Title"];
 }
 
 <div class="admin-hero rounded-4 p-4 p-md-5 mb-5">
@@ -8,8 +11,8 @@
             <i class="bi bi-speedometer2"></i>
         </div>
         <div>
-            <h1 class="h3 mb-1 text-white">Admin Panel</h1>
-            <p class="mb-0 text-white-50">Manage users, trainers, sports, facilities, spa services & tournaments</p>
+            <h1 class="h3 mb-1 text-white">@Localizer["HeroTitle"]</h1>
+            <p class="mb-0 text-white-50">@Localizer["HeroDesc"]</p>
         </div>
     </div>
 </div>
@@ -25,8 +28,8 @@
                             <i class="bi bi-people-fill"></i>
                         </div>
                         <div>
-                            <h3 class="h5 text-white mb-1">Manage Users</h3>
-                            <p class="mb-0 text-white-50 small">Create, edit, deactivate accounts</p>
+                            <h3 class="h5 text-white mb-1">@Localizer["ManageUsersTitle"]</h3>
+                            <p class="mb-0 text-white-50 small">@Localizer["ManageUsersDesc"]</p>
                         </div>
                     </div>
                 </div>
@@ -44,8 +47,8 @@
                             <i class="bi bi-person-badge-fill"></i>
                         </div>
                         <div>
-                            <h3 class="h5 text-white mb-1">Manage Trainers</h3>
-                            <p class="mb-0 text-white-50 small">Profiles, schedules, approvals</p>
+                            <h3 class="h5 text-white mb-1">@Localizer["ManageTrainersTitle"]</h3>
+                            <p class="mb-0 text-white-50 small">@Localizer["ManageTrainersDesc"]</p>
                         </div>
                     </div>
                 </div>
@@ -63,8 +66,8 @@
                             <i class="bi bi-basket2-fill"></i>
                         </div>
                         <div>
-                            <h3 class="h5 text-white mb-1">Manage Sports</h3>
-                            <p class="mb-0 text-white-50 small">Categories, levels, pricing</p>
+                            <h3 class="h5 text-white mb-1">@Localizer["ManageSportsTitle"]</h3>
+                            <p class="mb-0 text-white-50 small">@Localizer["ManageSportsDesc"]</p>
                         </div>
                     </div>
                 </div>
@@ -82,8 +85,8 @@
                             <i class="bi bi-building"></i>
                         </div>
                         <div>
-                            <h3 class="h5 text-white mb-1">Manage Facilities</h3>
-                            <p class="mb-0 text-white-50 small">Courts, rooms, availability</p>
+                            <h3 class="h5 text-white mb-1">@Localizer["ManageFacilitiesTitle"]</h3>
+                            <p class="mb-0 text-white-50 small">@Localizer["ManageFacilitiesDesc"]</p>
                         </div>
                     </div>
                 </div>
@@ -101,8 +104,8 @@
                             <i class="bi bi-flower3"></i>
                         </div>
                         <div>
-                            <h3 class="h5 text-white mb-1">Manage Spa Services</h3>
-                            <p class="mb-0 text-white-50 small">Treatments, durations, staff</p>
+                            <h3 class="h5 text-white mb-1">@Localizer["ManageSpaTitle"]</h3>
+                            <p class="mb-0 text-white-50 small">@Localizer["ManageSpaDesc"]</p>
                         </div>
                     </div>
                 </div>
@@ -120,8 +123,8 @@
                             <i class="bi bi-trophy-fill"></i>
                         </div>
                         <div>
-                            <h3 class="h5 text-white mb-1">Manage Tournaments</h3>
-                            <p class="mb-0 text-white-50 small">Brackets, dates, registrations</p>
+                            <h3 class="h5 text-white mb-1">@Localizer["ManageTournamentsTitle"]</h3>
+                            <p class="mb-0 text-white-50 small">@Localizer["ManageTournamentsDesc"]</p>
                         </div>
                     </div>
                 </div>

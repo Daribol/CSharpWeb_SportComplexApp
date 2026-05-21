@@ -15,18 +15,18 @@ namespace SportComplexApp.Web.ViewModels.Tournament
         public string Name { get; set; } = null!;
 
         [Required]
-        [Display(Name = "Description")]
+        [Display(Name = "LabelDescription")]
         public string Description { get; set; } = null!;
 
-        [Display(Name = "Start Date")]
+        [Display(Name = "LabelStartDate")]
         [DataType(DataType.Date)]
         public DateTime StartDate { get; set; }
 
-        [Display(Name = "End Date")]
+        [Display(Name = "LabelEndDate")]
         [DataType(DataType.Date)]
         public DateTime EndDate { get; set; }
 
-        [Display(Name = "Sport")]
+        [Display(Name = "LabelSport")]
         public int SportId { get; set; }
 
         public IEnumerable<SelectListItem> Sports { get; set; } = new List<SelectListItem>();

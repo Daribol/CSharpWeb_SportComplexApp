@@ -4,59 +4,59 @@
     {
         public static class Users
         {
-            public const string RoleAssigned = "Role successfully assigned to user.";
-            public const string RoleRemoved = "Role successfully removed from user.";
-            public const string UserDeleted = "User successfully deleted.";
+            public const string RoleAssigned = nameof(RoleAssigned);
+            public const string RoleRemoved = nameof(RoleRemoved);
+            public const string UserDeleted = nameof(UserDeleted);
         }
         public static class Sport
         {
-            public const string SportAddedToMyList = "Sport successfully added to your list.";
-            public const string SportRemovedFromMyList = "Sport successfully removed from your list.";
+            public const string SportAddedToMyList = nameof(SportAddedToMyList);
+            public const string SportRemovedFromMyList = nameof(SportRemovedFromMyList);
 
-            public const string SportCreated = "Sport successfully created.";
-            public const string SportUpdated = "Sport successfully updated.";
-            public const string SportDeleted = "Sport successfully deleted.";
+            public const string SportCreated = nameof(SportCreated);
+            public const string SportUpdated = nameof(SportUpdated);
+            public const string SportDeleted = nameof(SportDeleted);
         }
 
         public static class Reservation
         {
-            public const string ReservationCreated = "Reservation successfully created.";
-            public const string ReservationDeleted = "Reservation successfully deleted.";
+            public const string ReservationCreated = nameof(ReservationCreated);
+            public const string ReservationDeleted = nameof(ReservationDeleted);
         }
 
         public static class SpaService
         {
-            public const string SpaServiceCreated = "Spa service successfully created.";
-            public const string SpaServiceUpdated = "Spa service successfully updated.";
-            public const string SpaServiceDeleted = "Spa service successfully deleted.";
+            public const string SpaServiceCreated = nameof(SpaServiceCreated);
+            public const string SpaServiceUpdated = nameof(SpaServiceUpdated);
+            public const string SpaServiceDeleted = nameof(SpaServiceDeleted);
         }
         public static class SpaReservation
         {
-            public const string SpaReservationCreated = "Spa reservation successfully created.";
-            public const string SpaReservationDeleted = "Spa reservation successfully deleted.";
+            public const string SpaReservationCreated = nameof(SpaReservationCreated);
+            public const string SpaReservationDeleted = nameof(SpaReservationDeleted);
         }
 
         public static class Tournament
         {
-            public const string TournamentRegistered = "You have successfully registered for the tournament.";
-            public const string TournamentUnregistered = "You have successfully unregistered from the tournament.";
-            public const string TournamentCreated = "Tournament successfully created.";
-            public const string TournamentUpdated = "Tournament successfully updated.";
-            public const string TournamentDeleted = "Tournament successfully deleted.";
+            public const string TournamentRegistered = nameof(TournamentRegistered);
+            public const string TournamentUnregistered = nameof(TournamentUnregistered);
+            public const string TournamentCreated = nameof(TournamentCreated);
+            public const string TournamentUpdated = nameof(TournamentUpdated);
+            public const string TournamentDeleted = nameof(TournamentDeleted);
         }
 
         public static class Trainer
         {
-            public const string TrainerAdded = "Trainer successfully added.";
-            public const string TrainerUpdated = "Trainer successfully updated.";
-            public const string TrainerDeleted = "Trainer successfully deleted.";
+            public const string TrainerAdded = nameof(TrainerAdded);
+            public const string TrainerUpdated = nameof(TrainerUpdated);
+            public const string TrainerDeleted = nameof(TrainerDeleted);
         }
 
         public static class Facility
         {
-            public const string FacilityAdded = "Facility successfully added.";
-            public const string FacilityUpdated = "Facility successfully updated.";
-            public const string FacilityDeleted = "Facility successfully deleted.";
+            public const string FacilityAdded = nameof(FacilityAdded);
+            public const string FacilityUpdated = nameof(FacilityUpdated);
+            public const string FacilityDeleted = nameof(FacilityDeleted);
         }
     }
 }

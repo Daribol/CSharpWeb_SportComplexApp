@@ -1,18 +1,21 @@
-﻿@model IEnumerable<SportComplexApp.Web.ViewModels.Trainer.AllTrainersViewModel>
+﻿@using SportComplexApp.Web.ViewModels.Trainer
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@model IEnumerable<AllTrainersViewModel>
 
 @{
-    ViewData["Title"] = "Trainers";
+    ViewData["Title"] = Localizer["Title"];
 }
 <link rel="stylesheet" href="~/css/neon-theme.css" asp-append-version="true" />
 
 <div class="container mt-4">
-    <h2 class="mb-4 text-center" style="color:#00ffc8;">Trainers for This Sport</h2>
+    <h2 class="mb-4 text-center" style="color:#00ffc8;">@Localizer["Heading"]</h2>
     <hr class="mb-4" style="border-color: rgba(255,255,255,.08);" />
 
     @if (!Model.Any())
     {
         <div class="alert alert-info text-center">
-            <i class="bi bi-info-circle-fill me-2"></i>No trainers are available for this sport.
+            <i class="bi bi-info-circle-fill me-2"></i>@Localizer["NoTrainersMsg"]
         </div>
     }
     else
@@ -46,17 +49,17 @@
                                 }
                                 else
                                 {
-                                    <span class="text-muted">No specialization</span>
+                                    <span class="text-muted">@Localizer["NoSpecialization"]</span>
                                 }
                             </div>
 
                             <div class="mt-auto">
                                 <a asp-controller="Trainer"
-                                   asp-action="Details"
-                                   asp-route-id="@trainer.Id"
-                                   asp-route-sportId="@ViewBag.SportId"
-                                   class="btn btn-neon btn-sm w-100">
-                                    <i class="bi bi-person-lines-fill me-1"></i> View Details
+                                       asp-action="Details"
+                                       asp-route-id="@trainer.Id"
+                                       asp-route-sportId="@ViewBag.SportId"
+                                       class="btn btn-neon btn-sm w-100">
+                                    <i class="bi bi-person-lines-fill me-1"></i> @Localizer["BtnViewDetails"]
                                 </a>
                             </div>
                         </div>

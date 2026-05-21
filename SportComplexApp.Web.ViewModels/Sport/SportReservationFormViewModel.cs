@@ -17,7 +17,7 @@ namespace SportComplexApp.Web.ViewModels.Sport
         public string FacilityName { get; set; } = null!;
 
         [Required]
-        [Display(Name = "Reservation Date and Time")]
+        [Display(Name = "LabelReservationDateTime")]
         [DisplayFormat(DataFormatString = ReservationDateTimeFormat, ApplyFormatInEditMode = true)]
         public DateTime ReservationDateTime { get; set; }
 
@@ -29,7 +29,7 @@ namespace SportComplexApp.Web.ViewModels.Sport
         public int MaxDuration { get; set; }
 
         [Required]
-        [Display(Name = "Number of People")]
+        [Display(Name = "LabelNumberOfPeople")]
         public int NumberOfPeople { get; set; }
 
         public int MinPeople { get; set; }

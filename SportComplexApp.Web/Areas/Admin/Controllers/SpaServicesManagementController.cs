@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
+using SportComplexApp.Common;
 using SportComplexApp.Services.Data.Contracts;
 using SportComplexApp.Web.Controllers;
 using SportComplexApp.Web.ViewModels.Spa;
@@ -14,10 +16,12 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
     public class SpaServicesManagementController : BaseController
     {
         private readonly ISpaService spaService;
+        private readonly IStringLocalizer<SharedResource> sharedLocalizer;
 
-        public SpaServicesManagementController(ISpaService spaService)
+        public SpaServicesManagementController(ISpaService spaService, IStringLocalizer<SharedResource> sharedLocalizer)
         {
             this.spaService = spaService;
+            this.sharedLocalizer = sharedLocalizer;
         }
 
         public async Task<IActionResult> All(string? searchQuery = null, string? sortBy = null)
@@ -42,11 +46,11 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
 
             if (await spaService.ExistsAsync(model.Name))
             {
-                TempData["ErrorMessage"] = SpaServiceAlreadyExists;
+                TempData["ErrorMessage"] = sharedLocalizer[SpaServiceAlreadyExists].Value;
                 return View(model);
             }
             await spaService.AddAsync(model);
-            TempData["SuccessMessage"] = SpaServiceCreated;
+            TempData["SuccessMessage"] = sharedLocalizer[SpaServiceCreated].Value;
             return RedirectToAction(nameof(All));
         }
 
@@ -71,12 +75,12 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
             try
             {
                 await spaService.EditAsync(id, model);
-                TempData["SuccessMessage"] = SpaServiceUpdated;
+                TempData["SuccessMessage"] = sharedLocalizer[SpaServiceUpdated].Value;
                 return RedirectToAction(nameof(All));
             }
             catch (DbUpdateConcurrencyException)
             {
-                ModelState.AddModelError(string.Empty, "Данните бяха променени от друг потребител, докато вие ги редактирахте. Моля, върнете се назад и опитайте отново.");
+                ModelState.AddModelError(string.Empty, sharedLocalizer["ConcurrencyError"]);
                 return View(model);
             }
         }
@@ -97,7 +101,7 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             await spaService.DeleteAsync(id);
-            TempData["SuccessMessage"] = SpaServiceDeleted;
+            TempData["SuccessMessage"] = sharedLocalizer[SpaServiceDeleted].Value;
             return RedirectToAction(nameof(All));
         }
     }

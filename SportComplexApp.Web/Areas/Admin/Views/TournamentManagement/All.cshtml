@@ -1,15 +1,18 @@
-﻿@model IEnumerable<SportComplexApp.Web.ViewModels.Tournament.TournamentViewModel>
+﻿@using SportComplexApp.Web.ViewModels.Tournament
+@using Microsoft.AspNetCore.Mvc.Localization
 @using System
+@inject IViewLocalizer Localizer
+@model IEnumerable<TournamentViewModel>
 
 @{
-    ViewData["Title"] = "Manage Tournaments";
+    ViewData["Title"] = Localizer["Title"];
     var now = DateTime.Now;
 }
 
 <div class="d-flex align-items-center justify-content-between mb-4">
-    <h2 class="mb-0" style="color:#00ffc8;">Manage Tournaments</h2>
+    <h2 class="mb-0" style="color:#00ffc8;">@Localizer["Heading"]</h2>
     <a asp-action="Add" class="btn btn-neon">
-        <i class="bi bi-plus-circle me-1"></i> Create Tournament
+        <i class="bi bi-plus-circle me-1"></i> @Localizer["BtnCreateTournament"]
     </a>
 </div>
 
@@ -24,53 +27,54 @@
 <form method="get" asp-action="All" class="mb-4">
     <div class="row g-3 align-items-end">
         <div class="col-md-3">
-            <label for="searchQuery" class="form-label text-light">Search Name</label>
+            <label for="searchQuery" class="form-label text-light">@Localizer["LabelSearchName"]</label>
             <div class="input-group neon-input">
                 <span class="input-group-text neon-icon"><i class="bi bi-search"></i></span>
-                <input type="text" name="searchQuery" id="searchQuery" class="form-control" placeholder="E.g. Summer Cup..." value="@Context.Request.Query["searchQuery"]" />
+                <input type="text" name="searchQuery" id="searchQuery" class="form-control" placeholder="@Localizer["PlaceholderSearch"]" value="@Context.Request.Query["searchQuery"]" />
             </div>
         </div>
 
         <div class="col-md-3">
-            <label for="sport" class="form-label text-light">Filter by Sport</label>
+            <label for="sport" class="form-label text-light">@Localizer["LabelFilterSport"]</label>
             <div class="input-group neon-input">
                 <span class="input-group-text neon-icon"><i class="bi bi-dribbble"></i></span>
-                <input type="text" name="sport" id="sport" class="form-control" placeholder="E.g. Tennis..." value="@Context.Request.Query["sport"]" />
+                <input type="text" name="sport" id="sport" class="form-control" placeholder="@Localizer["PlaceholderSport"]" value="@Context.Request.Query["sport"]" />
             </div>
         </div>
 
         <div class="col-md-3">
-            <label for="sortBy" class="form-label text-light">Sort By</label>
+            <label for="sortBy" class="form-label text-light">@Localizer["LabelSortBy"]</label>
             <div class="input-group neon-input">
                 <span class="input-group-text neon-icon"><i class="bi bi-sort-down"></i></span>
                 <select name="sortBy" id="sortBy" class="form-select">
-                    <option value="">-- Default --</option>
-                    <option value="name_asc" selected="@(Context.Request.Query["sortBy"] == "name_asc")">Name (A-Z)</option>
-                    <option value="name_desc" selected="@(Context.Request.Query["sortBy"] == "name_desc")">Name (Z-A)</option>
-                    <option value="date_asc" selected="@(Context.Request.Query["sortBy"] == "date_asc")">Date (Earliest)</option>
-                    <option value="date_desc" selected="@(Context.Request.Query["sortBy"] == "date_desc")">Date (Latest)</option>
+                    <option value="">@Localizer["SortDefault"]</option>
+                    <option value="name_asc" selected="@(Context.Request.Query["sortBy"] == "name_asc")">@Localizer["SortNameAsc"]</option>
+                    <option value="name_desc" selected="@(Context.Request.Query["sortBy"] == "name_desc")">@Localizer["SortNameDesc"]</option>
+                    <option value="date_asc" selected="@(Context.Request.Query["sortBy"] == "date_asc")">@Localizer["SortDateAsc"]</option>
+                    <option value="date_desc" selected="@(Context.Request.Query["sortBy"] == "date_desc")">@Localizer["SortDateDesc"]</option>
                 </select>
             </div>
         </div>
 
         <div class="col-md-3 d-flex gap-2">
             <button type="submit" class="btn btn-outline-neon flex-grow-1">
-                <i class="bi bi-funnel-fill"></i> Filter
+                <i class="bi bi-funnel-fill"></i> @Localizer["BtnFilter"]
             </button>
             <a asp-action="All" class="btn btn-outline-neon">
-                <i class="bi bi-x-circle"></i> Clear
+                <i class="bi bi-x-circle"></i> @Localizer["BtnClear"]
             </a>
         </div>
     </div>
 </form>
+
 @if (!Model.Any())
 {
     <div class="card card-dark text-center p-5 rounded-4 border-0">
         <div class="display-6 mb-2">🏆</div>
-        <h5 class="mb-1 text-light">No tournaments available</h5>
-        <p class="text-light-50 mb-3">Create your first tournament to get started.</p>
+        <h5 class="mb-1 text-light">@Localizer["EmptyTitle"]</h5>
+        <p class="text-light-50 mb-3">@Localizer["EmptyDesc"]</p>
         <a asp-action="Add" class="btn btn-neon">
-            <i class="bi bi-plus-circle"></i> Create Tournament
+            <i class="bi bi-plus-circle"></i> @Localizer["BtnCreateTournament"]
         </a>
     </div>
 }
@@ -79,7 +83,10 @@ else
     <div class="row g-4 row-cols-1 row-cols-sm-2 row-cols-lg-3 row-cols-xl-4">
         @foreach (var t in Model)
         {
-            var status = t.EndDate < now ? "Finished" : (t.StartDate > now ? "Upcoming" : "Ongoing");
+            var isFinished = t.EndDate < now;
+            var isUpcoming = t.StartDate > now;
+            var isOngoing = !isFinished && !isUpcoming;
+            
             var durationDays = Math.Max(1, (t.EndDate.Date - t.StartDate.Date).Days + 1);
 
             var imageProp = t.GetType().GetProperty("ImageUrl");
@@ -102,29 +109,29 @@ else
                         <div class="d-flex align-items-start justify-content-between mb-2">
                             <h5 class="card-title mb-0 text-white clamp-3">@t.Name</h5>
 
-                            @if (status == "Upcoming")
+                            @if (isUpcoming)
                             {
                                 <span class="badge badge-sport">
-                                    <i class="bi bi-hourglass-split me-1"></i> Upcoming
+                                    <i class="bi bi-hourglass-split me-1"></i> @Localizer["StatusUpcoming"]
                                 </span>
                             }
-                            else if (status == "Ongoing")
+                            else if (isOngoing)
                             {
                                 <span class="badge bg-success">
-                                    <i class="bi bi-activity me-1"></i> Ongoing
+                                    <i class="bi bi-activity me-1"></i> @Localizer["StatusOngoing"]
                                 </span>
                             }
                             else
                             {
                                 <span class="badge bg-secondary">
-                                    <i class="bi bi-check2-circle me-1"></i> Finished
+                                    <i class="bi bi-check2-circle me-1"></i> @Localizer["StatusFinished"]
                                 </span>
                             }
                         </div>
 
                         <div class="mb-2">
                             <span class="badge badge-sport me-1">@t.Sport</span>
-                            <span class="badge badge-soft">@durationDays d</span>
+                            <span class="badge badge-soft">@durationDays @Localizer["DaysShort"]</span>
                         </div>
 
                         <ul class="list-unstyled small text-muted mb-3">
@@ -138,10 +145,10 @@ else
 
                         <div class="mt-auto d-flex gap-2">
                             <a asp-action="Edit" asp-route-id="@t.Id" class="btn btn-outline-neon btn-sm">
-                                <i class="bi bi-pencil-square"></i> Edit
+                                <i class="bi bi-pencil-square"></i> @Localizer["BtnEdit"]
                             </a>
                             <a asp-action="Delete" asp-route-id="@t.Id" class="btn btn-outline-neon btn-sm">
-                                <i class="bi bi-trash3"></i> Delete
+                                <i class="bi bi-trash3"></i> @Localizer["BtnDelete"]
                             </a>
                         </div>
                     </div>

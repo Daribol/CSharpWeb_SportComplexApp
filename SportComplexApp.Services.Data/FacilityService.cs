@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
+using SportComplexApp.Common;
 using SportComplexApp.Data;
 using SportComplexApp.Data.Models;
 using SportComplexApp.Services.Data.Contracts;
@@ -10,10 +12,12 @@ namespace SportComplexApp.Services.Data
     public class FacilityService : IFacilityService
     {
         private readonly SportComplexDbContext context;
+        private readonly IStringLocalizer<SharedResource> _sharedLocalizer;
 
-        public FacilityService(SportComplexDbContext context)
+        public FacilityService(SportComplexDbContext context, IStringLocalizer<SharedResource> sharedLocalizer)
         {
             this.context = context;
+            _sharedLocalizer = sharedLocalizer;
         }
 
         public async Task<IEnumerable<AllFacilitiesViewModel>> GetAllAsync()
@@ -28,6 +32,26 @@ namespace SportComplexApp.Services.Data
                     SportCount = f.Sports.Count(s => !s.IsDeleted)
                 })
                 .ToListAsync();
+        }
+
+        public async Task<IEnumerable<FacilityMasterViewModel>> GetAllFacilitiesWithSportsAsync()
+        {
+            var facilities = await context.Facilities
+                .Select(f => new FacilityMasterViewModel
+                {
+                    Id = f.Id,
+                    Name = f.Name,
+
+                    Sports = f.Sports.Select(s => new FacilitySportDetailViewModel
+                    {
+                        Id = s.Id,
+                        SportName = s.Name
+                    })
+                    .ToList()
+                })
+                .ToListAsync();
+
+            return facilities;
         }
 
         public async Task AddAsync(AddFacilityViewModel model)
@@ -98,14 +122,16 @@ namespace SportComplexApp.Services.Data
 
             if (facility.Sports.Any())
             {
-                throw new InvalidOperationException(FacilityHasSports);
+                throw new InvalidOperationException(_sharedLocalizer[ErrorMessages.Facility.FacilityNotFound]);
             }
 
-            if (facility != null && facility.Sports.Count == 0)
+            if (facility.Sports.Any())
             {
-                facility.IsDeleted = true;
-                await context.SaveChangesAsync();
+                throw new InvalidOperationException(_sharedLocalizer[ErrorMessages.Facility.FacilityHasSports]);
             }
+
+            facility.IsDeleted = true;
+            await context.SaveChangesAsync();
         }
     }
 }

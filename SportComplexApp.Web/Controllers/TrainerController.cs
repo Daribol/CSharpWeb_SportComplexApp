@@ -2,10 +2,13 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
+using SportComplexApp.Common;
 using SportComplexApp.Data;
 using SportComplexApp.Data.Models;
 using SportComplexApp.Services;
 using SportComplexApp.Services.Data.Contracts;
+using SportComplexApp.Web.ViewModels.Trainer;
 
 namespace SportComplexApp.Web.Controllers
 {
@@ -15,13 +18,15 @@ namespace SportComplexApp.Web.Controllers
         private readonly ISportService sportService;
         private readonly UserManager<Client> userManager;
         private readonly SportComplexDbContext context;
+        private readonly IStringLocalizer<SharedResource> sharedLocalizer;
 
-        public TrainerController(ITrainerService trainerService, ISportService sportService, UserManager<Client> userManager, SportComplexDbContext context)
+        public TrainerController(ITrainerService trainerService, ISportService sportService, UserManager<Client> userManager, SportComplexDbContext context, IStringLocalizer<SharedResource> sharedLocalizer)
         {
             this.trainerService = trainerService;
             this.sportService = sportService;
             this.userManager = userManager;
             this.context = context;
+            this.sharedLocalizer = sharedLocalizer;
         }
 
         [HttpGet]
@@ -65,6 +70,45 @@ namespace SportComplexApp.Web.Controllers
             return View(trainer);
         }
 
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> AllTrainers()
+        {
+            var trainersData = await context.Trainers
+                .Where(t => t.IsDeleted == false)
+                .Select(t => new
+                {
+                    Id = t.Id,
+                    FirstName = t.Name,
+                    LastName = t.LastName,
+                    SportNames = t.SportTrainers.Select(st => st.Sport.Name).ToList(),
+                    Reservations = t.Reservations.Select(r => new
+                    {
+                        Id = r.Id,
+                        RawDateTime = r.ReservationDateTime,
+                        Duration = r.Duration
+                    }).ToList()
+                })
+                .ToListAsync();
+
+            var trainers = trainersData.Select(t => new TrainerMasterViewModel
+            {
+                Id = t.Id,
+                FullName = $"{t.FirstName} {t.LastName}",
+                SpecialtySport = t.SportNames.Any() ? string.Join(", ", t.SportNames) : "No Specialty",
+                Reservations = t.Reservations.Select(r => new TrainerReservationDetailViewModel
+                {
+                    Id = r.Id,
+                    CustomerName = "Booked",
+                    ReservationDate = r.RawDateTime.ToString("yyyy-MM-dd"),
+                    TimeSlot = $"{r.RawDateTime:HH\\:mm} - {r.RawDateTime.AddMinutes(r.Duration):HH\\:mm}",
+                    Status = r.RawDateTime > DateTime.UtcNow ? "Upcoming" : "Completed"
+                }).ToList()
+            }).ToList();
+
+            return View(trainers);
+        }
+
         [Authorize(Roles = "Trainer")]
         public async Task<IActionResult> Reservations()
         {
@@ -97,14 +141,14 @@ namespace SportComplexApp.Web.Controllers
 
             if (reservation == null)
             {
-                TempData["ErrorMessage"] = "Reservation not found or you're not authorized to cancel it.";
+                TempData["ErrorMessage"] = sharedLocalizer["CancelReservationUnauthorized"].Value;
                 return RedirectToAction(nameof(Reservations));
             }
 
             context.Reservations.Remove(reservation);
             await context.SaveChangesAsync();
 
-            TempData["SuccessMessage"] = "Reservation cancelled successfully.";
+            TempData["SuccessMessage"] = sharedLocalizer[SuccessfulValidationMessages.Reservation.ReservationDeleted].Value;
             return RedirectToAction(nameof(Reservations));
         }
     }

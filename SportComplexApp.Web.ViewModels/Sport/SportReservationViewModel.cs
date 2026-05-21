@@ -20,7 +20,7 @@ namespace SportComplexApp.Web.ViewModels.Sport
 
         public int NumberOfPeople { get; set; }
 
-        public string TrainerName { get; set; } = "No Trainer Assigned";
+        public string? TrainerName { get; set; }
 
         public decimal TotalPrice { get; set; }
     }

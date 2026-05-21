@@ -1,11 +1,14 @@
-﻿@model IEnumerable<SportComplexApp.Web.ViewModels.Spa.MySpaReservationViewModel>
+﻿@using SportComplexApp.Web.ViewModels.Spa
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@model IEnumerable<MySpaReservationViewModel>
 
 @{
-    ViewData["Title"] = "My Spa Reservations";
+    ViewData["Title"] = Localizer["Title"];
 }
 
 <div class="container mt-5">
-    <h2 class="mb-4 text-center" style="color:#00ffc8;">My Spa Reservations</h2>
+    <h2 class="mb-4 text-center" style="color:#00ffc8;">@Localizer["Heading"]</h2>
 
     @if (TempData["SuccessMessage"] != null)
     {
@@ -18,7 +21,7 @@
     @if (!Model.Any())
     {
         <div class="alert alert-info text-center">
-            <i class="bi bi-info-circle-fill me-2"></i>You don't have any spa reservations yet.
+            <i class="bi bi-info-circle-fill me-2"></i>@Localizer["NoReservationsMsg"]
         </div>
     }
     else
@@ -27,12 +30,12 @@
             <table class="table table-hover align-middle border rounded shadow-sm neon-table">
                 <thead>
                     <tr>
-                        <th>Spa Service</th>
-                        <th>Date & Time</th>
-                        <th>Duration</th>
-                        <th>Price</th>
-                        <th>People</th>
-                        <th class="text-center">Actions</th>
+                        <th>@Localizer["TableColService"]</th>
+                        <th>@Localizer["TableColDateTime"]</th>
+                        <th>@Localizer["TableColDuration"]</th>
+                        <th>@Localizer["TableColPrice"]</th>
+                        <th>@Localizer["TableColPeople"]</th>
+                        <th class="text-center">@Localizer["TableColActions"]</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -41,15 +44,15 @@
                         <tr>
                             <td class="fw-semibold">@reservation.SpaServiceName</td>
                             <td>@reservation.DateTime.ToString("f")</td>
-                            <td>@reservation.Duration minutes</td>
-                            <td>@reservation.TotalPrice.ToString("F2") BGN</td>
+                            <td>@reservation.Duration @Localizer["Minutes"]</td>
+                            <td>@reservation.TotalPrice.ToString("F2") @Localizer["Currency"]</td>
                             <td>@reservation.People</td>
                             <td class="text-center">
                                 <form asp-action="Cancel" asp-route-id="@reservation.Id" method="post"
-                                      onsubmit="return confirm('Are you sure you want to cancel this reservation?');"
+                                      onsubmit="return confirm('@Localizer["ConfirmCancel"]');"
                                       class="d-inline">
                                     <button type="submit" class="btn btn-outline-neon btn-sm">
-                                        <i class="bi bi-x-circle"></i> Cancel
+                                        <i class="bi bi-x-circle"></i> @Localizer["BtnCancel"]
                                     </button>
                                 </form>
                             </td>

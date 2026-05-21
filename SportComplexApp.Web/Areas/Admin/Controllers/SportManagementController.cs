@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
+using SportComplexApp.Common;
 using SportComplexApp.Services.Data.Contracts;
 using SportComplexApp.Web.Controllers;
 using SportComplexApp.Web.ViewModels.Sport;
@@ -14,10 +16,12 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
     public class SportManagementController : BaseController
     {
         private readonly ISportService sportService;
+        private readonly IStringLocalizer<SharedResource> sharedLocalizer;
 
-        public SportManagementController(ISportService sportService)
+        public SportManagementController(ISportService sportService, IStringLocalizer<SharedResource> sharedLocalizer)
         {
             this.sportService = sportService;
+            this.sharedLocalizer = sharedLocalizer;
         }
 
         [HttpGet]
@@ -46,7 +50,7 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
         {
             if (model.MinPeople > model.MaxPeople)
             {
-                ModelState.AddModelError(nameof(model.MaxPeople), MaxPeopleLessThanMin);
+                ModelState.AddModelError(nameof(model.MaxPeople), sharedLocalizer[MaxPeopleLessThanMin]);
             }
 
             if (!ModelState.IsValid)
@@ -57,13 +61,13 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
 
             if (await sportService.ExistsAsync(model.Name))
             {
-                TempData["ErrorMessage"] = SportAlreadyExists;
+                TempData["ErrorMessage"] = sharedLocalizer[SportAlreadyExists].Value;
                 model.Facilities = await sportService.GetFacilitiesSelectListAsync();
                 return View(model);
             }
 
             await sportService.AddAsync(model);
-            TempData["SuccessMessage"] = SportCreated;
+            TempData["SuccessMessage"] = sharedLocalizer[SportCreated].Value;
             return RedirectToAction(nameof(All));
         }
 
@@ -84,7 +88,7 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
         {
             if (model.MinPeople > model.MaxPeople)
             {
-                ModelState.AddModelError(nameof(model.MaxPeople), MaxPeopleLessThanMin);
+                ModelState.AddModelError(nameof(model.MaxPeople), sharedLocalizer[MaxPeopleLessThanMin]);
             }
 
             if (!ModelState.IsValid)
@@ -96,12 +100,12 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
             try
             {
                 await sportService.EditAsync(id, model);
-                TempData["SuccessMessage"] = SportUpdated;
+                TempData["SuccessMessage"] = sharedLocalizer[SportUpdated].Value;
                 return RedirectToAction(nameof(All));
             }
             catch (DbUpdateConcurrencyException)
             {
-                ModelState.AddModelError(string.Empty, "Конфликт: Данните за този спорт бяха променени от друг администратор. Моля, презаредете страницата.");
+                ModelState.AddModelError(string.Empty, sharedLocalizer["ConcurrencyError"]);
                 model.Facilities = await sportService.GetFacilitiesSelectListAsync();
                 return View(model);
             }
@@ -123,7 +127,7 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
         public async Task<IActionResult> ConfirmDelete(int id)
         {
             await sportService.DeleteAsync(id);
-            TempData["SuccessMessage"] = SportDeleted;
+            TempData["SuccessMessage"] = sharedLocalizer[SportDeleted].Value;
             return RedirectToAction(nameof(All));
         }
     }

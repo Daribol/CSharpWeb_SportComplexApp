@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
+using SportComplexApp.Common;
 using SportComplexApp.Services.Data.Contracts;
 using SportComplexApp.Web.ViewModels.Spa;
 using static SportComplexApp.Common.SuccessfulValidationMessages.SpaReservation;
@@ -9,10 +11,12 @@ namespace SportComplexApp.Web.Controllers
     public class SpaController : BaseController
     {
         private readonly ISpaService spaService;
+        private readonly IStringLocalizer<SharedResource> sharedLocalizer;
 
-        public SpaController(ISpaService spaService)
+        public SpaController(ISpaService spaService, IStringLocalizer<SharedResource> sharedLocalizer)
         {
             this.spaService = spaService;
+            this.sharedLocalizer = sharedLocalizer;
         }
 
         [HttpGet]
@@ -67,7 +71,7 @@ namespace SportComplexApp.Web.Controllers
             try
             {
                 await spaService.CreateReservationAsync(model, userId);
-                TempData["SuccessMessage"] = SpaReservationCreated;
+                TempData["SuccessMessage"] = sharedLocalizer[SpaReservationCreated].Value;
                 return RedirectToAction(nameof(MyReservations));
             }
             catch (InvalidOperationException ex)
@@ -112,7 +116,7 @@ namespace SportComplexApp.Web.Controllers
 
             await spaService.CancelReservationAsync(id, userId);
 
-            TempData["SuccessMessage"] = SpaReservationDeleted;
+            TempData["SuccessMessage"] = sharedLocalizer[SpaReservationDeleted].Value;
             return RedirectToAction(nameof(MyReservations));
         }
     }

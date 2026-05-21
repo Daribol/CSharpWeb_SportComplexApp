@@ -1,13 +1,16 @@
-﻿@model SportComplexApp.Web.ViewModels.Trainer.AddTrainerViewModel
+﻿@using SportComplexApp.Web.ViewModels.Trainer
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@model AddTrainerViewModel
 
 @{
-    ViewData["Title"] = "Edit Trainer";
+    ViewData["Title"] = Localizer["Title"];
 }
 
 <div class="d-flex align-items-center justify-content-between mb-4">
-    <h2 class="mb-0" style="color:#00ffc8;">Edit Trainer</h2>
+    <h2 class="mb-0" style="color:#00ffc8;">@Localizer["Heading"]</h2>
     <a asp-action="All" class="btn btn-outline-neon">
-        <i class="bi bi-arrow-left-circle me-1"></i> Back
+        <i class="bi bi-arrow-left-circle me-1"></i> @Localizer["BtnBack"]
     </a>
 </div>
 
@@ -18,51 +21,46 @@
             <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
             <div class="row g-3">
-                <!-- First Name -->
                 <div class="col-md-6">
-                    <label asp-for="Name" class="form-label text-light">First name</label>
+                    <label asp-for="Name" class="form-label text-light">@Localizer["LabelFirstName"]</label>
                     <div class="input-group neon-input">
                         <span class="input-group-text neon-icon"><i class="bi bi-person"></i></span>
-                        <input asp-for="Name" class="form-control" placeholder="e.g. Alex" />
+                        <input asp-for="Name" class="form-control" placeholder="@Localizer["PlaceholderFirstName"]" />
                     </div>
                     <span asp-validation-for="Name" class="text-danger small"></span>
                 </div>
 
-                <!-- Last Name -->
                 <div class="col-md-6">
-                    <label asp-for="LastName" class="form-label text-light">Last name</label>
+                    <label asp-for="LastName" class="form-label text-light">@Localizer["LabelLastName"]</label>
                     <div class="input-group neon-input">
                         <span class="input-group-text neon-icon"><i class="bi bi-person-badge"></i></span>
-                        <input asp-for="LastName" class="form-control" placeholder="e.g. Ivanov" />
+                        <input asp-for="LastName" class="form-control" placeholder="@Localizer["PlaceholderLastName"]" />
                     </div>
                     <span asp-validation-for="LastName" class="text-danger small"></span>
                 </div>
 
-                <!-- Bio -->
                 <div class="col-12">
-                    <label asp-for="Bio" class="form-label text-light">Bio</label>
+                    <label asp-for="Bio" class="form-label text-light">@Localizer["LabelBio"]</label>
                     <div class="input-group neon-input">
                         <span class="input-group-text neon-icon"><i class="bi bi-card-text"></i></span>
-                        <textarea asp-for="Bio" rows="3" class="form-control" placeholder="Short intro, experience, certifications…"></textarea>
+                        <textarea asp-for="Bio" rows="3" class="form-control" placeholder="@Localizer["PlaceholderBio"]"></textarea>
                     </div>
                     <span asp-validation-for="Bio" class="text-danger small"></span>
                 </div>
 
-                <!-- Image URL -->
                 <div class="col-12">
-                    <label asp-for="ImageUrl" class="form-label text-light">Image URL</label>
+                    <label asp-for="ImageUrl" class="form-label text-light">@Localizer["LabelImage"]</label>
                     <div class="input-group neon-input">
                         <span class="input-group-text neon-icon"><i class="bi bi-image"></i></span>
-                        <input asp-for="ImageUrl" class="form-control" placeholder="https://…" />
+                        <input asp-for="ImageUrl" class="form-control" placeholder="@Localizer["PlaceholderImage"]" />
                     </div>
                     <span asp-validation-for="ImageUrl" class="text-danger small"></span>
                 </div>
 
-                <!-- Sports (multi-select chips with prechecked state) -->
                 <div class="col-12">
                     <div class="d-flex align-items-center justify-content-between">
-                        <label class="form-label text-light mb-1">Select Sports</label>
-                        <small class="text-light-50">You can select multiple</small>
+                        <label class="form-label text-light mb-1">@Localizer["LabelSelectSports"]</label>
+                        <small class="text-light-50">@Localizer["HelpSelectMultiple"]</small>
                     </div>
 
                     <div class="row g-2">
@@ -94,10 +92,10 @@
 
             <div class="mt-4 d-flex justify-content-end gap-2">
                 <button type="submit" class="btn btn-neon">
-                    <i class="bi bi-check-circle me-1"></i> Save Changes
+                    <i class="bi bi-check-circle me-1"></i> @Localizer["BtnSave"]
                 </button>
                 <a asp-action="All" class="btn btn-outline-neon">
-                    <i class="bi bi-x-circle me-1"></i> Cancel
+                    <i class="bi bi-x-circle me-1"></i> @Localizer["BtnCancel"]
                 </a>
             </div>
         </form>

@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
+using SportComplexApp.Common;
 using SportComplexApp.Services.Data.Contracts;
 using static SportComplexApp.Common.ErrorMessages.Tournament;
 using static SportComplexApp.Common.SuccessfulValidationMessages.Tournament;
@@ -9,10 +11,12 @@ namespace SportComplexApp.Web.Controllers
     public class TournamentController : BaseController
     {
         private readonly ITournamentService tournamentService;
+        private readonly IStringLocalizer<SharedResource> sharedLocalizer;
 
-        public TournamentController(ITournamentService tournamentService)
+        public TournamentController(ITournamentService tournamentService, IStringLocalizer<SharedResource> sharedLocalizer)
         {
             this.tournamentService = tournamentService;
+            this.sharedLocalizer = sharedLocalizer;
         }
 
         [HttpGet]
@@ -40,13 +44,13 @@ namespace SportComplexApp.Web.Controllers
 
             if (tournament.StartDate.Date <= today && tournament.EndDate.Date >= today)
             {
-                TempData["ErrorMessage"] = TournamentRegistrationClosed;
+                TempData["ErrorMessage"] = sharedLocalizer[ErrorMessages.Tournament.TournamentRegistrationClosed].Value;
                 return RedirectToAction(nameof(All));
             }
 
             if (User.IsInRole("Trainer"))
             {
-                TempData["ErrorMessage"] = TrainerCannotRegister;
+                TempData["ErrorMessage"] = sharedLocalizer[ErrorMessages.Tournament.TrainerCannotRegister].Value;
                 return RedirectToAction(nameof(All));
             }
 
@@ -54,12 +58,12 @@ namespace SportComplexApp.Web.Controllers
 
             if (isRegistered)
             {
-                TempData["ErrorMessage"] = TournamentAlreadyRegistered;
+                TempData["ErrorMessage"] = sharedLocalizer[ErrorMessages.Tournament.TournamentAlreadyRegistered].Value;
             }
             else
             {
                 await tournamentService.RegisterAsync(id, userId);
-                TempData["SuccessMessage"] = TournamentRegistered;
+                TempData["SuccessMessage"] = sharedLocalizer[SuccessfulValidationMessages.Tournament.TournamentRegistered].Value;
             }
             
             return RedirectToAction(nameof(MyTournaments));
@@ -75,11 +79,11 @@ namespace SportComplexApp.Web.Controllers
 
             if (success)
             {
-                TempData["SuccessMessage"] = TournamentUnregistered;
+                TempData["SuccessMessage"] = sharedLocalizer[SuccessfulValidationMessages.Tournament.TournamentUnregistered];
             }
             else
             {
-                TempData["ErrorMessage"] = CannotUnregister;
+                TempData["ErrorMessage"] = sharedLocalizer[ErrorMessages.Tournament.CannotUnregister].Value;
             }
 
             return RedirectToAction(nameof(MyTournaments));

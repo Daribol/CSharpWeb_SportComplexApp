@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
+using SportComplexApp.Common;
 using SportComplexApp.Services.Data.Contracts;
 using SportComplexApp.Web.Controllers;
 using System.Text;
@@ -13,11 +15,13 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
     {
         private readonly ISportService sportService;
         private readonly ISpaService spaService;
+        private readonly IStringLocalizer<SharedResource> sharedLocalizer;
 
-        public ReportController(ISportService sportService, ISpaService spaService)
+        public ReportController(ISportService sportService, ISpaService spaService, IStringLocalizer<SharedResource> sharedLocalizer)
         {
             this.sportService = sportService;
             this.spaService = spaService;
+            this.sharedLocalizer = sharedLocalizer;
         }
 
         [HttpGet]
@@ -34,7 +38,7 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
 
             var builder = new StringBuilder();
 
-            builder.AppendLine("Sport Name,Total Reservations,Total Visitors,Total Revenue (BGN)");
+            builder.AppendLine($"{sharedLocalizer["CsvSportName"]},{sharedLocalizer["CsvTotalReservations"]},{sharedLocalizer["CsvTotalVisitors"]},{sharedLocalizer["CsvTotalRevenue"]}");
 
             foreach (var item in reportData)
             {
@@ -43,7 +47,7 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
                 builder.AppendLine($"{safeSportName},{item.TotalReservations},{item.TotalPeople},{item.TotalRevenue:F2}");
             }
 
-            builder.AppendLine($"TOTAL,{reportData.Sum(x => x.TotalReservations)},{reportData.Sum(x => x.TotalPeople)},{reportData.Sum(x => x.TotalRevenue):F2}");
+            builder.AppendLine($"{sharedLocalizer["CsvTotalRow"]},{reportData.Sum(x => x.TotalReservations)},{reportData.Sum(x => x.TotalPeople)},{reportData.Sum(x => x.TotalRevenue):F2}");
 
             var fileBytes = Encoding.UTF8.GetBytes(builder.ToString());
 
@@ -67,7 +71,7 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
 
             var builder = new StringBuilder();
 
-            builder.AppendLine("Spa Service Name,Total Reservations,Total Revenue (BGN)");
+            builder.AppendLine($"{sharedLocalizer["CsvSpaServiceName"]},{sharedLocalizer["CsvTotalReservations"]},{sharedLocalizer["CsvTotalRevenue"]}");
 
             foreach (var item in reportData)
             {
@@ -76,7 +80,7 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
                 builder.AppendLine($"{safeSpaName},{item.TotalReservations},{item.TotalRevenue:F2}");
             }
 
-            builder.AppendLine($"TOTAL,{reportData.Sum(x => x.TotalReservations)},{reportData.Sum(x => x.TotalRevenue):F2}");
+            builder.AppendLine($"{sharedLocalizer["CsvTotalRow"]},{reportData.Sum(x => x.TotalReservations)},{reportData.Sum(x => x.TotalRevenue):F2}");
 
             var fileBytes = Encoding.UTF8.GetBytes(builder.ToString());
             var bom = Encoding.UTF8.GetPreamble();

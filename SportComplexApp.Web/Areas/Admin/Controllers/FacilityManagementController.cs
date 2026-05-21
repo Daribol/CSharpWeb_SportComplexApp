@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
+using SportComplexApp.Common;
 using SportComplexApp.Services.Data.Contracts;
 using SportComplexApp.Web.Controllers;
 using SportComplexApp.Web.ViewModels.Facility;
@@ -14,15 +16,17 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
     public class FacilityManagementController : BaseController
     {
         private readonly IFacilityService facilityService;
+        private readonly IStringLocalizer<SharedResource> sharedLocalizer;
 
-        public FacilityManagementController(IFacilityService facilityService)
+        public FacilityManagementController(IFacilityService facilityService, IStringLocalizer<SharedResource> sharedLocalizer)
         {
             this.facilityService = facilityService;
+            this.sharedLocalizer = sharedLocalizer;
         }
 
         public async Task<IActionResult> All()
         {
-            var facilities = await facilityService.GetAllAsync();
+            var facilities = await facilityService.GetAllFacilitiesWithSportsAsync();
             return View(facilities);
         }
 
@@ -42,12 +46,12 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
 
             if (await facilityService.ExistsAsync(model.Name))
             {
-                TempData["ErrorMessage"] = FacilityAlreadyExists;
+                TempData["ErrorMessage"] = sharedLocalizer[FacilityAlreadyExists].Value;
                 return View(model);
             }
 
             await facilityService.AddAsync(model);
-            TempData["SuccessMessage"] = FacilityAdded;
+            TempData["SuccessMessage"] = sharedLocalizer[FacilityAdded].Value;
             return RedirectToAction(nameof(All));
         }
 
@@ -74,19 +78,17 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
 
             try
             {
-                // Тук извиквате вашия сървис за запазване на промените
                 await facilityService.EditAsync(id, model);
                 return RedirectToAction(nameof(All));
             }
             catch (DbUpdateConcurrencyException)
             {
-                // Това е грешката, която EF Core хвърля при конфликт!
-                ModelState.AddModelError(string.Empty, "Данните бяха променени от друг потребител, докато вие ги редактирахте. Моля, презаредете страницата и опитайте отново.");
+                ModelState.AddModelError(string.Empty, sharedLocalizer["ConcurrencyError"]);
                 return View(model);
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError(string.Empty, "Възникна неочаквана грешка: " + ex.Message);
+                ModelState.AddModelError(string.Empty, sharedLocalizer["UnexpectedError"] + ex.Message);
                 return View(model);
             }
         }
@@ -109,7 +111,7 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
             try
             {
                 await facilityService.DeleteAsync(id);
-                TempData["SuccessMessage"] = FacilityDeleted;
+                TempData["SuccessMessage"] = sharedLocalizer[FacilityDeleted].Value;
             }
             catch (InvalidOperationException ex)
             {

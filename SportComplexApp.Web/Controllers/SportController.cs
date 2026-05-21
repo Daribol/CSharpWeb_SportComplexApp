@@ -1,19 +1,22 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 using SportComplexApp.Common;
 using SportComplexApp.Services.Data.Contracts;
 using SportComplexApp.Web.ViewModels.Sport;
-using static SportComplexApp.Common.ErrorMessages.Sport;
+
 
 namespace SportComplexApp.Web.Controllers
 {
     public class SportController : BaseController
     {
         private readonly ISportService sportService;
+        private readonly IStringLocalizer<SharedResource> sharedLocalizer;
 
-        public SportController(ISportService sportService)
+        public SportController(ISportService sportService, IStringLocalizer<SharedResource> sharedLocalizer)
         {
             this.sportService = sportService;
+            this.sharedLocalizer = sharedLocalizer;
         }
 
         [HttpGet]
@@ -71,7 +74,7 @@ namespace SportComplexApp.Web.Controllers
             try
             {
                 await sportService.CreateReservationAsync(model, userId);
-                TempData["SuccessMessage"] = SuccessfulValidationMessages.Reservation.ReservationCreated;
+                TempData["SuccessMessage"] = sharedLocalizer[SuccessfulValidationMessages.Reservation.ReservationCreated].Value;
                 return RedirectToAction(nameof(MyReservations));
             }
             catch (InvalidOperationException ex)
@@ -118,7 +121,7 @@ namespace SportComplexApp.Web.Controllers
 
             await sportService.CancelReservationAsync(id, userId);
 
-            TempData["SuccessMessage"] = SuccessfulValidationMessages.Reservation.ReservationDeleted;
+            TempData["SuccessMessage"] = sharedLocalizer[SuccessfulValidationMessages.Reservation.ReservationDeleted].Value;
             return RedirectToAction(nameof(MyReservations));
         }
     }

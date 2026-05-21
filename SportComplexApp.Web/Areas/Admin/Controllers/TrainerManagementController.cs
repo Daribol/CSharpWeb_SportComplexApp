@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
+using SportComplexApp.Common;
 using SportComplexApp.Services.Data.Contracts;
 using SportComplexApp.Web.Controllers;
 using SportComplexApp.Web.ViewModels.Trainer;
@@ -14,10 +16,12 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
     public class TrainerManagementController : BaseController
     {
         private readonly ITrainerService trainerService;
+        private readonly IStringLocalizer<SharedResource> sharedLocalizer;
 
-        public TrainerManagementController(ITrainerService trainerService)
+        public TrainerManagementController(ITrainerService trainerService, IStringLocalizer<SharedResource> sharedLocalizer)
         {
             this.trainerService = trainerService;
+            this.sharedLocalizer = sharedLocalizer;
         }
 
         [HttpGet]
@@ -43,7 +47,7 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
         {
             if(model.SelectedSportIds == null || !model.SelectedSportIds.Any())
             {
-                ModelState.AddModelError(nameof(model.SelectedSportIds), MustSelectAtLeastOneSport);
+                ModelState.AddModelError(nameof(model.SelectedSportIds), sharedLocalizer[MustSelectAtLeastOneSport]);
             }
 
             if (!ModelState.IsValid)
@@ -53,7 +57,7 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
             }
 
             await trainerService.AddAsync(model);
-            TempData["SuccessMessage"] = TrainerAdded;
+            TempData["SuccessMessage"] = sharedLocalizer[TrainerAdded].Value;
             return RedirectToAction(nameof(All));
         }
 
@@ -75,7 +79,7 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
         {
             if (model.SelectedSportIds == null || !model.SelectedSportIds.Any())
             {
-                ModelState.AddModelError(nameof(model.SelectedSportIds), MustSelectAtLeastOneSport);
+                ModelState.AddModelError(nameof(model.SelectedSportIds), sharedLocalizer[MustSelectAtLeastOneSport]);
             }
 
             if (!ModelState.IsValid)
@@ -87,12 +91,12 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
             try
             {
                 await trainerService.EditAsync(id, model);
-                TempData["SuccessMessage"] = TrainerUpdated;
+                TempData["SuccessMessage"] = sharedLocalizer[TrainerUpdated].Value;
                 return RedirectToAction(nameof(All));
             }
             catch (DbUpdateConcurrencyException)
             {
-                ModelState.AddModelError(string.Empty, "Конфликт: Данните за този треньор бяха променени от друг администратор. Моля, презаредете страницата.");
+                ModelState.AddModelError(string.Empty, sharedLocalizer["ConcurrencyError"]);
                 model.AvailableSports = await trainerService.GetSportsAsSelectListAsync();
                 return View(model);
             }
@@ -114,7 +118,7 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
         public async Task<IActionResult> ConfirmDelete(int id)
         {
             await trainerService.DeleteAsync(id);
-            TempData["SuccessMessage"] = TrainerDeleted;
+            TempData["SuccessMessage"] = sharedLocalizer[TrainerDeleted].Value;
             return RedirectToAction(nameof(All));
         }
     }

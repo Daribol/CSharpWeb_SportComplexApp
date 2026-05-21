@@ -87,23 +87,44 @@ namespace SportComplexApp.Services.Data
                 trainersQuery = trainersQuery.Where(t => (t.Name + " " + t.LastName).ToLower().Contains(qLower));
             }
 
-            trainersQuery = sortBy switch
-            {
-                "name_desc" => trainersQuery.OrderByDescending(t => t.Name).ThenByDescending(t => t.LastName),
-                "name_asc" => trainersQuery.OrderBy(t => t.Name).ThenBy(t => t.LastName),
-                _ => trainersQuery.OrderBy(t => t.Id)
-            };
-
-            return await trainersQuery
-                .Select(t => new AllTrainersViewModel
+            var trainersData = await trainersQuery
+        .Select(t => new
+        {
+            Id = t.Id,
+            Name = t.Name,
+            LastName = t.LastName,
+            ImageUrl = t.ImageUrl,
+            Sports = t.SportTrainers.Select(st => st.Sport.Name).ToList(),
+            Reservations = t.Reservations
+                .Where(r => r.ReservationDateTime > DateTime.UtcNow)
+                .Select(r => new
                 {
-                    Id = t.Id,
-                    Name = t.Name,
-                    LastName = t.LastName,
-                    ImageUrl = t.ImageUrl,
-                    Sports = t.SportTrainers.Select(st => st.Sport.Name).ToList()
-                })
-                .ToListAsync();
+                    Id = r.Id,
+                    RawDateTime = r.ReservationDateTime,
+                    Duration = r.Duration
+                }).ToList()
+        })
+        .ToListAsync();
+
+            var finalTrainers = trainersData.Select(t => new AllTrainersViewModel
+            {
+                Id = t.Id,
+                Name = t.Name,
+                LastName = t.LastName,
+                ImageUrl = t.ImageUrl,
+                Sports = t.Sports,
+
+                Reservations = t.Reservations.Select(r => new TrainerReservationDetailViewModel
+                {
+                    Id = r.Id,
+                    CustomerName = "Booked",
+                    ReservationDate = r.RawDateTime.ToString("yyyy-MM-dd"),
+                    TimeSlot = $"{r.RawDateTime:HH\\:mm} - {r.RawDateTime.AddMinutes(r.Duration):HH\\:mm}",
+                    Status = "Upcoming"
+                }).ToList()
+            });
+
+            return finalTrainers;
         }
         public async Task<TrainerDetailsViewModel?> GetTrainerDetailsAsync(int trainerId)
         {
@@ -150,6 +171,51 @@ namespace SportComplexApp.Services.Data
                 .Where(t => t.ClientId == userId && !t.IsDeleted)
                 .Select(t => (int?)t.Id)
                 .FirstOrDefaultAsync();
+        }
+
+        public async Task<IEnumerable<TrainerMasterViewModel>> GetTrainersWithReservationsAsync()
+        {
+            var trainersData = await context.Trainers
+                .Where(t => t.IsDeleted == false)
+                .Select(t => new
+                {
+                    Id = t.Id,
+                    FirstName = t.Name,
+                    LastName = t.LastName,
+                    SportNames = t.SportTrainers.Select(st => st.Sport.Name).ToList(),
+
+                    Reservations = t.Reservations.Select(r => new
+                    {
+                        Id = r.Id,
+                        ClientFirstName = r.Client.FirstName,
+                        ClientLastName = r.Client.LastName,
+
+                        RawDateTime = r.ReservationDateTime,
+                        Duration = r.Duration
+                    }).ToList()
+               })
+               .ToListAsync();
+
+            var trainers = trainersData.Select(t => new TrainerMasterViewModel
+            {
+                Id = t.Id,
+                FullName = $"{t.FirstName} {t.LastName}",
+                SpecialtySport = t.SportNames.Any() ? string.Join(", ", t.SportNames) : "No Specialty",
+
+                Reservations = t.Reservations.Select(r => new TrainerReservationDetailViewModel
+                {
+                    Id = r.Id,
+                    CustomerName = $"{r.ClientFirstName} {r.ClientLastName}",
+
+                    ReservationDate = r.RawDateTime.ToString("yyyy-MM-dd"),
+
+                    TimeSlot = $"{r.RawDateTime:HH\\:mm} - {r.RawDateTime.AddMinutes(r.Duration):HH\\:mm}",
+
+                    Status = r.RawDateTime > DateTime.UtcNow ? "Upcoming" : "Completed"
+                }).ToList()
+            }).ToList();
+
+            return trainers;
         }
 
         public async Task<List<TrainerReservationViewModel>> GetReservationsForTrainerAsync(int trainerId)

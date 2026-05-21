@@ -1,13 +1,16 @@
-﻿@model IEnumerable<SportComplexApp.Web.ViewModels.Spa.SpaServiceViewModel>
+﻿@using SportComplexApp.Web.ViewModels.Spa
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@model IEnumerable<SpaServiceViewModel>
 
 @{
-    ViewData["Title"] = "Manage Spa Services";
+    ViewData["Title"] = Localizer["Title"];
 }
 
 <div class="d-flex align-items-center justify-content-between mb-4">
-    <h2 class="mb-0 text-neon">Manage Spa Services</h2>
+    <h2 class="mb-0 text-neon">@Localizer["Heading"]</h2>
     <a asp-action="Add" class="btn btn-neon">
-        <i class="bi bi-plus-circle"></i> Add New Spa Service
+        <i class="bi bi-plus-circle"></i> @Localizer["BtnAddSpa"]
     </a>
 </div>
 
@@ -29,45 +32,46 @@
 <form method="get" asp-action="All" class="mb-4">
     <div class="row g-3 align-items-end">
         <div class="col-md-5">
-            <label for="searchQuery" class="form-label text-light">Search by Name</label>
+            <label for="searchQuery" class="form-label text-light">@Localizer["LabelSearchName"]</label>
             <div class="input-group">
                 <span class="input-group-text bg-dark border-secondary text-neon"><i class="bi bi-search"></i></span>
-                <input type="text" name="searchQuery" id="searchQuery" class="form-control bg-dark text-light border-secondary" placeholder="E.g. Hot Stone Massage..." value="@Context.Request.Query["searchQuery"]" />
+                <input type="text" name="searchQuery" id="searchQuery" class="form-control bg-dark text-light border-secondary" placeholder="@Localizer["PlaceholderSearch"]" value="@Context.Request.Query["searchQuery"]" />
             </div>
         </div>
 
         <div class="col-md-4">
-            <label for="sortBy" class="form-label text-light">Sort By</label>
+            <label for="sortBy" class="form-label text-light">@Localizer["LabelSortBy"]</label>
             <div class="input-group">
                 <span class="input-group-text bg-dark border-secondary text-neon"><i class="bi bi-sort-down"></i></span>
                 <select name="sortBy" id="sortBy" class="form-select bg-dark text-light border-secondary">
-                    <option value="">-- Default --</option>
-                    <option value="name_asc" selected="@(Context.Request.Query["sortBy"] == "name_asc")">Name (A-Z)</option>
-                    <option value="name_desc" selected="@(Context.Request.Query["sortBy"] == "name_desc")">Name (Z-A)</option>
-                    <option value="price_asc" selected="@(Context.Request.Query["sortBy"] == "price_asc")">Price (Lowest)</option>
-                    <option value="price_desc" selected="@(Context.Request.Query["sortBy"] == "price_desc")">Price (Highest)</option>
+                    <option value="">@Localizer["SortDefault"]</option>
+                    <option value="name_asc" selected="@(Context.Request.Query["sortBy"] == "name_asc")">@Localizer["SortNameAsc"]</option>
+                    <option value="name_desc" selected="@(Context.Request.Query["sortBy"] == "name_desc")">@Localizer["SortNameDesc"]</option>
+                    <option value="price_asc" selected="@(Context.Request.Query["sortBy"] == "price_asc")">@Localizer["SortPriceAsc"]</option>
+                    <option value="price_desc" selected="@(Context.Request.Query["sortBy"] == "price_desc")">@Localizer["SortPriceDesc"]</option>
                 </select>
             </div>
         </div>
 
         <div class="col-md-3 d-flex gap-2">
             <button type="submit" class="btn btn-neon flex-grow-1">
-                <i class="bi bi-funnel-fill"></i> Filter
+                <i class="bi bi-funnel-fill"></i> @Localizer["BtnFilter"]
             </button>
             <a asp-action="All" class="btn btn-outline-secondary">
-                <i class="bi bi-x-circle"></i> Clear
+                <i class="bi bi-x-circle"></i> @Localizer["BtnClear"]
             </a>
         </div>
     </div>
 </form>
+
 @if (!Model.Any())
 {
     <div class="card card-dark text-center p-5 rounded-4 border-0">
         <div class="display-6 mb-2">💆</div>
-        <h5 class="mb-1 text-light">No spa services available</h5>
-        <p class="text-muted mb-3">Add your first spa service to get started.</p>
+        <h5 class="mb-1 text-light">@Localizer["NoSpaTitle"]</h5>
+        <p class="text-muted mb-3">@Localizer["NoSpaDesc"]</p>
         <a asp-action="Add" class="btn btn-neon">
-            <i class="bi bi-plus-circle"></i> Add Spa Service
+            <i class="bi bi-plus-circle"></i> @Localizer["BtnAddSpa"]
         </a>
     </div>
 }
@@ -96,16 +100,16 @@ else
                         <p class="text-muted small mb-3 clamp-3">@spa.Description</p>
 
                         <ul class="list-unstyled small text-muted mb-3">
-                            <li><i class="bi bi-cash-coin text-success"></i> @spa.Price.ToString("F2") BGN</li>
-                            <li><i class="bi bi-stopwatch text-primary"></i> @spa.Duration min</li>
+                            <li><i class="bi bi-cash-coin text-success"></i> @spa.Price.ToString("F2") @Localizer["Currency"]</li>
+                            <li><i class="bi bi-stopwatch text-primary"></i> @spa.Duration @Localizer["Minutes"]</li>
                         </ul>
 
                         <div class="mt-auto d-flex gap-2">
                             <a asp-action="Edit" asp-route-id="@spa.Id" class="btn btn-outline-warning btn-sm">
-                                <i class="bi bi-pencil-square"></i> Edit
+                                <i class="bi bi-pencil-square"></i> @Localizer["BtnEdit"]
                             </a>
                             <a asp-action="Delete" asp-route-id="@spa.Id" class="btn btn-outline-danger btn-sm">
-                                <i class="bi bi-trash3"></i> Delete
+                                <i class="bi bi-trash3"></i> @Localizer["BtnDelete"]
                             </a>
                         </div>
                     </div>

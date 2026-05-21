@@ -9,6 +9,7 @@ using SportComplexApp.Services.Mapping;
 using SportComplexApp.Web.ViewModels;
 using SportComplexApp.Services.Data;
 using SportComplexApp.Data.Configuration;
+using SportComplexApp.Common;
 
 var builder = WebApplication.CreateBuilder(args);
 string? connectionString = builder.Configuration.GetConnectionString("SQLServer");
@@ -40,10 +41,7 @@ builder.Services.AddSingleton<TimeProvider>(TimeProvider.System);
 builder.Services.AddMemoryCache();
 
 builder.Services.AddRazorPages();
-builder.Services.AddControllersWithViews(cfg =>
-{
-    cfg.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
-});
+
 
 builder.Services.AddScoped<ISportService, SportService>();
 builder.Services.AddScoped<ISpaService, SportComplexApp.Services.Data.SpaService>();
@@ -52,8 +50,30 @@ builder.Services.AddScoped<ITrainerService, TrainerService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IFacilityService, FacilityService>();
 
+builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
+
+builder.Services.AddControllersWithViews(cfg =>
+{
+    cfg.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
+})
+.AddViewLocalization(Microsoft.AspNetCore.Mvc.Razor.LanguageViewLocationExpanderFormat.Suffix)
+.AddDataAnnotationsLocalization(options =>
+{
+    options.DataAnnotationLocalizerProvider = (type, factory) =>
+        factory.Create(typeof(SharedResource));
+});
+
+builder.Services.Configure<RequestLocalizationOptions>(options =>
+{
+    var supportedCultures = new[] { "en", "bg" };
+    options.SetDefaultCulture("en");
+    options.AddSupportedCultures(supportedCultures);
+    options.AddSupportedUICultures(supportedCultures);
+});
 
 var app = builder.Build();
+
+app.UseRequestLocalization();
 
 using (var scope = app.Services.CreateScope())
 {

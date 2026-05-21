@@ -1,30 +1,33 @@
 ﻿@using SportComplexApp.Common
 @using SportComplexApp.Web.ViewModels.Home
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
 @model HomePageViewModel
+
 @{
-    ViewData["Title"] = "Welcome to the Sport Complex";
+    // Превеждаме и заглавието на страницата в таба на браузъра
+    ViewData["Title"] = Localizer["PageTitle"];
 }
 <link rel="stylesheet" href="~/css/neon-theme.css" asp-append-version="true" />
+
 <div class="container mt-4">
 
-    <!-- HERO -->
     <div class="position-relative rounded-4 overflow-hidden shadow-lg mb-5 home-hero">
         <div class="ratio ratio-21x9"></div>
         <div class="position-absolute top-50 start-50 translate-middle text-center px-3 px-md-5">
-            <h1 class="display-5 fw-bold text-white mb-3">Welcome to SportComplexApp</h1>
+            <h1 class="display-5 fw-bold text-white mb-3">@Localizer["HeroTitle"]</h1>
             <p class="lead text-white-50 mb-3">
-                Discover fitness, trainers & premium spa — all in one place.
+                @Localizer["HeroSubtitle"]
             </p>
             <a href="/Sport/All" class="btn btn-neon btn-lg rounded-pill">
-                <i class="bi bi-rocket-takeoff me-1"></i> Get Started
+                <i class="bi bi-rocket-takeoff me-1"></i> @Localizer["GetStartedBtn"]
             </a>
         </div>
     </div>
     
-    <!-- Working hours -->
     <section class="container my-5 text-center">
         <h3 class="mb-3">
-            <i class="bi bi-clock"></i> Working Hours
+            <i class="bi bi-clock"></i> @Localizer["WorkingHoursTitle"]
         </h3>
         <p class="lead">
             @ApplicationConstants.OpeningTime.ToString(@"hh\:mm") -
@@ -32,16 +35,14 @@
         </p>
     </section>
 
-    <!-- EXPLORE -->
-    <h2 class="mb-4 text-center" style="color:#00ffc8;">Explore Our Services</h2>
+    <h2 class="mb-4 text-center" style="color:#00ffc8;">@Localizer["ExploreServicesTitle"]</h2>
 
     <div class="row g-4">
-        <!-- Sports -->
         <div class="col-12 col-lg-4">
             <div class="card card-dark border-0 shadow-sm">
                 <div class="card-header bg-transparent border-0 d-flex align-items-center justify-content-between">
-                    <h4 class="mb-0 text-white">Sports</h4>
-                    <a asp-controller="Sport" asp-action="All" class="btn btn-outline-neon btn-sm">View all</a>
+                    <h4 class="mb-0 text-white">@Localizer["SportsCategory"]</h4>
+                    <a asp-controller="Sport" asp-action="All" class="btn btn-outline-neon btn-sm">@Localizer["ViewAllBtn"]</a>
                 </div>
                 @if (Model.Sports?.Any() == true)
                 {
@@ -70,17 +71,16 @@
                 }
                 else
                 {
-                    <div class="p-4 text-muted">No sports to show.</div>
+                    <div class="p-4 text-muted">@Localizer["NoSportsMsg"]</div>
                 }
             </div>
         </div>
 
-        <!-- Trainers -->
         <div class="col-12 col-lg-4">
             <div class="card card-dark border-0 shadow-sm">
                 <div class="card-header bg-transparent border-0 d-flex align-items-center justify-content-between">
-                    <h4 class="mb-0 text-white">Trainers</h4>
-                    <a asp-controller="Trainer" asp-action="Browse" class="btn btn-outline-neon btn-sm">View all</a>
+                    <h4 class="mb-0 text-white">@Localizer["TrainersCategory"]</h4>
+                    <a asp-controller="Trainer" asp-action="Browse" class="btn btn-outline-neon btn-sm">@Localizer["ViewAllBtn"]</a>
                 </div>
                 @if (Model.Trainers?.Any() == true)
                 {
@@ -109,17 +109,16 @@
                 }
                 else
                 {
-                    <div class="p-4 text-muted">No trainers to show.</div>
+                    <div class="p-4 text-muted">@Localizer["NoTrainersMsg"]</div>
                 }
             </div>
         </div>
 
-        <!-- Spa -->
         <div class="col-12 col-lg-4">
             <div class="card card-dark border-0 shadow-sm">
                 <div class="card-header bg-transparent border-0 d-flex align-items-center justify-content-between">
-                    <h4 class="mb-0 text-white">Spa Procedures</h4>
-                    <a asp-controller="Spa" asp-action="All" class="btn btn-outline-neon btn-sm">View all</a>
+                    <h4 class="mb-0 text-white">@Localizer["SpaCategory"]</h4>
+                    <a asp-controller="Spa" asp-action="All" class="btn btn-outline-neon btn-sm">@Localizer["ViewAllBtn"]</a>
                 </div>
                 @if (Model.SpaProcedures?.Any() == true)
                 {
@@ -148,7 +147,7 @@
                 }
                 else
                 {
-                    <div class="p-4 text-muted">No spa procedures to show.</div>
+                    <div class="p-4 text-muted">@Localizer["NoSpaMsg"]</div>
                 }
             </div>
         </div>

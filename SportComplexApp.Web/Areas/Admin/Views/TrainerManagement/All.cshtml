@@ -1,9 +1,16 @@
-﻿@model IEnumerable<SportComplexApp.Web.ViewModels.Trainer.AllTrainersViewModel>
+﻿@using SportComplexApp.Web.ViewModels.Trainer
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@model IEnumerable<AllTrainersViewModel>
+
+@{
+    ViewData["Title"] = Localizer["Title"];
+}
 
 <div class="d-flex align-items-center justify-content-between mb-4">
-    <h2 class="mb-0" style="color:#00ffc8;">Manage Trainers</h2>
+    <h2 class="mb-0" style="color:#00ffc8;">@Localizer["Heading"]</h2>
     <a asp-action="Add" class="btn btn-neon">
-        <i class="bi bi-plus-circle me-1"></i> Add New Trainer
+        <i class="bi bi-plus-circle me-1"></i> @Localizer["BtnAddTrainer"]
     </a>
 </div>
 
@@ -18,43 +25,44 @@
 <form method="get" asp-action="All" class="mb-4">
     <div class="row g-3 align-items-end">
         <div class="col-md-5">
-            <label for="query" class="form-label text-light">Search Trainer Name</label>
+            <label for="query" class="form-label text-light">@Localizer["LabelSearch"]</label>
             <div class="input-group neon-input">
                 <span class="input-group-text neon-icon"><i class="bi bi-search"></i></span>
-                <input type="text" name="query" id="query" class="form-control" placeholder="E.g. Ivan..." value="@Context.Request.Query["query"]" />
+                <input type="text" name="query" id="query" class="form-control" placeholder="@Localizer["PlaceholderSearch"]" value="@Context.Request.Query["query"]" />
             </div>
         </div>
 
         <div class="col-md-4">
-            <label for="sortBy" class="form-label text-light">Sort By</label>
+            <label for="sortBy" class="form-label text-light">@Localizer["LabelSortBy"]</label>
             <div class="input-group neon-input">
                 <span class="input-group-text neon-icon"><i class="bi bi-sort-down"></i></span>
                 <select name="sortBy" id="sortBy" class="form-select">
-                    <option value="">-- Default --</option>
-                    <option value="name_asc" selected="@(Context.Request.Query["sortBy"] == "name_asc")">Name (A-Z)</option>
-                    <option value="name_desc" selected="@(Context.Request.Query["sortBy"] == "name_desc")">Name (Z-A)</option>
+                    <option value="">@Localizer["SortDefault"]</option>
+                    <option value="name_asc" selected="@(Context.Request.Query["sortBy"] == "name_asc")">@Localizer["SortNameAsc"]</option>
+                    <option value="name_desc" selected="@(Context.Request.Query["sortBy"] == "name_desc")">@Localizer["SortNameDesc"]</option>
                 </select>
             </div>
         </div>
 
         <div class="col-md-3 d-flex gap-2">
             <button type="submit" class="btn btn-outline-neon flex-grow-1">
-                <i class="bi bi-funnel-fill"></i> Filter
+                <i class="bi bi-funnel-fill"></i> @Localizer["BtnFilter"]
             </button>
             <a asp-action="All" class="btn btn-outline-neon">
-                <i class="bi bi-x-circle"></i> Clear
+                <i class="bi bi-x-circle"></i> @Localizer["BtnClear"]
             </a>
         </div>
     </div>
 </form>
+
 @if (!Model.Any())
 {
     <div class="card card-dark text-center p-5 rounded-4 border-0">
         <div class="display-6 mb-2">🧑‍🏫</div>
-        <h5 class="mb-1 text-light">No trainers available</h5>
-        <p class="text-light-50 mb-3">Add your first trainer to get started.</p>
+        <h5 class="mb-1 text-light">@Localizer["EmptyTitle"]</h5>
+        <p class="text-light-50 mb-3">@Localizer["EmptyDesc"]</p>
         <a asp-action="Add" class="btn btn-neon">
-            <i class="bi bi-plus-circle"></i> Add Trainer
+            <i class="bi bi-plus-circle"></i> @Localizer["BtnEmptyAdd"]
         </a>
     </div>
 }
@@ -79,7 +87,7 @@ else
                     <div class="card-body d-flex flex-column">
                         <div class="d-flex align-items-start justify-content-between mb-2">
                             <h5 class="card-title mb-0 text-white">@t.Name @t.LastName</h5>
-                            <span class="badge badge-soft"><i class="bi bi-award me-1"></i> Trainer</span>
+                            <span class="badge badge-soft"><i class="bi bi-award me-1"></i> @Localizer["BadgeTrainer"]</span>
                         </div>
 
                         <div class="mb-3">
@@ -92,16 +100,16 @@ else
                             }
                             else
                             {
-                                <span class="text-light-50">No specialization</span>
+                                <span class="text-light-50">@Localizer["NoSpecialization"]</span>
                             }
                         </div>
 
                         <div class="mt-auto d-flex gap-2">
                             <a asp-action="Edit" asp-route-id="@t.Id" class="btn btn-outline-neon btn-sm">
-                                <i class="bi bi-pencil-square"></i> Edit
+                                <i class="bi bi-pencil-square"></i> @Localizer["BtnEdit"]
                             </a>
                             <a asp-action="Delete" asp-route-id="@t.Id" class="btn btn-outline-neon btn-sm">
-                                <i class="bi bi-trash3"></i> Delete
+                                <i class="bi bi-trash3"></i> @Localizer["BtnDelete"]
                             </a>
                         </div>
                     </div>

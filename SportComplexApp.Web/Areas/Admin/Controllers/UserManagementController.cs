@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
+using SportComplexApp.Common;
 using SportComplexApp.Data.Models;
 using SportComplexApp.Services.Data.Contracts;
 using SportComplexApp.Web.Controllers;
@@ -15,11 +17,13 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
     {
         private readonly IUserService userService;
         private readonly UserManager<Client> userManager;
+        private readonly IStringLocalizer<SharedResource> sharedLocalizer;
 
-        public UserManagementController(IUserService userService, UserManager<Client> userManager)
+        public UserManagementController(IUserService userService, UserManager<Client> userManager, IStringLocalizer<SharedResource> sharedLocalizer)
         {
             this.userService = userService;
             this.userManager = userManager;
+            this.sharedLocalizer = sharedLocalizer;
         }
 
         public async Task<IActionResult> Index()
@@ -33,7 +37,7 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
         {
             if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(role))
             {
-                TempData["ErrorMessage"] = UserIdOrRoleCannotBeEmpty;
+                TempData["ErrorMessage"] = sharedLocalizer[UserIdOrRoleCannotBeEmpty].Value;
                 return RedirectToAction(nameof(Index));
             }
 
@@ -47,13 +51,13 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
             var user = await userManager.FindByIdAsync(userId);
             if (user == null)
             {
-                TempData["ErrorMessage"] = UserDoesNotExist;
+                TempData["ErrorMessage"] = sharedLocalizer[UserDoesNotExist].Value;
                 return RedirectToAction(nameof(Index));
             }
 
             if (await userManager.IsInRoleAsync(user, role))
             {
-                TempData["ErrorMessage"] = UserAlreadyInRole;
+                TempData["ErrorMessage"] = sharedLocalizer[UserAlreadyInRole].Value;
                 return RedirectToAction(nameof(Index));
             }
 
@@ -61,11 +65,11 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
 
             if (!assignResult)
             {
-                TempData["ErrorMessage"] = FailedToAssignRole;
+                TempData["ErrorMessage"] = sharedLocalizer[FailedToAssignRole].Value;
                 return RedirectToAction(nameof(Index));
             }
 
-            TempData["SuccessMessage"] = RoleAssigned;
+            TempData["SuccessMessage"] = sharedLocalizer[RoleAssigned].Value;
             return RedirectToAction(nameof(Index));
         }
 
@@ -74,7 +78,7 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
         {
             if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(role))
             {
-                TempData["ErrorMessage"] = UserIdOrRoleCannotBeEmpty;
+                TempData["ErrorMessage"] = sharedLocalizer[UserIdOrRoleCannotBeEmpty].Value;
                 return RedirectToAction(nameof(Index));
             }
 
@@ -89,11 +93,11 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
 
             if (!removeRoleResult)
             {
-                TempData["ErrorMessage"] = FailedToRemoveRole;
+                TempData["ErrorMessage"] = sharedLocalizer[FailedToRemoveRole].Value;
                 return RedirectToAction(nameof(Index));
             }
 
-            TempData["SuccessMessage"] = RoleRemoved;
+            TempData["SuccessMessage"] = sharedLocalizer[RoleRemoved].Value;
             return RedirectToAction(nameof(Index));
         }
 
@@ -102,7 +106,7 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
         {
             if (string.IsNullOrEmpty(userId))
             {
-                TempData["ErrorMessage"] = UserIdOrRoleCannotBeEmpty;
+                TempData["ErrorMessage"] = sharedLocalizer[UserIdOrRoleCannotBeEmpty].Value;
                 return RedirectToAction(nameof(Index));
             }
 
@@ -117,11 +121,11 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
 
             if (!deleteResult)
             {
-                TempData["ErrorMessage"] = FailedToDeleteUser;
+                TempData["ErrorMessage"] = sharedLocalizer[FailedToDeleteUser].Value;
                 return RedirectToAction(nameof(Index));
             }
 
-            TempData["SuccessMessage"] = UserDeleted;
+            TempData["SuccessMessage"] = sharedLocalizer[UserDeleted].Value;
             return RedirectToAction(nameof(Index));
         }
     }

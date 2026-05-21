@@ -1,13 +1,16 @@
-﻿@model IEnumerable<SportComplexApp.Web.ViewModels.Sport.AllSportsViewModel>
+﻿@using SportComplexApp.Web.ViewModels.Sport
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@model IEnumerable<AllSportsViewModel>
 
 @{
-    ViewData["Title"] = "Manage Sports";
+    ViewData["Title"] = Localizer["Title"];
 }
 
 <div class="d-flex align-items-center justify-content-between mb-4">
-    <h2 class="mb-0" style="color:#00ffc8;">Manage Sports</h2>
+    <h2 class="mb-0" style="color:#00ffc8;">@Localizer["Heading"]</h2>
     <a asp-action="Add" class="btn btn-neon">
-        <i class="bi bi-plus-circle"></i> Add New Sport
+        <i class="bi bi-plus-circle"></i> @Localizer["BtnAddNewSport"]
     </a>
 </div>
 
@@ -22,15 +25,15 @@
 <form method="get" asp-action="All" class="mb-4">
     <div class="row g-3 align-items-end">
         <div class="col-md-3">
-            <label for="searchQuery" class="form-label text-light">Search by Name</label>
+            <label for="searchQuery" class="form-label text-light">@Localizer["LabelSearchName"]</label>
             <div class="input-group neon-input">
                 <span class="input-group-text neon-icon"><i class="bi bi-search"></i></span>
-                <input type="text" name="searchQuery" id="searchQuery" class="form-control" placeholder="E.g. Basketball..." value="@Context.Request.Query["searchQuery"]" />
+                <input type="text" name="searchQuery" id="searchQuery" class="form-control" placeholder="@Localizer["PlaceholderSearch"]" value="@Context.Request.Query["searchQuery"]" />
             </div>
         </div>
 
         <div class="col-md-2">
-            <label for="minDuration" class="form-label text-light">Min (min)</label>
+            <label for="minDuration" class="form-label text-light">@Localizer["LabelMinDuration"]</label>
             <div class="input-group neon-input">
                 <span class="input-group-text neon-icon"><i class="bi bi-hourglass-split"></i></span>
                 <input type="number" name="minDuration" id="minDuration" class="form-control" value="@Context.Request.Query["minDuration"]" />
@@ -38,7 +41,7 @@
         </div>
 
         <div class="col-md-2">
-            <label for="maxDuration" class="form-label text-light">Max (min)</label>
+            <label for="maxDuration" class="form-label text-light">@Localizer["LabelMaxDuration"]</label>
             <div class="input-group neon-input">
                 <span class="input-group-text neon-icon"><i class="bi bi-hourglass"></i></span>
                 <input type="number" name="maxDuration" id="maxDuration" class="form-control" value="@Context.Request.Query["maxDuration"]" />
@@ -46,40 +49,41 @@
         </div>
 
         <div class="col-md-3">
-            <label for="sortBy" class="form-label text-light">Sort By</label>
+            <label for="sortBy" class="form-label text-light">@Localizer["LabelSortBy"]</label>
             <div class="input-group neon-input">
                 <span class="input-group-text neon-icon"><i class="bi bi-sort-down"></i></span>
                 <select name="sortBy" id="sortBy" class="form-select">
-                    <option value="">-- Default --</option>
-                    <option value="name_asc" selected="@(Context.Request.Query["sortBy"] == "name_asc")">Name (A-Z)</option>
-                    <option value="name_desc" selected="@(Context.Request.Query["sortBy"] == "name_desc")">Name (Z-A)</option>
-                    <option value="duration_asc" selected="@(Context.Request.Query["sortBy"] == "duration_asc")">Duration (Shortest)</option>
-                    <option value="duration_desc" selected="@(Context.Request.Query["sortBy"] == "duration_desc")">Duration (Longest)</option>
+                    <option value="">@Localizer["SortDefault"]</option>
+                    <option value="name_asc" selected="@(Context.Request.Query["sortBy"] == "name_asc")">@Localizer["SortNameAsc"]</option>
+                    <option value="name_desc" selected="@(Context.Request.Query["sortBy"] == "name_desc")">@Localizer["SortNameDesc"]</option>
+                    <option value="duration_asc" selected="@(Context.Request.Query["sortBy"] == "duration_asc")">@Localizer["SortDurationAsc"]</option>
+                    <option value="duration_desc" selected="@(Context.Request.Query["sortBy"] == "duration_desc")">@Localizer["SortDurationDesc"]</option>
                 </select>
             </div>
         </div>
 
         <div class="col-md-2 d-grid">
             <button type="submit" class="btn btn-outline-neon">
-                <i class="bi bi-funnel-fill"></i> Filter
+                <i class="bi bi-funnel-fill"></i> @Localizer["BtnFilter"]
             </button>
         </div>
     </div>
 
     <div class="mt-2 d-flex justify-content-end">
         <a asp-action="All" class="btn btn-outline-neon btn-sm">
-            <i class="bi bi-x-circle"></i> Clear
+            <i class="bi bi-x-circle"></i> @Localizer["BtnClear"]
         </a>
     </div>
 </form>
+
 @if (!Model.Any())
 {
     <div class="card card-dark text-center p-5 rounded-4 border-0">
         <div class="display-6 mb-2">🏀</div>
-        <h5 class="mb-1 text-light">No sports found</h5>
-        <p class="text-light-50 mb-3">There are no sports matching your criteria or currently available.</p>
+        <h5 class="mb-1 text-light">@Localizer["NoSportsTitle"]</h5>
+        <p class="text-light-50 mb-3">@Localizer["NoSportsDesc"]</p>
         <a asp-action="Add" class="btn btn-neon">
-            <i class="bi bi-plus-circle"></i> Add Sport
+            <i class="bi bi-plus-circle"></i> @Localizer["BtnAddSport"]
         </a>
     </div>
 }
@@ -105,17 +109,17 @@ else
                         <h5 class="card-title mb-2 text-white">@sport.Name</h5>
 
                         <ul class="list-unstyled small text-muted mb-3">
-                            <li><i class="bi bi-cash-coin text-success"></i> @sport.Price.ToString("F2") BGN</li>
-                            <li><i class="bi bi-stopwatch text-primary"></i> @sport.Duration min</li>
+                            <li><i class="bi bi-cash-coin text-success"></i> @sport.Price.ToString("F2") @Localizer["Currency"]</li>
+                            <li><i class="bi bi-stopwatch text-primary"></i> @sport.Duration @Localizer["Minutes"]</li>
                             <li><i class="bi bi-building text-warning"></i> @sport.Facility</li>
                         </ul>
 
                         <div class="mt-auto d-flex gap-2">
                             <a asp-action="Edit" asp-route-id="@sport.Id" class="btn btn-outline-neon btn-sm">
-                                <i class="bi bi-pencil-square"></i> Edit
+                                <i class="bi bi-pencil-square"></i> @Localizer["BtnEdit"]
                             </a>
                             <a asp-action="Delete" asp-route-id="@sport.Id" class="btn btn-outline-neon btn-sm">
-                                <i class="bi bi-trash3"></i> Delete
+                                <i class="bi bi-trash3"></i> @Localizer["BtnDelete"]
                             </a>
                         </div>
                     </div>

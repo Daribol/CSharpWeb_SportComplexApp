@@ -1,13 +1,16 @@
-﻿@model SportComplexApp.Web.ViewModels.Tournament.AddTournamentViewModel
+﻿@using SportComplexApp.Web.ViewModels.Tournament
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@model AddTournamentViewModel
 
 @{
-    ViewData["Title"] = "Add Tournament";
+    ViewData["Title"] = Localizer["Title"];
 }
 
 <div class="d-flex align-items-center justify-content-between mb-4">
-    <h2 class="mb-0" style="color:#00ffc8;">Add New Tournament</h2>
+    <h2 class="mb-0" style="color:#00ffc8;">@Localizer["Heading"]</h2>
     <a asp-action="All" class="btn btn-outline-neon">
-        <i class="bi bi-arrow-left-circle me-1"></i> Back
+        <i class="bi bi-arrow-left-circle me-1"></i> @Localizer["BtnBack"]
     </a>
 </div>
 
@@ -24,32 +27,29 @@
         <form asp-action="Add" method="post" novalidate>
             <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
-            <!-- Name -->
             <div class="mb-3">
-                <label asp-for="Name" class="form-label text-light">Tournament Name</label>
+                <label asp-for="Name" class="form-label text-light">@Localizer["LabelName"]</label>
                 <div class="input-group neon-input">
                     <span class="input-group-text neon-icon"><i class="bi bi-trophy"></i></span>
-                    <input asp-for="Name" class="form-control" placeholder="e.g. Summer Cup 2025" />
+                    <input asp-for="Name" class="form-control" placeholder="@Localizer["PlaceholderName"]" />
                 </div>
                 <span asp-validation-for="Name" class="text-danger small"></span>
             </div>
 
-            <!-- Sport -->
             <div class="mb-3">
-                <label asp-for="SportId" class="form-label text-light">Sport</label>
+                <label asp-for="SportId" class="form-label text-light">@Localizer["LabelSport"]</label>
                 <div class="input-group neon-input">
                     <span class="input-group-text neon-icon"><i class="bi bi-basket2"></i></span>
                     <select asp-for="SportId" asp-items="Model.Sports" class="form-select">
-                        <option value="">-- Select Sport --</option>
+                        <option value="">@Localizer["SelectSport"]</option>
                     </select>
                 </div>
                 <span asp-validation-for="SportId" class="text-danger small"></span>
             </div>
 
             <div class="row g-3">
-                <!-- Start Date -->
                 <div class="col-md-6">
-                    <label asp-for="StartDate" class="form-label text-light">Start Date</label>
+                    <label asp-for="StartDate" class="form-label text-light">@Localizer["LabelStartDate"]</label>
                     <div class="position-relative">
                         <input asp-for="StartDate"
                                type="date"
@@ -60,9 +60,8 @@
                     <span asp-validation-for="StartDate" class="text-danger small"></span>
                 </div>
 
-                <!-- End Date -->
                 <div class="col-md-6">
-                    <label asp-for="EndDate" class="form-label text-light">End Date</label>
+                    <label asp-for="EndDate" class="form-label text-light">@Localizer["LabelEndDate"]</label>
                     <div class="position-relative">
                         <input asp-for="EndDate"
                                type="date"
@@ -74,19 +73,18 @@
                 </div>
             </div>
 
-            <!-- Description -->
             <div class="mt-3">
-                <label asp-for="Description" class="form-label text-light">Description</label>
-                <textarea asp-for="Description" class="form-control" rows="4" placeholder="Short overview, rules, location…"></textarea>
+                <label asp-for="Description" class="form-label text-light">@Localizer["LabelDescription"]</label>
+                <textarea asp-for="Description" class="form-control" rows="4" placeholder="@Localizer["PlaceholderDescription"]"></textarea>
                 <span asp-validation-for="Description" class="text-danger small"></span>
             </div>
 
             <div class="mt-4 d-flex justify-content-end gap-2">
                 <button type="submit" class="btn btn-neon">
-                    <i class="bi bi-plus-circle me-1"></i> Create Tournament
+                    <i class="bi bi-plus-circle me-1"></i> @Localizer["BtnCreate"]
                 </button>
                 <a asp-action="All" class="btn btn-outline-neon">
-                    <i class="bi bi-x-circle me-1"></i> Cancel
+                    <i class="bi bi-x-circle me-1"></i> @Localizer["BtnCancel"]
                 </a>
             </div>
         </form>
@@ -106,6 +104,7 @@
             pointer-events: none;
             font-size: 1.05rem;
         }
+
         input[type="date"]::-webkit-calendar-picker-indicator {
             opacity: 1;
             display: block;

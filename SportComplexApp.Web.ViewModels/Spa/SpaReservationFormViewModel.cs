@@ -7,19 +7,19 @@ namespace SportComplexApp.Web.ViewModels.Spa
 {
     public class SpaReservationFormViewModel
     {
-        [Required]
+        [Required(ErrorMessage = "RequiredFieldError")]
         public int SpaServiceId { get; set; }
         public string SpaServiceName { get; set; } = null!;
         public string? ImageUrl { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "RequiredFieldError")]
         [DataType(DataType.DateTime)]
-        [Display(Name = "Reservation Date and Time")]
+        [Display(Name = "LabelReservationDateTime")]
         [DisplayFormat(DataFormatString = ReservationDateTimeFormat, ApplyFormatInEditMode = true)]
         public DateTime ReservationDate { get; set; }
 
-        [Required]
-        [DisplayName("Number of People")]
+        [Required(ErrorMessage = "RequiredFieldError")]
+        [Display(Name = "LabelNumberOfPeople")]
         [Range(1, 10, ErrorMessage = NumberOfPeopleOutOfRange)]
         public int NumberOfPeople { get; set; }
     }

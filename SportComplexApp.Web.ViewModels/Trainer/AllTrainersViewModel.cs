@@ -14,5 +14,7 @@ namespace SportComplexApp.Web.ViewModels.Trainer
         public string LastName { get; set; } = null!;
         public string? ImageUrl { get; set; }
         public List<string> Sports { get; set; } = new();
+
+        public IEnumerable<TrainerReservationDetailViewModel> Reservations { get; set; } = new List<TrainerReservationDetailViewModel>();
     }
 }

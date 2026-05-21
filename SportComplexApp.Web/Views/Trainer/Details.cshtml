@@ -1,17 +1,21 @@
-﻿@model SportComplexApp.Web.ViewModels.Trainer.TrainerDetailsViewModel
+﻿@using SportComplexApp.Web.ViewModels.Trainer
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@model TrainerDetailsViewModel
 
 @{
-    ViewData["Title"] = "Trainer Details";
+    ViewData["Title"] = Localizer["Title"];
     var hasImage = !string.IsNullOrWhiteSpace(Model.ImageUrl);
 }
 <link rel="stylesheet" href="~/css/neon-theme.css" asp-append-version="true" />
+
 <div class="container mt-4">
 
     <div class="trainer-hero position-relative rounded-4 overflow-hidden shadow-lg mb-4"
          style="background-image:
-                @(hasImage
-                    ? $"linear-gradient(180deg, rgba(0,0,0,.35), rgba(0,0,0,.6)), url('{Model.ImageUrl}')"
-                    : "linear-gradient(180deg, rgba(0,0,0,.35), rgba(0,0,0,.6)), radial-gradient(80% 60% at 20% 10%, rgba(0,255,200,.15), transparent), linear-gradient(135deg,#1f1f1f,#2a2a2a)");">
+        @(hasImage
+                     ? $"linear-gradient(180deg, rgba(0,0,0,.35), rgba(0,0,0,.6)), url('{Model.ImageUrl}')"
+                     : "linear-gradient(180deg, rgba(0,0,0,.35), rgba(0,0,0,.6)), radial-gradient(80% 60% at 20% 10%, rgba(0,255,200,.15), transparent), linear-gradient(135deg,#1f1f1f,#2a2a2a)");">
         <div class="ratio ratio-21x9"></div>
 
         <div class="trainer-avatar position-absolute bottom-0 start-0 translate-middle-y ms-4 mb-3">
@@ -42,7 +46,7 @@
                 }
                 else
                 {
-                    <span class="badge badge-soft">No sports assigned</span>
+                    <span class="badge badge-soft">@Localizer["NoSportsAssigned"]</span>
                 }
             </div>
         </div>
@@ -50,7 +54,7 @@
 
     <div class="card card-dark border-0 shadow-lg rounded-4">
         <div class="card-body p-4 p-md-5">
-            <h2 class="h5 mb-3" style="color:#00ffc8;">About</h2>
+            <h2 class="h5 mb-3" style="color:#00ffc8;">@Localizer["AboutHeading"]</h2>
 
             @if (!string.IsNullOrWhiteSpace(Model.Bio))
             {
@@ -58,14 +62,14 @@
             }
             else
             {
-                <p class="text-muted mb-0">This trainer has not provided a bio yet.</p>
+                <p class="text-muted mb-0">@Localizer["NoBioMsg"]</p>
             }
         </div>
 
         <div class="card-footer bg-transparent border-0 d-flex justify-content-between align-items-center px-4 px-md-5 pb-4">
             <a href="javascript:history.back()"
                    class="btn btn-outline-neon btn-sm">
-                <i class="bi bi-arrow-left-circle me-1"></i> Back to Trainers
+                <i class="bi bi-arrow-left-circle me-1"></i> @Localizer["BtnBack"]
             </a>
         </div>
     </div>

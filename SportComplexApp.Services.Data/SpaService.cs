@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using SportComplexApp.Common;
 using SportComplexApp.Data;
 using SportComplexApp.Data.Models;
@@ -14,11 +15,13 @@ namespace SportComplexApp.Services.Data
     {
         private readonly SportComplexDbContext context;
         private readonly TimeProvider time;
+        private readonly IStringLocalizer<SharedResource> sharedLocalizer;
 
-        public SpaService(SportComplexDbContext context, TimeProvider timeProvider)
+        public SpaService(SportComplexDbContext context, TimeProvider timeProvider, IStringLocalizer<SharedResource> sharedLocalizer)
         {
             this.context = context;
             this.time = timeProvider ?? TimeProvider.System;
+            this.sharedLocalizer = sharedLocalizer;
         }
 
         public async Task<IEnumerable<SpaServiceViewModel>> GetAllSpaServicesAsync(string? searchQuery = null, string? sortBy = null)
@@ -179,23 +182,23 @@ namespace SportComplexApp.Services.Data
             if (reservationTime.TimeOfDay < ApplicationConstants.OpeningTime
                 || reservationTime.TimeOfDay >= ApplicationConstants.ClosingTime)
             {
-                throw new InvalidOperationException(ReservationOutsideWorkingHours);
+                throw new InvalidOperationException(sharedLocalizer[ReservationOutsideWorkingHours]);
             }
 
             if (reservationTime > now.AddDays(ApplicationConstants.MaxReservationDaysInAdvance))
             {
-                throw new InvalidOperationException(ReservationTooFarInFuture);
+                throw new InvalidOperationException(sharedLocalizer[ReservationTooFarInFuture]);
             }
 
 
             if (reservationTime < now)
             {
-                throw new InvalidOperationException(ReservationInPast);
+                throw new InvalidOperationException(sharedLocalizer[ReservationInPast]);
             }
 
             if (reservationTime < now.AddHours(1))
             {
-                throw new InvalidOperationException(ReservationTooSoon);
+                throw new InvalidOperationException(sharedLocalizer[ReservationTooSoon]);
             }
 
             var startTime = model.ReservationDate;
@@ -209,7 +212,7 @@ namespace SportComplexApp.Services.Data
 
             if (isHired)
             {
-                throw new InvalidOperationException(ReservationConflict);
+                throw new InvalidOperationException(sharedLocalizer[ReservationConflict]);
             }
 
             bool sportOverlap = await context.Reservations
@@ -220,7 +223,7 @@ namespace SportComplexApp.Services.Data
 
             if (sportOverlap)
             {
-                throw new InvalidOperationException(ReservationConflict);
+                throw new InvalidOperationException(sharedLocalizer[ReservationConflict]);
             }
 
             var reservation = new SpaReservation()
