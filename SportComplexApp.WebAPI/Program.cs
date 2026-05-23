@@ -64,7 +64,9 @@ namespace SportComplexApp.WebAPI
 
             app.UseCors("AllowAllOrigins");
 
+            app.UseAuthentication();
             app.UseAuthorization();
+
             app.MapIdentityApi<Client>();
 
             app.MapControllers();

@@ -53,8 +53,27 @@ else
     <div class="d-flex flex-column gap-3">
         @foreach (var user in Model)
         {
+            // 1. Нормализираме ролите, за да оправим иконките и логиката (без значение дали са на БГ или с малки букви в базата)
+            var normalizedRoles = user.Roles.Select(r =>
+            {
+                var lower = r.ToLower();
+                if (lower.Contains("admin") || lower.Contains("админ")) return "Admin";
+                if (lower.Contains("trainer") || lower.Contains("треньор")) return "Trainer";
+                return "Client";
+            }).Distinct().ToList();
+
+            // 2. Определяме какво може да се добавя (само неща, които НЯМА)
+            var availableToAdd = new List<string> { "Admin", "Trainer" }
+                .Except(normalizedRoles)
+                .ToList();
+
+            // 3. Определяме какво може да се премахва (всичко БЕЗ Client)
+            var rolesToRemove = normalizedRoles
+                .Where(r => r != "Client")
+                .ToList();
+
             <div class="card card-dark hover border-0 rounded-4 p-3 p-lg-4 d-flex flex-column flex-xl-row align-items-xl-center gap-4">
-                
+            
                 <div class="d-flex align-items-center gap-3" style="min-width: 280px;">
                     <div class="bg-dark border border-secondary border-opacity-25 rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" style="width: 50px; height: 50px;">
                         <i class="bi bi-person-fill text-light-50 fs-4"></i>
@@ -66,65 +85,67 @@ else
                 </div>
 
                 <div class="d-flex flex-wrap gap-2 flex-grow-1 ms-xl-4 me-xl-4">
-                    @if (user.Roles != null && user.Roles.Any())
+                    @foreach (var role in normalizedRoles)
                     {
-                        @foreach (var role in user.Roles)
+                        var badgeClass = role switch
                         {
-                            var badgeClass = role switch
-                            {
-                                "Admin" => "bg-danger",
-                                "Trainer" => "bg-warning text-dark",
-                                "Client" => "badge-sport",
-                                _ => "badge-soft"
-                            };
+                            "Admin" => "bg-danger",
+                            "Trainer" => "bg-warning text-dark",
+                            "Client" => "badge-sport bg-info text-dark", // сложил съм bg-info за цвят, ако badge-sport не е дефиниран
+                            _ => "bg-secondary"
+                        };
 
-                            var iconClass = role switch
-                            {
-                                "Admin" => "bi-shield-lock",
-                                "Trainer" => "bi-star",
-                                "Client" => "bi-person",
-                                _ => "bi-question-circle"
-                            };
+                        var iconClass = role switch
+                        {
+                            "Admin" => "bi-shield-lock",
+                            "Trainer" => "bi-star",
+                            "Client" => "bi-person",
+                            _ => "bi-question-circle"
+                        };
 
-                            <span class="badge @badgeClass shadow-sm px-3 py-2 rounded-pill d-inline-flex align-items-center"
-                                  style="max-width: 140px; white-space: nowrap;">
-                                <i class="bi @iconClass flex-shrink-0"></i>
-                                <span class="ms-2 text-truncate">@TranslateRole(role)</span>
-                            </span>
-                        }
-                    }
-                    else
-                    {
-                        <span class="text-light-50 small fst-italic">@Localizer["NoRoles"]</span>
+                        <span class="badge @badgeClass shadow-sm px-3 py-2 rounded-pill d-inline-flex align-items-center"
+                              style="max-width: 140px; white-space: nowrap;">
+                            <i class="bi @iconClass flex-shrink-0"></i>
+                            <span class="ms-2 text-truncate">@TranslateRole(role)</span>
+                        </span>
                     }
                 </div>
 
                 <div class="d-flex flex-column flex-md-row align-items-md-center gap-2 mt-3 mt-xl-0 ms-xl-auto">
-    
-                    <form asp-action="AssignRole" method="post" class="d-flex gap-2">
-                        <input type="hidden" name="userId" value="@user.Id" />
-                        <select name="role" class="form-select form-select-sm bg-dark text-light border-secondary notranslate" translate="no">
-                            <option value="Admin">@TranslateRole("Admin")</option>
-                            <option value="Client">@TranslateRole("Client")</option>
-                            <option value="Trainer">@TranslateRole("Trainer")</option>
-                        </select>
-                        <button type="submit" class="btn btn-outline-neon btn-sm text-nowrap" title="@Localizer["BtnAssign"]">
-                            <i class="bi bi-plus-lg"></i>
-                        </button>
-                    </form>
 
-                    @if (user.Roles != null && user.Roles.Any())
+                    @if (availableToAdd.Any())
+                    {
+                        <form asp-action="AssignRole" method="post" class="d-flex gap-2">
+                            <input type="hidden" name="userId" value="@user.Id" />
+                            <select name="role" class="form-select form-select-sm bg-dark text-light border-secondary notranslate" style="width: 150px;">
+                                @foreach (var r in availableToAdd)
+                                {
+                                    <option value="@r">@TranslateRole(r)</option>
+                                }
+                            </select>
+                            <button type="submit" class="btn btn-outline-success btn-sm text-nowrap" title="@Localizer["BtnAssign"]">
+                                <i class="bi bi-plus-lg"></i>
+                            </button>
+                        </form>
+                    }
+                    else
+                    {
+                        <div class="d-flex gap-2 opacity-50">
+                            <select class="form-select form-select-sm bg-dark text-muted border-secondary" disabled style="width: 150px;">
+                                <option>Всички роли</option>
+                            </select>
+                            <button class="btn btn-outline-secondary btn-sm" disabled><i class="bi bi-check2-all"></i></button>
+                        </div>
+                    }
+
+                    @if (rolesToRemove.Any())
                     {
                         <form asp-action="RemoveRole" method="post" class="d-flex gap-2">
                             <input type="hidden" name="userId" value="@user.Id" />
-                            <select name="role" class="form-select form-select-sm bg-dark text-light border-secondary notranslate" translate="no">
-                                @foreach (var role in user.Roles)
+                            <select name="role" class="form-select form-select-sm bg-dark text-light border-secondary notranslate" style="width: 150px;">
+                                @foreach (var r in rolesToRemove)
                                 {
-                                    string safeEnglishRole = "Client";
-                                    if (role.Contains("Admin") || role.Contains("Админ") || role.Contains("Администратор")) safeEnglishRole = "Admin";
-                                    if (role.Contains("Trainer") || role.Contains("Треньор")) safeEnglishRole = "Trainer";
-
-                                    <option value="@safeEnglishRole">@TranslateRole(safeEnglishRole)</option>
+                                    <option value="@r">@TranslateRole(r)</option>
                                 }
                             </select>
                             <button type="submit" class="btn btn-outline-warning btn-sm text-nowrap" title="@Localizer["BtnRemove"]">
@@ -132,12 +153,21 @@ else
                             </button>
                         </form>
                     }
+                    else
+                    {
+                        <div class="d-flex gap-2 opacity-50">
+                            <select class="form-select form-select-sm bg-dark text-muted border-secondary" disabled style="width: 150px;">
+                                <option>Само Клиент</option>
+                            </select>
+                            <button class="btn btn-outline-secondary btn-sm" disabled><i class="bi bi-dash-lg"></i></button>
+                        </div>
+                    }
 
                     <a asp-action="DeleteUser" asp-route-id="@user.Id" class="btn btn-outline-danger btn-sm text-nowrap ms-md-2" title="@Localizer["BtnDelete"]">
                         <i class="bi bi-trash3"></i>
                     </a>
-                </div>
                 
+                </div>
             </div>
         }
     </div>

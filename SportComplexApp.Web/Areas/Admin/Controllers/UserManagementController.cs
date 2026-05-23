@@ -60,6 +60,12 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
+            if (role.Equals("Client", StringComparison.OrdinalIgnoreCase))
+            {
+                TempData["ErrorMessage"] = "Ролята 'Клиент' е базова и не може да бъде манипулирана ръчно.";
+                return RedirectToAction(nameof(Index));
+            }
+
             bool userExists = await userService.UserExistsByIdAsync(userId);
 
             if (!userExists)
@@ -98,6 +104,12 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
             if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(role))
             {
                 TempData["ErrorMessage"] = sharedLocalizer[UserIdOrRoleCannotBeEmpty].Value;
+                return RedirectToAction(nameof(Index));
+            }
+
+            if (role.Equals("Client", StringComparison.OrdinalIgnoreCase))
+            {
+                TempData["ErrorMessage"] = "Ролята 'Клиент' е базова и не може да бъде премахната.";
                 return RedirectToAction(nameof(Index));
             }
 

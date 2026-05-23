@@ -12,8 +12,8 @@ using SportComplexApp.Data;
 namespace SportComplexApp.Data.Migrations
 {
     [DbContext(typeof(SportComplexDbContext))]
-    [Migration("20260515074856_AddTriggers")]
-    partial class AddTriggers
+    [Migration("20260523201009_AddAuditTriggers")]
+    partial class AddAuditTriggers
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -50,7 +50,12 @@ namespace SportComplexApp.Data.Migrations
                         .HasDatabaseName("RoleNameIndex")
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
-                    b.ToTable("AspNetRoles", "22180008");
+                    b.ToTable("AspNetRoles", "22180008", t =>
+                        {
+                            t.HasTrigger("trg_AspNetRoles_Audit");
+                        });
+
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -75,7 +80,12 @@ namespace SportComplexApp.Data.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("AspNetRoleClaims", "22180008");
+                    b.ToTable("AspNetRoleClaims", "22180008", t =>
+                        {
+                            t.HasTrigger("trg_AspNetRoleClaims_Audit");
+                        });
+
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -100,7 +110,12 @@ namespace SportComplexApp.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AspNetUserClaims", "22180008");
+                    b.ToTable("AspNetUserClaims", "22180008", t =>
+                        {
+                            t.HasTrigger("trg_AspNetUserClaims_Audit");
+                        });
+
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
@@ -122,7 +137,12 @@ namespace SportComplexApp.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AspNetUserLogins", "22180008");
+                    b.ToTable("AspNetUserLogins", "22180008", t =>
+                        {
+                            t.HasTrigger("trg_AspNetUserLogins_Audit");
+                        });
+
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
@@ -137,7 +157,12 @@ namespace SportComplexApp.Data.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("AspNetUserRoles", "22180008");
+                    b.ToTable("AspNetUserRoles", "22180008", t =>
+                        {
+                            t.HasTrigger("trg_AspNetUserRoles_Audit");
+                        });
+
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
@@ -156,7 +181,12 @@ namespace SportComplexApp.Data.Migrations
 
                     b.HasKey("UserId", "LoginProvider", "Name");
 
-                    b.ToTable("AspNetUserTokens", "22180008");
+                    b.ToTable("AspNetUserTokens", "22180008", t =>
+                        {
+                            t.HasTrigger("trg_AspNetUserTokens_Audit");
+                        });
+
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
                 });
 
             modelBuilder.Entity("SportComplexApp.Data.Models.Client", b =>
@@ -185,7 +215,9 @@ namespace SportComplexApp.Data.Migrations
 
                     b.Property<DateTime>("LastModified_22180008")
                         .IsConcurrencyToken()
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
 
                     b.Property<string>("LastName")
                         .IsRequired()
@@ -235,7 +267,12 @@ namespace SportComplexApp.Data.Migrations
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
-                    b.ToTable("AspNetUsers", "22180008");
+                    b.ToTable("AspNetUsers", "22180008", t =>
+                        {
+                            t.HasTrigger("trg_AspNetUsers_Audit");
+                        });
+
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
                 });
 
             modelBuilder.Entity("SportComplexApp.Data.Models.Facility", b =>
@@ -246,12 +283,17 @@ namespace SportComplexApp.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.Property<DateTime>("LastModified_22180008")
                         .IsConcurrencyToken()
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -260,7 +302,12 @@ namespace SportComplexApp.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Facilities", "22180008");
+                    b.ToTable("Facilities", "22180008", t =>
+                        {
+                            t.HasTrigger("trg_Facilities_Audit");
+                        });
+
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
 
                     b.HasData(
                         new
@@ -334,7 +381,9 @@ namespace SportComplexApp.Data.Migrations
 
                     b.Property<DateTime>("LastModified_22180008")
                         .IsConcurrencyToken()
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
 
                     b.Property<int>("NumberOfPeople")
                         .ValueGeneratedOnAdd()
@@ -358,7 +407,12 @@ namespace SportComplexApp.Data.Migrations
 
                     b.HasIndex("TrainerId");
 
-                    b.ToTable("Reservations", "22180008");
+                    b.ToTable("Reservations", "22180008", t =>
+                        {
+                            t.HasTrigger("trg_Reservations_Audit");
+                        });
+
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
                 });
 
             modelBuilder.Entity("SportComplexApp.Data.Models.SpaReservation", b =>
@@ -375,7 +429,9 @@ namespace SportComplexApp.Data.Migrations
 
                     b.Property<DateTime>("LastModified_22180008")
                         .IsConcurrencyToken()
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
 
                     b.Property<int>("NumberOfPeople")
                         .ValueGeneratedOnAdd()
@@ -394,7 +450,12 @@ namespace SportComplexApp.Data.Migrations
 
                     b.HasIndex("SpaServiceId");
 
-                    b.ToTable("SpaReservations", "22180008");
+                    b.ToTable("SpaReservations", "22180008", t =>
+                        {
+                            t.HasTrigger("trg_SpaReservations_Audit");
+                        });
+
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
                 });
 
             modelBuilder.Entity("SportComplexApp.Data.Models.SpaService", b =>
@@ -424,7 +485,9 @@ namespace SportComplexApp.Data.Migrations
 
                     b.Property<DateTime>("LastModified_22180008")
                         .IsConcurrencyToken()
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -441,7 +504,12 @@ namespace SportComplexApp.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("SpaServices", "22180008");
+                    b.ToTable("SpaServices", "22180008", t =>
+                        {
+                            t.HasTrigger("trg_SpaServices_Audit");
+                        });
+
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
 
                     b.HasData(
                         new
@@ -505,7 +573,9 @@ namespace SportComplexApp.Data.Migrations
 
                     b.Property<DateTime>("LastModified_22180008")
                         .IsConcurrencyToken()
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
 
                     b.Property<int>("MaxPeople")
                         .HasColumnType("int");
@@ -526,7 +596,12 @@ namespace SportComplexApp.Data.Migrations
 
                     b.HasIndex("FacilityId");
 
-                    b.ToTable("Sports", "22180008");
+                    b.ToTable("Sports", "22180008", t =>
+                        {
+                            t.HasTrigger("trg_Sports_Audit");
+                        });
+
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
 
                     b.HasData(
                         new
@@ -619,13 +694,20 @@ namespace SportComplexApp.Data.Migrations
 
                     b.Property<DateTime>("LastModified_22180008")
                         .IsConcurrencyToken()
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
 
                     b.HasKey("SportId", "TrainerId");
 
                     b.HasIndex("TrainerId");
 
-                    b.ToTable("SportTrainers", "22180008");
+                    b.ToTable("SportTrainers", "22180008", t =>
+                        {
+                            t.HasTrigger("trg_SportTrainers_Audit");
+                        });
+
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
 
                     b.HasData(
                         new
@@ -682,12 +764,17 @@ namespace SportComplexApp.Data.Migrations
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.Property<DateTime>("LastModified_22180008")
                         .IsConcurrencyToken()
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -704,7 +791,12 @@ namespace SportComplexApp.Data.Migrations
 
                     b.HasIndex("SportId");
 
-                    b.ToTable("Tournaments", "22180008");
+                    b.ToTable("Tournaments", "22180008", t =>
+                        {
+                            t.HasTrigger("trg_Tournaments_Audit");
+                        });
+
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
 
                     b.HasData(
                         new
@@ -756,7 +848,9 @@ namespace SportComplexApp.Data.Migrations
 
                     b.Property<DateTime>("LastModified_22180008")
                         .IsConcurrencyToken()
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
 
                     b.Property<int>("TournamentId")
                         .HasColumnType("int");
@@ -767,7 +861,12 @@ namespace SportComplexApp.Data.Migrations
 
                     b.HasIndex("TournamentId");
 
-                    b.ToTable("TournamentRegistrations", "22180008");
+                    b.ToTable("TournamentRegistrations", "22180008", t =>
+                        {
+                            t.HasTrigger("trg_TournamentRegistrations_Audit");
+                        });
+
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
                 });
 
             modelBuilder.Entity("SportComplexApp.Data.Models.Trainer", b =>
@@ -794,7 +893,9 @@ namespace SportComplexApp.Data.Migrations
 
                     b.Property<DateTime>("LastModified_22180008")
                         .IsConcurrencyToken()
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
 
                     b.Property<string>("LastName")
                         .IsRequired()
@@ -810,14 +911,19 @@ namespace SportComplexApp.Data.Migrations
 
                     b.HasIndex("ClientId");
 
-                    b.ToTable("Trainers", "22180008");
+                    b.ToTable("Trainers", "22180008", t =>
+                        {
+                            t.HasTrigger("trg_Trainers_Audit");
+                        });
+
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
 
                     b.HasData(
                         new
                         {
                             Id = 1,
                             Bio = "Certified basketball coach with 8+ years of experience.",
-                            ImageUrl = "https://nutrigen.bg/_cms/wp-content/uploads/2019/11/Kiril-Raykov-profile-pic-702x1024.jpg",
+                            ImageUrl = "/images/kiril_raikov.jpg",
                             IsDeleted = false,
                             LastModified_22180008 = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Raikov",
@@ -827,7 +933,7 @@ namespace SportComplexApp.Data.Migrations
                         {
                             Id = 2,
                             Bio = "Yoga & Pilates instructor focused on mobility and mindfulness.",
-                            ImageUrl = "https://static.dir.bg/uploads/images/2015/08/03/691218/orig.jpg?_=1526561264",
+                            ImageUrl = "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=500&h=500&fit=crop",
                             IsDeleted = false,
                             LastModified_22180008 = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Markovska",
@@ -837,7 +943,7 @@ namespace SportComplexApp.Data.Migrations
                         {
                             Id = 3,
                             Bio = "CrossFit coach, competition-level conditioning specialist.",
-                            ImageUrl = "https://toppresa.com/318883/%D0%BA%D0%BE%D1%81%D1%82%D0%B0%D0%B4%D0%B8%D0%BD-%D0%BB%D0%B5%D1%84%D1%82%D0%B5%D1%80%D0%BE%D0%B2-%D0%BE%D1%82-%D0%B3%D0%BE%D1%86%D0%B5-%D0%B4%D0%B5%D0%BB%D1%87%D0%B5%D0%B2-%D0%B5%D0%B4%D0%BD%D0%B0",
+                            ImageUrl = "/images/koceto.jpg",
                             IsDeleted = false,
                             LastModified_22180008 = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Lefterov",
@@ -847,7 +953,7 @@ namespace SportComplexApp.Data.Migrations
                         {
                             Id = 4,
                             Bio = "Swimming coach—technique and endurance for all levels.",
-                            ImageUrl = "https://www.pluvane.com/wp-content/uploads/2021/02/coach_13.jpg",
+                            ImageUrl = "https://images.unsplash.com/photo-1512217649539-75b22b15525c?w=500&h=500&fit=crop",
                             IsDeleted = false,
                             LastModified_22180008 = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Mollov",
@@ -857,7 +963,7 @@ namespace SportComplexApp.Data.Migrations
                         {
                             Id = 5,
                             Bio = "Tennis training: technique, tactics, and matchplay.",
-                            ImageUrl = "https://www.google.com/url?sa=i&url=https%3A%2F%2Fbg.wikipedia.org%2Fwiki%2F%25D0%2593%25D1%2580%25D0%25B8%25D0%25B3%25D0%25BE%25D1%2580_%25D0%2594%25D0%25B8%25D0%25BC%25D0%25B8%25D1%2582%25D1%2580%25D0%25BE%25D0%25B2&psig=AOvVaw3qECx0GFabpMtQcgCFtLWW&ust=1755155485839000&source=images&cd=vfe&opi=89978449&ved=2ahUKEwj13avrnYePAxWcb_EDHVP9G7EQjRx6BAgAEBo",
+                            ImageUrl = "/images/grisho.jpg",
                             IsDeleted = false,
                             LastModified_22180008 = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             LastName = "Dimitrov",
@@ -878,7 +984,9 @@ namespace SportComplexApp.Data.Migrations
 
                     b.Property<DateTime>("LastModified_22180008")
                         .IsConcurrencyToken()
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETDATE()");
 
                     b.Property<DateTime>("StartTime")
                         .HasColumnType("datetime2");
@@ -890,7 +998,12 @@ namespace SportComplexApp.Data.Migrations
 
                     b.HasIndex("TrainerId");
 
-                    b.ToTable("TrainerSessions", "22180008");
+                    b.ToTable("TrainerSessions", "22180008", t =>
+                        {
+                            t.HasTrigger("trg_TrainerSessions_Audit");
+                        });
+
+                    b.HasAnnotation("SqlServer:UseSqlOutputClause", false);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

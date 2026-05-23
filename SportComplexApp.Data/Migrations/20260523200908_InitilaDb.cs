@@ -8,13 +8,17 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace SportComplexApp.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialDb : Migration
+    public partial class InitilaDb : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.EnsureSchema(
+                name: "22180008");
+
             migrationBuilder.CreateTable(
                 name: "AspNetRoles",
+                schema: "22180008",
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
@@ -29,9 +33,11 @@ namespace SportComplexApp.Data.Migrations
 
             migrationBuilder.CreateTable(
                 name: "AspNetUsers",
+                schema: "22180008",
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    LastModified_22180008 = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()"),
                     FirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -56,12 +62,15 @@ namespace SportComplexApp.Data.Migrations
 
             migrationBuilder.CreateTable(
                 name: "Facilities",
+                schema: "22180008",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    LastModified_22180008 = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()")
                 },
                 constraints: table =>
                 {
@@ -69,7 +78,24 @@ namespace SportComplexApp.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Logs_22180008",
+                schema: "22180008",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    TableName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    OperationType = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    OperationDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Logs_22180008", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "SpaServices",
+                schema: "22180008",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -80,7 +106,8 @@ namespace SportComplexApp.Data.Migrations
                     Price = table.Column<decimal>(type: "decimal(18,2)", precision: 10, scale: 2, nullable: false),
                     ImageUrl = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
                     Duration = table.Column<int>(type: "int", nullable: false, defaultValue: 60),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    LastModified_22180008 = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()")
                 },
                 constraints: table =>
                 {
@@ -89,6 +116,7 @@ namespace SportComplexApp.Data.Migrations
 
             migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
+                schema: "22180008",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -103,6 +131,7 @@ namespace SportComplexApp.Data.Migrations
                     table.ForeignKey(
                         name: "FK_AspNetRoleClaims_AspNetRoles_RoleId",
                         column: x => x.RoleId,
+                        principalSchema: "22180008",
                         principalTable: "AspNetRoles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -110,6 +139,7 @@ namespace SportComplexApp.Data.Migrations
 
             migrationBuilder.CreateTable(
                 name: "AspNetUserClaims",
+                schema: "22180008",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -124,6 +154,7 @@ namespace SportComplexApp.Data.Migrations
                     table.ForeignKey(
                         name: "FK_AspNetUserClaims_AspNetUsers_UserId",
                         column: x => x.UserId,
+                        principalSchema: "22180008",
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -131,6 +162,7 @@ namespace SportComplexApp.Data.Migrations
 
             migrationBuilder.CreateTable(
                 name: "AspNetUserLogins",
+                schema: "22180008",
                 columns: table => new
                 {
                     LoginProvider = table.Column<string>(type: "nvarchar(450)", nullable: false),
@@ -144,6 +176,7 @@ namespace SportComplexApp.Data.Migrations
                     table.ForeignKey(
                         name: "FK_AspNetUserLogins_AspNetUsers_UserId",
                         column: x => x.UserId,
+                        principalSchema: "22180008",
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -151,6 +184,7 @@ namespace SportComplexApp.Data.Migrations
 
             migrationBuilder.CreateTable(
                 name: "AspNetUserRoles",
+                schema: "22180008",
                 columns: table => new
                 {
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
@@ -162,12 +196,14 @@ namespace SportComplexApp.Data.Migrations
                     table.ForeignKey(
                         name: "FK_AspNetUserRoles_AspNetRoles_RoleId",
                         column: x => x.RoleId,
+                        principalSchema: "22180008",
                         principalTable: "AspNetRoles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_AspNetUserRoles_AspNetUsers_UserId",
                         column: x => x.UserId,
+                        principalSchema: "22180008",
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -175,6 +211,7 @@ namespace SportComplexApp.Data.Migrations
 
             migrationBuilder.CreateTable(
                 name: "AspNetUserTokens",
+                schema: "22180008",
                 columns: table => new
                 {
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
@@ -188,6 +225,7 @@ namespace SportComplexApp.Data.Migrations
                     table.ForeignKey(
                         name: "FK_AspNetUserTokens_AspNetUsers_UserId",
                         column: x => x.UserId,
+                        principalSchema: "22180008",
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -195,6 +233,7 @@ namespace SportComplexApp.Data.Migrations
 
             migrationBuilder.CreateTable(
                 name: "Trainers",
+                schema: "22180008",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -204,7 +243,8 @@ namespace SportComplexApp.Data.Migrations
                     Bio = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
                     ImageUrl = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),
-                    ClientId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    ClientId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    LastModified_22180008 = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()")
                 },
                 constraints: table =>
                 {
@@ -212,12 +252,14 @@ namespace SportComplexApp.Data.Migrations
                     table.ForeignKey(
                         name: "FK_Trainers_AspNetUsers_ClientId",
                         column: x => x.ClientId,
+                        principalSchema: "22180008",
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
                 name: "Sports",
+                schema: "22180008",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -229,7 +271,8 @@ namespace SportComplexApp.Data.Migrations
                     Duration = table.Column<int>(type: "int", nullable: false),
                     MinPeople = table.Column<int>(type: "int", nullable: false),
                     MaxPeople = table.Column<int>(type: "int", nullable: false),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    LastModified_22180008 = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()")
                 },
                 constraints: table =>
                 {
@@ -237,6 +280,7 @@ namespace SportComplexApp.Data.Migrations
                     table.ForeignKey(
                         name: "FK_Sports_Facilities_FacilityId",
                         column: x => x.FacilityId,
+                        principalSchema: "22180008",
                         principalTable: "Facilities",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -244,6 +288,7 @@ namespace SportComplexApp.Data.Migrations
 
             migrationBuilder.CreateTable(
                 name: "SpaReservations",
+                schema: "22180008",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -251,7 +296,8 @@ namespace SportComplexApp.Data.Migrations
                     ClientId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     SpaServiceId = table.Column<int>(type: "int", nullable: false),
                     ReservationDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    NumberOfPeople = table.Column<int>(type: "int", nullable: false, defaultValue: 1)
+                    NumberOfPeople = table.Column<int>(type: "int", nullable: false, defaultValue: 1),
+                    LastModified_22180008 = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()")
                 },
                 constraints: table =>
                 {
@@ -259,12 +305,14 @@ namespace SportComplexApp.Data.Migrations
                     table.ForeignKey(
                         name: "FK_SpaReservations_AspNetUsers_ClientId",
                         column: x => x.ClientId,
+                        principalSchema: "22180008",
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_SpaReservations_SpaServices_SpaServiceId",
                         column: x => x.SpaServiceId,
+                        principalSchema: "22180008",
                         principalTable: "SpaServices",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -272,13 +320,15 @@ namespace SportComplexApp.Data.Migrations
 
             migrationBuilder.CreateTable(
                 name: "TrainerSessions",
+                schema: "22180008",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     TrainerId = table.Column<int>(type: "int", nullable: false),
                     StartTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    EndTime = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    EndTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    LastModified_22180008 = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()")
                 },
                 constraints: table =>
                 {
@@ -286,6 +336,7 @@ namespace SportComplexApp.Data.Migrations
                     table.ForeignKey(
                         name: "FK_TrainerSessions_Trainers_TrainerId",
                         column: x => x.TrainerId,
+                        principalSchema: "22180008",
                         principalTable: "Trainers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -293,6 +344,7 @@ namespace SportComplexApp.Data.Migrations
 
             migrationBuilder.CreateTable(
                 name: "Reservations",
+                schema: "22180008",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -302,7 +354,8 @@ namespace SportComplexApp.Data.Migrations
                     TrainerId = table.Column<int>(type: "int", nullable: true),
                     ReservationDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Duration = table.Column<int>(type: "int", nullable: false),
-                    NumberOfPeople = table.Column<int>(type: "int", nullable: false, defaultValue: 1)
+                    NumberOfPeople = table.Column<int>(type: "int", nullable: false, defaultValue: 1),
+                    LastModified_22180008 = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()")
                 },
                 constraints: table =>
                 {
@@ -310,18 +363,21 @@ namespace SportComplexApp.Data.Migrations
                     table.ForeignKey(
                         name: "FK_Reservations_AspNetUsers_ClientId",
                         column: x => x.ClientId,
+                        principalSchema: "22180008",
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Reservations_Sports_SportId",
                         column: x => x.SportId,
+                        principalSchema: "22180008",
                         principalTable: "Sports",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Reservations_Trainers_TrainerId",
                         column: x => x.TrainerId,
+                        principalSchema: "22180008",
                         principalTable: "Trainers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -329,10 +385,12 @@ namespace SportComplexApp.Data.Migrations
 
             migrationBuilder.CreateTable(
                 name: "SportTrainers",
+                schema: "22180008",
                 columns: table => new
                 {
                     SportId = table.Column<int>(type: "int", nullable: false),
-                    TrainerId = table.Column<int>(type: "int", nullable: false)
+                    TrainerId = table.Column<int>(type: "int", nullable: false),
+                    LastModified_22180008 = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()")
                 },
                 constraints: table =>
                 {
@@ -340,12 +398,14 @@ namespace SportComplexApp.Data.Migrations
                     table.ForeignKey(
                         name: "FK_SportTrainers_Sports_SportId",
                         column: x => x.SportId,
+                        principalSchema: "22180008",
                         principalTable: "Sports",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_SportTrainers_Trainers_TrainerId",
                         column: x => x.TrainerId,
+                        principalSchema: "22180008",
                         principalTable: "Trainers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -353,6 +413,7 @@ namespace SportComplexApp.Data.Migrations
 
             migrationBuilder.CreateTable(
                 name: "Tournaments",
+                schema: "22180008",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -362,7 +423,9 @@ namespace SportComplexApp.Data.Migrations
                     EndDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: false),
                     SportId = table.Column<int>(type: "int", nullable: false),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                    ImageUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    LastModified_22180008 = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()")
                 },
                 constraints: table =>
                 {
@@ -370,6 +433,7 @@ namespace SportComplexApp.Data.Migrations
                     table.ForeignKey(
                         name: "FK_Tournaments_Sports_SportId",
                         column: x => x.SportId,
+                        principalSchema: "22180008",
                         principalTable: "Sports",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -377,12 +441,14 @@ namespace SportComplexApp.Data.Migrations
 
             migrationBuilder.CreateTable(
                 name: "TournamentRegistrations",
+                schema: "22180008",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ClientId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    TournamentId = table.Column<int>(type: "int", nullable: false)
+                    TournamentId = table.Column<int>(type: "int", nullable: false),
+                    LastModified_22180008 = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValueSql: "GETDATE()")
                 },
                 constraints: table =>
                 {
@@ -390,29 +456,33 @@ namespace SportComplexApp.Data.Migrations
                     table.ForeignKey(
                         name: "FK_TournamentRegistrations_AspNetUsers_ClientId",
                         column: x => x.ClientId,
+                        principalSchema: "22180008",
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_TournamentRegistrations_Tournaments_TournamentId",
                         column: x => x.TournamentId,
+                        principalSchema: "22180008",
                         principalTable: "Tournaments",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.InsertData(
+                schema: "22180008",
                 table: "Facilities",
-                columns: new[] { "Id", "IsDeleted", "Name" },
+                columns: new[] { "Id", "ImageUrl", "IsDeleted", "Name" },
                 values: new object[,]
                 {
-                    { 1, false, "Indoor Arena" },
-                    { 2, false, "Tennis Center" },
-                    { 3, false, "Aquatics & Spa" },
-                    { 4, false, "Fitness Studio" }
+                    { 1, null, false, "Indoor Arena" },
+                    { 2, null, false, "Tennis Center" },
+                    { 3, null, false, "Aquatics & Spa" },
+                    { 4, null, false, "Fitness Studio" }
                 });
 
             migrationBuilder.InsertData(
+                schema: "22180008",
                 table: "SpaServices",
                 columns: new[] { "Id", "Description", "Duration", "ImageUrl", "IsDeleted", "Name", "Price", "ProcedureDetails" },
                 values: new object[,]
@@ -423,18 +493,20 @@ namespace SportComplexApp.Data.Migrations
                 });
 
             migrationBuilder.InsertData(
+                schema: "22180008",
                 table: "Trainers",
                 columns: new[] { "Id", "Bio", "ClientId", "ImageUrl", "IsDeleted", "LastName", "Name" },
                 values: new object[,]
                 {
-                    { 1, "Certified basketball coach with 8+ years of experience.", null, "https://nutrigen.bg/_cms/wp-content/uploads/2019/11/Kiril-Raykov-profile-pic-702x1024.jpg", false, "Raikov", "Kiril" },
-                    { 2, "Yoga & Pilates instructor focused on mobility and mindfulness.", null, "https://static.dir.bg/uploads/images/2015/08/03/691218/orig.jpg?_=1526561264", false, "Markovska", "Vili" },
-                    { 3, "CrossFit coach, competition-level conditioning specialist.", null, "https://toppresa.com/318883/%D0%BA%D0%BE%D1%81%D1%82%D0%B0%D0%B4%D0%B8%D0%BD-%D0%BB%D0%B5%D1%84%D1%82%D0%B5%D1%80%D0%BE%D0%B2-%D0%BE%D1%82-%D0%B3%D0%BE%D1%86%D0%B5-%D0%B4%D0%B5%D0%BB%D1%87%D0%B5%D0%B2-%D0%B5%D0%B4%D0%BD%D0%B0", false, "Lefterov", "Kostadin" },
-                    { 4, "Swimming coach—technique and endurance for all levels.", null, "https://www.pluvane.com/wp-content/uploads/2021/02/coach_13.jpg", false, "Mollov", "Nikolai" },
-                    { 5, "Tennis training: technique, tactics, and matchplay.", null, "https://www.google.com/url?sa=i&url=https%3A%2F%2Fbg.wikipedia.org%2Fwiki%2F%25D0%2593%25D1%2580%25D0%25B8%25D0%25B3%25D0%25BE%25D1%2580_%25D0%2594%25D0%25B8%25D0%25BC%25D0%25B8%25D1%2582%25D1%2580%25D0%25BE%25D0%25B2&psig=AOvVaw3qECx0GFabpMtQcgCFtLWW&ust=1755155485839000&source=images&cd=vfe&opi=89978449&ved=2ahUKEwj13avrnYePAxWcb_EDHVP9G7EQjRx6BAgAEBo", false, "Dimitrov", "Grigor" }
+                    { 1, "Certified basketball coach with 8+ years of experience.", null, "/images/kiril_raikov.jpg", false, "Raikov", "Kiril" },
+                    { 2, "Yoga & Pilates instructor focused on mobility and mindfulness.", null, "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=500&h=500&fit=crop", false, "Markovska", "Vili" },
+                    { 3, "CrossFit coach, competition-level conditioning specialist.", null, "/images/koceto.jpg", false, "Lefterov", "Kostadin" },
+                    { 4, "Swimming coach—technique and endurance for all levels.", null, "https://images.unsplash.com/photo-1512217649539-75b22b15525c?w=500&h=500&fit=crop", false, "Mollov", "Nikolai" },
+                    { 5, "Tennis training: technique, tactics, and matchplay.", null, "/images/grisho.jpg", false, "Dimitrov", "Grigor" }
                 });
 
             migrationBuilder.InsertData(
+                schema: "22180008",
                 table: "Sports",
                 columns: new[] { "Id", "Duration", "FacilityId", "ImageUrl", "IsDeleted", "MaxPeople", "MinPeople", "Name", "Price" },
                 values: new object[,]
@@ -448,6 +520,7 @@ namespace SportComplexApp.Data.Migrations
                 });
 
             migrationBuilder.InsertData(
+                schema: "22180008",
                 table: "SportTrainers",
                 columns: new[] { "SportId", "TrainerId" },
                 values: new object[,]
@@ -461,22 +534,25 @@ namespace SportComplexApp.Data.Migrations
                 });
 
             migrationBuilder.InsertData(
+                schema: "22180008",
                 table: "Tournaments",
-                columns: new[] { "Id", "Description", "EndDate", "IsDeleted", "Name", "SportId", "StartDate" },
+                columns: new[] { "Id", "Description", "EndDate", "ImageUrl", "IsDeleted", "Name", "SportId", "StartDate" },
                 values: new object[,]
                 {
-                    { 1, "Amateur tennis tournament with group stages and knockouts.", new DateTime(2025, 9, 14, 0, 0, 0, 0, DateTimeKind.Unspecified), false, "City Cup – Tennis", 2, new DateTime(2025, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 2, "Fast-paced 3-on-3 format, open for mixed teams.", new DateTime(2025, 10, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), false, "Basket 3-on-3 Open", 1, new DateTime(2025, 10, 4, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 3, "Sprint races across age groups.", new DateTime(2025, 11, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), false, "Swim Sprint Challenge", 3, new DateTime(2025, 11, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) }
+                    { 1, "Amateur tennis tournament with group stages and knockouts.", new DateTime(2025, 9, 14, 0, 0, 0, 0, DateTimeKind.Unspecified), null, false, "City Cup – Tennis", 2, new DateTime(2025, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 2, "Fast-paced 3-on-3 format, open for mixed teams.", new DateTime(2025, 10, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), null, false, "Basket 3-on-3 Open", 1, new DateTime(2025, 10, 4, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 3, "Sprint races across age groups.", new DateTime(2025, 11, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, false, "Swim Sprint Challenge", 3, new DateTime(2025, 11, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) }
                 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
+                schema: "22180008",
                 table: "AspNetRoleClaims",
                 column: "RoleId");
 
             migrationBuilder.CreateIndex(
                 name: "RoleNameIndex",
+                schema: "22180008",
                 table: "AspNetRoles",
                 column: "NormalizedName",
                 unique: true,
@@ -484,26 +560,31 @@ namespace SportComplexApp.Data.Migrations
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetUserClaims_UserId",
+                schema: "22180008",
                 table: "AspNetUserClaims",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetUserLogins_UserId",
+                schema: "22180008",
                 table: "AspNetUserLogins",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetUserRoles_RoleId",
+                schema: "22180008",
                 table: "AspNetUserRoles",
                 column: "RoleId");
 
             migrationBuilder.CreateIndex(
                 name: "EmailIndex",
+                schema: "22180008",
                 table: "AspNetUsers",
                 column: "NormalizedEmail");
 
             migrationBuilder.CreateIndex(
                 name: "UserNameIndex",
+                schema: "22180008",
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
                 unique: true,
@@ -511,61 +592,73 @@ namespace SportComplexApp.Data.Migrations
 
             migrationBuilder.CreateIndex(
                 name: "IX_Reservations_ClientId",
+                schema: "22180008",
                 table: "Reservations",
                 column: "ClientId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Reservations_SportId",
+                schema: "22180008",
                 table: "Reservations",
                 column: "SportId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Reservations_TrainerId",
+                schema: "22180008",
                 table: "Reservations",
                 column: "TrainerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_SpaReservations_ClientId",
+                schema: "22180008",
                 table: "SpaReservations",
                 column: "ClientId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_SpaReservations_SpaServiceId",
+                schema: "22180008",
                 table: "SpaReservations",
                 column: "SpaServiceId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Sports_FacilityId",
+                schema: "22180008",
                 table: "Sports",
                 column: "FacilityId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_SportTrainers_TrainerId",
+                schema: "22180008",
                 table: "SportTrainers",
                 column: "TrainerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_TournamentRegistrations_ClientId",
+                schema: "22180008",
                 table: "TournamentRegistrations",
                 column: "ClientId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_TournamentRegistrations_TournamentId",
+                schema: "22180008",
                 table: "TournamentRegistrations",
                 column: "TournamentId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Tournaments_SportId",
+                schema: "22180008",
                 table: "Tournaments",
                 column: "SportId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Trainers_ClientId",
+                schema: "22180008",
                 table: "Trainers",
                 column: "ClientId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_TrainerSessions_TrainerId",
+                schema: "22180008",
                 table: "TrainerSessions",
                 column: "TrainerId");
         }
@@ -574,55 +667,76 @@ namespace SportComplexApp.Data.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "AspNetRoleClaims");
+                name: "AspNetRoleClaims",
+                schema: "22180008");
 
             migrationBuilder.DropTable(
-                name: "AspNetUserClaims");
+                name: "AspNetUserClaims",
+                schema: "22180008");
 
             migrationBuilder.DropTable(
-                name: "AspNetUserLogins");
+                name: "AspNetUserLogins",
+                schema: "22180008");
 
             migrationBuilder.DropTable(
-                name: "AspNetUserRoles");
+                name: "AspNetUserRoles",
+                schema: "22180008");
 
             migrationBuilder.DropTable(
-                name: "AspNetUserTokens");
+                name: "AspNetUserTokens",
+                schema: "22180008");
 
             migrationBuilder.DropTable(
-                name: "Reservations");
+                name: "Logs_22180008",
+                schema: "22180008");
 
             migrationBuilder.DropTable(
-                name: "SpaReservations");
+                name: "Reservations",
+                schema: "22180008");
 
             migrationBuilder.DropTable(
-                name: "SportTrainers");
+                name: "SpaReservations",
+                schema: "22180008");
 
             migrationBuilder.DropTable(
-                name: "TournamentRegistrations");
+                name: "SportTrainers",
+                schema: "22180008");
 
             migrationBuilder.DropTable(
-                name: "TrainerSessions");
+                name: "TournamentRegistrations",
+                schema: "22180008");
 
             migrationBuilder.DropTable(
-                name: "AspNetRoles");
+                name: "TrainerSessions",
+                schema: "22180008");
 
             migrationBuilder.DropTable(
-                name: "SpaServices");
+                name: "AspNetRoles",
+                schema: "22180008");
 
             migrationBuilder.DropTable(
-                name: "Tournaments");
+                name: "SpaServices",
+                schema: "22180008");
 
             migrationBuilder.DropTable(
-                name: "Trainers");
+                name: "Tournaments",
+                schema: "22180008");
 
             migrationBuilder.DropTable(
-                name: "Sports");
+                name: "Trainers",
+                schema: "22180008");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
+                name: "Sports",
+                schema: "22180008");
 
             migrationBuilder.DropTable(
-                name: "Facilities");
+                name: "AspNetUsers",
+                schema: "22180008");
+
+            migrationBuilder.DropTable(
+                name: "Facilities",
+                schema: "22180008");
         }
     }
 }

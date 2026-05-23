@@ -12,8 +12,8 @@ using SportComplexApp.Data;
 namespace SportComplexApp.Data.Migrations
 {
     [DbContext(typeof(SportComplexDbContext))]
-    [Migration("20260522233451_UpdateTrainerImages")]
-    partial class UpdateTrainerImages
+    [Migration("20260523200908_InitilaDb")]
+    partial class InitilaDb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

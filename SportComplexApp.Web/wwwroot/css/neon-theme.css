@@ -1,4 +1,14 @@
-﻿:root {
+﻿html, body {
+    overflow-x: hidden;
+    width: 100%;
+    position: relative;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+:root {
     --neon: #00ffc8;
     --bg: #0e0e0e;
     --panel: #151515;
@@ -13,10 +23,6 @@ body {
     color: var(--text);
 }
 
-/* ====== Base Dark + Neon Theme ====== */
-
-/* body { background:#0a0a0a; } */
-
 .card-dark {
     background: #151515;
     border: 1px solid rgba(255,255,255,.08);
@@ -28,7 +34,6 @@ body {
     box-shadow: 0 .75rem 1.5rem rgba(0,0,0,.35);
 }
 
-/* -------- Inputs -------- */
 .form-control,
 .form-select {
     background: #0f1111;
@@ -62,7 +67,6 @@ body {
         color: #fff;
     }
 
-/* Readonly/Disabled */
 .form-control[readonly] {
     background: #111 !important;
     color: #e6e6e6 !important;
@@ -75,14 +79,12 @@ body {
     opacity: 1;
 }
 
-/* Icons input-group */
 .neon-icon {
     background: #0f1111;
     border: 1px solid rgba(0,255,200,.35);
     color: #00ffc8;
 }
 
-/* -------- Datetime-local Hybrid  -------- */
 .dtl-themed {
     color-scheme: light;
     background: #0f1111 !important;
@@ -111,7 +113,6 @@ body {
     appearance: auto !important;
 }
 
-/* -------- Buttons -------- */
 .btn-neon {
     background: #00ffc8;
     color: #000;
@@ -138,7 +139,6 @@ body {
         box-shadow: 0 0 10px #00ffc8;
     }
 
-/* -------- Badges / Pills / Price -------- */
 .badge-soft {
     background: #202020;
     color: #c9ccd1;
@@ -159,7 +159,6 @@ body {
     text-shadow: 0 0 8px rgba(0,255,200,.35);
 }
 
-/* -------- Tables -------- */
 .neon-table thead {
     background: #111;
     color: #00ffc8;
@@ -176,7 +175,6 @@ body {
     color: #fff;
 }
 
-/* -------- Pagination -------- */
 .sc-pagination .page-link {
     background: #111;
     border: 1px solid rgba(255,255,255,.12);
@@ -196,7 +194,6 @@ body {
     color: #fff;
 }
 
-/* -------- Cards – cover images -------- */
 .cover {
     background-size: cover;
     background-position: center;
@@ -208,7 +205,6 @@ body {
     background: radial-gradient(80% 60% at 20% 10%, rgba(0,255,200,.25), transparent), linear-gradient(135deg,#1f1f1f,#2a2a2a);
 }
 
-/* -------- Small helpers -------- */
 .text-light-50 {
     color: rgba(255,255,255,.65);
 }
@@ -220,14 +216,10 @@ body {
     overflow: hidden;
 }
 
-/*site.css*/
-
-/* Кръщаваме контейнера */
-/* 1. КУТИЯ ЗА СЪОРЪЖЕНИЕ (Отваря се НАДОЛУ) */
 .img-preview-box {
     display: none;
     position: absolute;
-    top: calc(100% + 5px); /* Под полето */
+    top: calc(100% + 5px);
     left: 0;
     width: 100%;
     min-height: 150px;
@@ -244,12 +236,11 @@ body {
     display: block;
 }
 
-/* 2. КУТИЯ ЗА ТРЕНЬОР (Отваря се ОТСТРАНИ) */
 .trainer-preview-box {
     display: none;
     position: absolute;
     top: 0;
-    left: calc(100% + 15px); /* Отстрани вдясно */
+    left: calc(100% + 15px);
     width: 220px;
     min-height: 200px;
     z-index: 1050;
@@ -265,28 +256,24 @@ body {
     display: block;
 }
 
-/* БОНУС: Ако човекът е на телефон, снимката ще излиза НАГОРЕ, за да не се скрие извън екрана */
 @media (max-width: 991px) {
     .trainer-preview-box {
         left: 0;
         top: auto;
-        bottom: calc(100% + 5px); /* Над менюто */
+        bottom: calc(100% + 5px);
         width: 100%;
         animation: fadeInSlideUp 0.3s ease-out;
     }
 }
 
-/* Това правило е задължително за красиви картички */
 .trainer-img {
     width: 100%;
-    height: 300px; /* Твърда височина за уеднаквяване */
-    object-fit: cover; /* Изрязва снимката, без да я разтяга */
-    object-position: center top; /* Фокусира към лицето */
+    height: 300px;
+    object-fit: cover;
+    object-position: center top;
     display: block;
 }
 
-/* Базови настройки за анимацията на всички дни */
-/* Разделяне на 7 колони */
 .row-cols-7 > * {
     flex: 0 0 auto;
     width: 14.2857142857%;
@@ -301,7 +288,6 @@ body {
     border-radius: 4px;
 }
 
-/* Ховър ефект 1:1 с Треньорския Dashboard */
 .day-card {
     transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.2s ease, border-color 0.2s ease;
     z-index: 1;
@@ -326,34 +312,30 @@ body {
             white-space: normal !important;
             word-break: break-word;
         }
-/* Контейнер за картичката */
 .card-img-wrapper {
     width: 100%;
-    height: 250px; /* Фиксирана височина за всички */
-    overflow: hidden; /* Крие всичко, което излиза от рамката */
-    border-top-left-radius: 1rem; /* Закръгля горните ъгли */
+    height: 250px;
+    overflow: hidden;
+    border-top-left-radius: 1rem;
     border-top-right-radius: 1rem;
 }
 
-/* Самата снимка */
 .card-img-top {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* Ключовото правило: изрязва и запълва */
-    object-position: center; /* Центрира лицето/центъра на снимката */
-    transition: transform 0.3s ease; /* Ефект при ховър */
+    object-fit: cover;
+    object-position: center;
+    transition: transform 0.3s ease;
 }
 
-/* Ефект при мишка отгоре */
 .card:hover .card-img-top {
-    transform: scale(1.05); /* Леко приближаване */
+    transform: scale(1.05);
 }
 
-/* Стабилизиране на баджовете, за да не се "чупят" при дълги текстове */
 badge {
-    max-width: 150px; /* Ограничаваме максималната ширина */
+    max-width: 150px;
     overflow: hidden;
-    text-overflow: ellipsis; /* Слага три точки, ако е твърде дълго */
+    text-overflow: ellipsis;
     display: inline-flex !important;
     align-items: center;
 }

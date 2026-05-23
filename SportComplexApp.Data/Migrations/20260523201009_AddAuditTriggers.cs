@@ -5,7 +5,7 @@
 namespace SportComplexApp.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class AddTriggers : Migration
+    public partial class AddAuditTriggers : Migration
     {
         private readonly string[] _tables = new[]
         {
