@@ -14,16 +14,15 @@ namespace SportComplexApp.Web.Controllers
         private readonly ISportService sportService;
         private readonly IStringLocalizer<SharedResource> sharedLocalizer;
 
-        public SportController(ISportService sportService, IStringLocalizer<SharedResource> sharedLocalizer)
+        public SportController(ISportService sportService, IFacilityService facilityService, IStringLocalizer<SharedResource> sharedLocalizer)
         {
             this.sportService = sportService;
-            this.sharedLocalizer = sharedLocalizer;
             this.facilityService = facilityService;
+            this.sharedLocalizer = sharedLocalizer;
         }
 
         [HttpGet]
         [AllowAnonymous]
-        [HttpGet]
         public async Task<IActionResult> All(string? searchQuery = null, int? minDuration = null, int? maxDuration = null, string? sortBy = null, int? trainerId = null, int page = 1)
         {
             int pageSize = 6;
