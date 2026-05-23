@@ -11,6 +11,7 @@ namespace SportComplexApp.Data.Models
         public int Id { get; set; }
 
         public string Name { get; set; } = null!;
+        public string? ImageUrl { get; set; }
         public bool IsDeleted { get; set; } = false;
 
         public virtual ICollection<Sport> Sports { get; set; } = new HashSet<Sport>();

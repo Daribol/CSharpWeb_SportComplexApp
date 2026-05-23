@@ -16,5 +16,9 @@ namespace SportComplexApp.Web.ViewModels.Trainer
         public List<string> Sports { get; set; } = new();
         public string? Bio { get; set; }
         public string? ImageUrl { get; set; }
+
+        public int CurrentMonth { get; set; }
+        public int CurrentYear { get; set; }
+        public List<TrainerReservationViewModel> Reservations { get; set; } = new();
     }
 }

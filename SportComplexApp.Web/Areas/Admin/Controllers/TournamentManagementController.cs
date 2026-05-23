@@ -26,10 +26,33 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
             this.sharedLocalizer = sharedLocalizer;
         }
 
-        public async Task<IActionResult> All(string? searchQuery = null, string? sport = null, string? sortBy = null)
+        [HttpGet]
+        public async Task<IActionResult> All(string? searchQuery = null, string? sport = null, string? sortBy = null, int page = 1)
         {
-            var tournaments = await tournamentService.GetAllAsync(searchQuery, sport, sortBy);
-            return View(tournaments.Where(t => !t.IsDeleted));
+            int pageSize = 8;
+
+            var allTournaments = await tournamentService.GetAllAsync(searchQuery, sport, sortBy);
+            var activeTournaments = allTournaments.Where(t => !t.IsDeleted).ToList();
+
+            int totalItems = activeTournaments.Count();
+            int totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+
+            if (page < 1) page = 1;
+            if (page > totalPages && totalPages > 0) page = totalPages;
+
+            var paginatedTournaments = activeTournaments
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            ViewBag.SearchQuery = searchQuery;
+            ViewBag.Sport = sport;
+            ViewBag.SortBy = sortBy;
+
+            ViewBag.CurrentPage = page;
+            ViewBag.TotalPages = totalPages;
+
+            return View(paginatedTournaments);
         }
 
         [HttpGet]

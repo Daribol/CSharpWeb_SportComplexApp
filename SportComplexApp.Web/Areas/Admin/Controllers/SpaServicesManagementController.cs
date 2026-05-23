@@ -24,10 +24,31 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
             this.sharedLocalizer = sharedLocalizer;
         }
 
-        public async Task<IActionResult> All(string? searchQuery = null, string? sortBy = null)
+        [HttpGet]
+        public async Task<IActionResult> All(string? searchQuery = null, string? sortBy = null, int page = 1)
         {
+            int pageSize = 8;
+
             var model = await spaService.GetAllSpaServicesAsync(searchQuery, sortBy);
-            return View(model);
+
+            int totalItems = model.Count();
+            int totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+
+            if (page < 1) page = 1;
+            if (page > totalPages && totalPages > 0) page = totalPages;
+
+            var paginatedModel = model
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            ViewBag.SearchQuery = searchQuery;
+            ViewBag.SortBy = sortBy;
+
+            ViewBag.CurrentPage = page;
+            ViewBag.TotalPages = totalPages;
+
+            return View(paginatedModel);
         }
 
         [HttpGet]

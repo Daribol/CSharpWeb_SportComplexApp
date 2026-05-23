@@ -133,7 +133,7 @@
     <value>Резервирай</value>
   </data>
   <data name="Currency" xml:space="preserve">
-    <value>лв.</value>
+    <value>€</value>
   </data>
   <data name="MaxDuration" xml:space="preserve">
     <value>Макс. (мин)</value>
@@ -144,11 +144,17 @@
   <data name="Minutes" xml:space="preserve">
     <value>мин</value>
   </data>
+  <data name="Next" xml:space="preserve">
+    <value>Напред</value>
+  </data>
   <data name="NoSpaDesc" xml:space="preserve">
     <value>Опитайте да промените търсенето или времетраенето.</value>
   </data>
   <data name="NoSpaTitle" xml:space="preserve">
     <value>Няма спа услуги, отговарящи на филтрите.</value>
+  </data>
+  <data name="Previous" xml:space="preserve">
+    <value>Назад</value>
   </data>
   <data name="SearchPlaceholder" xml:space="preserve">
     <value>напр. Масаж...</value>

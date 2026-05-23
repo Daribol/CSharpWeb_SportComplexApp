@@ -219,3 +219,146 @@ body {
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
+
+/*site.css*/
+
+/* Кръщаваме контейнера */
+/* 1. КУТИЯ ЗА СЪОРЪЖЕНИЕ (Отваря се НАДОЛУ) */
+.img-preview-box {
+    display: none;
+    position: absolute;
+    top: calc(100% + 5px); /* Под полето */
+    left: 0;
+    width: 100%;
+    min-height: 150px;
+    z-index: 1000;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    box-shadow: 0 5px 20px rgba(0, 255, 200, 0.4);
+    border: 2px solid #00ffc8;
+    pointer-events: none;
+    animation: fadeInSlideUp 0.3s ease-out;
+}
+
+.facility-hover-area:hover .img-preview-box {
+    display: block;
+}
+
+/* 2. КУТИЯ ЗА ТРЕНЬОР (Отваря се ОТСТРАНИ) */
+.trainer-preview-box {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: calc(100% + 15px); /* Отстрани вдясно */
+    width: 220px;
+    min-height: 200px;
+    z-index: 1050;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    box-shadow: 0 5px 20px rgba(0, 255, 200, 0.4);
+    border: 2px solid #00ffc8;
+    pointer-events: none;
+    animation: fadeInSlideLeft 0.3s ease-out;
+}
+
+.facility-hover-area:hover .trainer-preview-box {
+    display: block;
+}
+
+/* БОНУС: Ако човекът е на телефон, снимката ще излиза НАГОРЕ, за да не се скрие извън екрана */
+@media (max-width: 991px) {
+    .trainer-preview-box {
+        left: 0;
+        top: auto;
+        bottom: calc(100% + 5px); /* Над менюто */
+        width: 100%;
+        animation: fadeInSlideUp 0.3s ease-out;
+    }
+}
+
+/* Това правило е задължително за красиви картички */
+.trainer-img {
+    width: 100%;
+    height: 300px; /* Твърда височина за уеднаквяване */
+    object-fit: cover; /* Изрязва снимката, без да я разтяга */
+    object-position: center top; /* Фокусира към лицето */
+    display: block;
+}
+
+/* Базови настройки за анимацията на всички дни */
+/* Разделяне на 7 колони */
+.row-cols-7 > * {
+    flex: 0 0 auto;
+    width: 14.2857142857%;
+}
+
+.style-scrollbar::-webkit-scrollbar {
+    width: 4px;
+}
+
+.style-scrollbar::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 255, 200, 0.3);
+    border-radius: 4px;
+}
+
+/* Ховър ефект 1:1 с Треньорския Dashboard */
+.day-card {
+    transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.2s ease, border-color 0.2s ease;
+    z-index: 1;
+    position: relative;
+}
+
+    .day-card.has-events:hover {
+        transform: scale(1.5);
+        z-index: 100;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.95), 0 0 20px rgba(0, 255, 200, 0.4) !important;
+        background-color: #161a1a !important;
+        border-color: rgba(0, 255, 200, 0.8) !important;
+        cursor: pointer;
+    }
+
+        .day-card.has-events:hover .p-1.overflow-auto {
+            max-height: none !important;
+            overflow: visible !important;
+        }
+
+        .day-card.has-events:hover .text-truncate {
+            white-space: normal !important;
+            word-break: break-word;
+        }
+/* Контейнер за картичката */
+.card-img-wrapper {
+    width: 100%;
+    height: 250px; /* Фиксирана височина за всички */
+    overflow: hidden; /* Крие всичко, което излиза от рамката */
+    border-top-left-radius: 1rem; /* Закръгля горните ъгли */
+    border-top-right-radius: 1rem;
+}
+
+/* Самата снимка */
+.card-img-top {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ключовото правило: изрязва и запълва */
+    object-position: center; /* Центрира лицето/центъра на снимката */
+    transition: transform 0.3s ease; /* Ефект при ховър */
+}
+
+/* Ефект при мишка отгоре */
+.card:hover .card-img-top {
+    transform: scale(1.05); /* Леко приближаване */
+}
+
+/* Стабилизиране на баджовете, за да не се "чупят" при дълги текстове */
+badge {
+    max-width: 150px; /* Ограничаваме максималната ширина */
+    overflow: hidden;
+    text-overflow: ellipsis; /* Слага три точки, ако е твърде дълго */
+    display: inline-flex !important;
+    align-items: center;
+}
+
+    .badge span {
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }

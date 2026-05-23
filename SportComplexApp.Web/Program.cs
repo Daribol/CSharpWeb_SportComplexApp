@@ -42,7 +42,7 @@ builder.Services.AddMemoryCache();
 
 builder.Services.AddRazorPages();
 
-
+builder.Services.AddSingleton<TranslationService>();
 builder.Services.AddScoped<ISportService, SportService>();
 builder.Services.AddScoped<ISpaService, SportComplexApp.Services.Data.SpaService>();
 builder.Services.AddScoped<ITournamentService, TournamentService>();
@@ -54,7 +54,7 @@ builder.Services.AddLocalization(options => options.ResourcesPath = "Resources")
 
 builder.Services.AddControllersWithViews(cfg =>
 {
-    cfg.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
+    cfg.Filters.Add<GlobalTranslationFilter>();
 })
 .AddViewLocalization(Microsoft.AspNetCore.Mvc.Razor.LanguageViewLocationExpanderFormat.Suffix)
 .AddDataAnnotationsLocalization(options =>

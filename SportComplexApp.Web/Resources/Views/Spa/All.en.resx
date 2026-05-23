@@ -133,7 +133,7 @@
     <value>Reserve</value>
   </data>
   <data name="Currency" xml:space="preserve">
-    <value>BGN</value>
+    <value>€</value>
   </data>
   <data name="MaxDuration" xml:space="preserve">
     <value>Max (min)</value>
@@ -144,11 +144,17 @@
   <data name="Minutes" xml:space="preserve">
     <value>min</value>
   </data>
+  <data name="Next" xml:space="preserve">
+    <value>Next</value>
+  </data>
   <data name="NoSpaDesc" xml:space="preserve">
     <value>Try adjusting the search or duration range.</value>
   </data>
   <data name="NoSpaTitle" xml:space="preserve">
     <value>No spa services match your filters.</value>
+  </data>
+  <data name="Previous" xml:space="preserve">
+    <value>Previous</value>
   </data>
   <data name="SearchPlaceholder" xml:space="preserve">
     <value>e.g. Massage...</value>

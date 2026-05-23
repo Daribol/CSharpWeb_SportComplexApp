@@ -7,36 +7,52 @@
     ViewData["Title"] = Localizer["Title"];
 }
 
-<div class="card card-dark shadow-lg border-0 rounded-4 mb-4">
-    <div class="card-body p-4 p-md-5">
-        <h2 class="mb-3" style="color:#ff4d4d;">
-            <i class="bi bi-exclamation-triangle-fill me-2"></i> @Localizer["Heading"]
-        </h2>
+<div class="row justify-content-center mt-4">
+    <div class="col-md-8 col-lg-6">
+        <div class="card card-dark shadow-lg border border-danger border-opacity-25 rounded-4 mb-4">
+            <div class="card-body p-4 p-md-5 text-center">
+                
+                <div class="display-1 text-danger mb-3">
+                    <i class="bi bi-exclamation-triangle-fill"></i>
+                </div>
+                
+                <h2 class="mb-4 text-white">
+                    @Localizer["Heading"]
+                </h2>
 
-        <div class="alert alert-dark border border-warning d-flex align-items-start gap-2 mb-4">
-            <i class="bi bi-exclamation-circle-fill text-warning mt-1"></i>
-            <div>
-                <strong class="text-warning">@Localizer["WarningTitle"]</strong><br />
-                @Localizer["WarningText"]
-                <span class="fw-bold" style="color:#ff6b6b;">@Model.Name</span>
-                @if (!string.IsNullOrWhiteSpace(Model.Sport))
-                {
-                    @: (@Localizer["SportPrefix"] <span class="fw-semibold text-light">@Model.Sport</span>)
-                }
-                <br />
-                @Localizer["WarningUndone"]
+                <div class="alert bg-dark border border-warning border-opacity-50 text-start d-flex align-items-start gap-3 mb-4 rounded-3 shadow-sm">
+                    <i class="bi bi-exclamation-circle-fill text-warning fs-4 mt-1"></i>
+                    <div>
+                        <strong class="text-warning d-block mb-1">@Localizer["WarningTitle"]</strong>
+                        <span class="text-light-50">@Localizer["WarningText"]</span>
+                        
+                        <div class="mt-2 mb-2">
+                            <span class="fw-bold text-danger fs-5">@Model.Name</span>
+                            @if (!string.IsNullOrWhiteSpace(Model.Sport))
+                            {
+                                <span class="text-light-50 ms-1">(@Localizer["SportPrefix"] <span class="fw-semibold text-light">@Model.Sport</span>)</span>
+                            }
+                        </div>
+                        
+                        <span class="text-light-50 d-block small">@Localizer["WarningUndone"]</span>
+                    </div>
+                </div>
+
+                <form asp-action="DeleteConfirmed" method="post" class="mt-4">
+                    <input type="hidden" asp-for="Id" />
+
+                    <div class="d-flex gap-3 justify-content-center">
+                        <a asp-action="All" class="btn btn-outline-neon px-4 rounded-pill">
+                            <i class="bi bi-arrow-left me-1"></i> @Localizer["BtnCancel"]
+                        </a>
+                        <button type="submit" class="btn btn-danger px-4 rounded-pill shadow-sm">
+                            <i class="bi bi-trash3 me-1"></i> @Localizer["BtnDelete"]
+                        </button>
+                    </div>
+                </form>
+
             </div>
         </div>
-
-        <form asp-action="DeleteConfirmed" method="post" class="mt-2 d-flex gap-2">
-            <input type="hidden" asp-for="Id" />
-            <button type="submit" class="btn btn-danger">
-                <i class="bi bi-trash3 me-1"></i> @Localizer["BtnDelete"]
-            </button>
-            <a asp-action="All" class="btn btn-outline-neon">
-                <i class="bi bi-x-circle me-1"></i> @Localizer["BtnCancel"]
-            </a>
-        </form>
     </div>
 </div>
 

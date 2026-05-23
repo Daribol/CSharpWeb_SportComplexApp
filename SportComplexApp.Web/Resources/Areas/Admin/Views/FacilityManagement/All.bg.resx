@@ -144,6 +144,9 @@
   <data name="ManageFacilitiesHeader" xml:space="preserve">
     <value>Управление на съоръжения</value>
   </data>
+  <data name="Next" xml:space="preserve">
+    <value>Напред</value>
+  </data>
   <data name="NoFacilitiesDesc" xml:space="preserve">
     <value>Добавете първото си съоръжение, за да започнете.</value>
   </data>
@@ -152,6 +155,9 @@
   </data>
   <data name="NoSportsAvailable" xml:space="preserve">
     <value>Няма добавени спортове към това съоръжение.</value>
+  </data>
+  <data name="Previous" xml:space="preserve">
+    <value>Напред</value>
   </data>
   <data name="SportsInHeader" xml:space="preserve">
     <value>Спортове в</value>

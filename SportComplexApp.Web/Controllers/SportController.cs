@@ -10,6 +10,7 @@ namespace SportComplexApp.Web.Controllers
 {
     public class SportController : BaseController
     {
+        private readonly IFacilityService facilityService;
         private readonly ISportService sportService;
         private readonly IStringLocalizer<SharedResource> sharedLocalizer;
 
@@ -17,14 +18,29 @@ namespace SportComplexApp.Web.Controllers
         {
             this.sportService = sportService;
             this.sharedLocalizer = sharedLocalizer;
+            this.facilityService = facilityService;
         }
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> All(string? searchQuery = null, int? minDuration = null, int? maxDuration = null, string? sortBy = null, int? trainerId = null)
+        [HttpGet]
+        public async Task<IActionResult> All(string? searchQuery = null, int? minDuration = null, int? maxDuration = null, string? sortBy = null, int? trainerId = null, int page = 1)
         {
+            int pageSize = 6;
+
             var sports = await this.sportService
                 .GetAllSportsAsync(searchQuery, minDuration, maxDuration, sortBy, trainerId);
+
+            int totalItems = sports.Count();
+            int totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+
+            if (page < 1) page = 1;
+            if (page > totalPages && totalPages > 0) page = totalPages;
+
+            var paginatedSports = sports
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
 
             ViewBag.SearchQuery = searchQuery;
             ViewBag.MinDuration = minDuration;
@@ -32,7 +48,10 @@ namespace SportComplexApp.Web.Controllers
             ViewBag.SortBy = sortBy;
             ViewBag.TrainerId = trainerId;
 
-            return View(sports);
+            ViewBag.CurrentPage = page;
+            ViewBag.TotalPages = totalPages;
+
+            return View(paginatedSports);
         }
 
         [HttpGet]
@@ -44,6 +63,20 @@ namespace SportComplexApp.Web.Controllers
             if (model == null)
             {
                 return NotFound();
+            }
+
+            if (facilityService != null)
+            {
+                var allFacilities = await facilityService.GetAllFacilitiesWithSportsAsync();
+
+                if (allFacilities != null)
+                {
+                    var facility = allFacilities.FirstOrDefault(f => f.Sports.Any(s => s.Id == id));
+                    if (facility != null)
+                    {
+                        model.FacilityImageUrl = facility.ImageUrl;
+                    }
+                }
             }
 
             return View(model);
@@ -60,6 +93,7 @@ namespace SportComplexApp.Web.Controllers
                 {
                     model.SportName = fallback.SportName;
                     model.FacilityName = fallback.FacilityName;
+                    model.FacilityImageUrl = fallback.FacilityImageUrl;
                     model.Trainers = fallback.Trainers;
                     model.MinDuration = fallback.MinDuration;
                     model.MaxDuration = fallback.MaxDuration;

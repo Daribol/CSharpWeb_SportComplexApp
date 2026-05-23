@@ -15,6 +15,7 @@ namespace SportComplexApp.Web.ViewModels.Sport
         public string SportName { get; set; } = null!;
 
         public string FacilityName { get; set; } = null!;
+        public string? FacilityImageUrl { get; set; }
 
         [Required]
         [Display(Name = "LabelReservationDateTime")]

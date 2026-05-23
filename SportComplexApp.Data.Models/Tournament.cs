@@ -20,6 +20,7 @@ namespace SportComplexApp.Data.Models
 
         public int SportId { get; set; }
         public Sport Sport { get; set; } = null!;
+        public string? ImageUrl { get; set; }
 
         public bool IsDeleted { get; set; } = false;
 

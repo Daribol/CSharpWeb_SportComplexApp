@@ -261,11 +261,20 @@
   <data name="ReservationTooSoon" xml:space="preserve">
     <value>Можете да направите резервация поне 1 час предварително.</value>
   </data>
+  <data name="RoleAdmin" xml:space="preserve">
+    <value>Админ</value>
+  </data>
   <data name="RoleAssigned" xml:space="preserve">
     <value>Ролята беше успешно добавена към потребителя.</value>
   </data>
+  <data name="RoleClient" xml:space="preserve">
+    <value>Клиент</value>
+  </data>
   <data name="RoleRemoved" xml:space="preserve">
     <value>Ролята беше успешно премахната от потребителя.</value>
+  </data>
+  <data name="RoleTrainer" xml:space="preserve">
+    <value>Треньор</value>
   </data>
   <data name="SpaReservationCreated" xml:space="preserve">
     <value>Спа резервацията беше успешно създадена.</value>

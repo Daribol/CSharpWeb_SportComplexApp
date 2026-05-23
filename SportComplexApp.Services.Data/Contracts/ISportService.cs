@@ -31,6 +31,6 @@ namespace SportComplexApp.Services.Data.Contracts
         Task DeleteAsync(int id);
         Task<IEnumerable<SelectListItem>> GetAllAsSelectListAsync();
 
-        Task<IEnumerable<SportReportViewModel>> GetSportReservationsReportAsync();
+        Task<IEnumerable<SportReportViewModel>> GetSportReservationsReportAsync(DateTime? startDate = null, DateTime? endDate = null);
     }
 }

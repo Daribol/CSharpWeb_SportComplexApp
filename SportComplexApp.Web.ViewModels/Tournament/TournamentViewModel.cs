@@ -14,6 +14,7 @@ namespace SportComplexApp.Web.ViewModels.Tournament
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public string Description { get; set; } = null!;
+        public string? ImageUrl { get; set; }
         public bool IsDeleted { get; set; } = false;
     }
 }

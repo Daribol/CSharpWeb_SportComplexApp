@@ -8,8 +8,11 @@ namespace SportComplexApp.Web.ViewModels.Report
 {
     public class SpaReportViewModel
     {
-        public string SpaServiceName { get; set; } = null!;
-        public int TotalReservations { get; set; }
-        public decimal TotalRevenue { get; set; }
+        public string ClientName { get; set; } = null!;
+        public string ServiceName { get; set; } = null!;
+        public string Date { get; set; } = null!;
+        public decimal Price { get; set; }
+
+        public bool IsServiceDeleted { get; set; }
     }
 }

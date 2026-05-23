@@ -133,7 +133,7 @@
     <value>Филтрирай</value>
   </data>
   <data name="Currency" xml:space="preserve">
-    <value>лв.</value>
+    <value>€</value>
   </data>
   <data name="Heading" xml:space="preserve">
     <value>Управление на Спа Услуги</value>
@@ -147,6 +147,9 @@
   <data name="Minutes" xml:space="preserve">
     <value>мин</value>
   </data>
+  <data name="Next" xml:space="preserve">
+    <value>Напред</value>
+  </data>
   <data name="NoSpaDesc" xml:space="preserve">
     <value>Добавете първата си спа услуга, за да започнете.</value>
   </data>
@@ -155,6 +158,9 @@
   </data>
   <data name="PlaceholderSearch" xml:space="preserve">
     <value>напр. Масаж с горещи камъни...</value>
+  </data>
+  <data name="Previous" xml:space="preserve">
+    <value>Назад</value>
   </data>
   <data name="SortDefault" xml:space="preserve">
     <value>-- По подразбиране --</value>

@@ -145,7 +145,7 @@
     <value>Име на услугата</value>
   </data>
   <data name="LabelPrice" xml:space="preserve">
-    <value>Цена (лв.)</value>
+    <value>Цена (€)</value>
   </data>
   <data name="PlaceholderDesc" xml:space="preserve">
     <value>Релаксиращ масаж на цяло тяло…</value>

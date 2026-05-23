@@ -8,9 +8,9 @@
 }
 
 <div class="d-flex align-items-center justify-content-between mb-4">
-    <h2 class="mb-0 text-neon">@Localizer["Heading"]</h2>
+    <h2 class="mb-0" style="color:#00ffc8;">@Localizer["Heading"]</h2>
     <a asp-action="Add" class="btn btn-neon">
-        <i class="bi bi-plus-circle"></i> @Localizer["BtnAddSpa"]
+        <i class="bi bi-plus-circle me-1"></i> @Localizer["BtnAddSpa"]
     </a>
 </div>
 
@@ -18,14 +18,14 @@
 {
     <div class="alert alert-success alert-dismissible fade show" role="alert">
         @TempData["SuccessMessage"]
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 }
 @if (TempData["ErrorMessage"] != null)
 {
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
         @TempData["ErrorMessage"]
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 }
 
@@ -33,17 +33,17 @@
     <div class="row g-3 align-items-end">
         <div class="col-md-5">
             <label for="searchQuery" class="form-label text-light">@Localizer["LabelSearchName"]</label>
-            <div class="input-group">
-                <span class="input-group-text bg-dark border-secondary text-neon"><i class="bi bi-search"></i></span>
-                <input type="text" name="searchQuery" id="searchQuery" class="form-control bg-dark text-light border-secondary" placeholder="@Localizer["PlaceholderSearch"]" value="@Context.Request.Query["searchQuery"]" />
+            <div class="input-group neon-input">
+                <span class="input-group-text neon-icon"><i class="bi bi-search"></i></span>
+                <input type="text" name="searchQuery" id="searchQuery" class="form-control" placeholder="@Localizer["PlaceholderSearch"]" value="@Context.Request.Query["searchQuery"]" />
             </div>
         </div>
 
         <div class="col-md-4">
             <label for="sortBy" class="form-label text-light">@Localizer["LabelSortBy"]</label>
-            <div class="input-group">
-                <span class="input-group-text bg-dark border-secondary text-neon"><i class="bi bi-sort-down"></i></span>
-                <select name="sortBy" id="sortBy" class="form-select bg-dark text-light border-secondary">
+            <div class="input-group neon-input">
+                <span class="input-group-text neon-icon"><i class="bi bi-sort-down"></i></span>
+                <select name="sortBy" id="sortBy" class="form-select">
                     <option value="">@Localizer["SortDefault"]</option>
                     <option value="name_asc" selected="@(Context.Request.Query["sortBy"] == "name_asc")">@Localizer["SortNameAsc"]</option>
                     <option value="name_desc" selected="@(Context.Request.Query["sortBy"] == "name_desc")">@Localizer["SortNameDesc"]</option>
@@ -54,10 +54,10 @@
         </div>
 
         <div class="col-md-3 d-flex gap-2">
-            <button type="submit" class="btn btn-neon flex-grow-1">
+            <button type="submit" class="btn btn-outline-neon flex-grow-1">
                 <i class="bi bi-funnel-fill"></i> @Localizer["BtnFilter"]
             </button>
-            <a asp-action="All" class="btn btn-outline-secondary">
+            <a asp-action="All" class="btn btn-outline-neon">
                 <i class="bi bi-x-circle"></i> @Localizer["BtnClear"]
             </a>
         </div>
@@ -69,9 +69,9 @@
     <div class="card card-dark text-center p-5 rounded-4 border-0">
         <div class="display-6 mb-2">💆</div>
         <h5 class="mb-1 text-light">@Localizer["NoSpaTitle"]</h5>
-        <p class="text-muted mb-3">@Localizer["NoSpaDesc"]</p>
+        <p class="text-light-50 mb-3">@Localizer["NoSpaDesc"]</p>
         <a asp-action="Add" class="btn btn-neon">
-            <i class="bi bi-plus-circle"></i> @Localizer["BtnAddSpa"]
+            <i class="bi bi-plus-circle me-1"></i> @Localizer["BtnAddSpa"]
         </a>
     </div>
 }
@@ -81,34 +81,34 @@ else
         @foreach (var spa in Model)
         {
             <div class="col">
-                <div class="card card-dark spa-card h-100 border-0">
+                <div class="card card-dark hover h-100 border-0 rounded-4">
+                    
                     @if (!string.IsNullOrWhiteSpace(spa.ImageUrl))
                     {
-                        <div class="spa-cover ratio ratio-16x9"
-                             style="background-image: url('@spa.ImageUrl');"></div>
+                        <img src="@spa.ImageUrl" class="card-img-top" alt="@spa.Name" style="height: 180px; object-fit: cover; border-radius: 1rem 1rem 0 0;" />
                     }
                     else
                     {
-                        <div class="spa-cover ratio ratio-16x9 spa-cover--placeholder d-flex align-items-center justify-content-center">
-                            <i class="bi bi-flower3 display-6 text-white-50"></i>
+                        <div class="cover cover--placeholder ratio ratio-16x9 d-flex align-items-center justify-content-center bg-dark border-bottom border-secondary border-opacity-25" style="border-radius: 1rem 1rem 0 0;">
+                            <i class="bi bi-flower3 display-6 text-light-50"></i>
                         </div>
                     }
 
                     <div class="card-body d-flex flex-column">
-                        <h5 class="card-title text-light mb-1">@spa.Name</h5>
+                        <h5 class="card-title mb-2 text-white clamp-3">@spa.Name</h5>
 
                         <p class="text-muted small mb-3 clamp-3">@spa.Description</p>
 
-                        <ul class="list-unstyled small text-muted mb-3">
-                            <li><i class="bi bi-cash-coin text-success"></i> @spa.Price.ToString("F2") @Localizer["Currency"]</li>
-                            <li><i class="bi bi-stopwatch text-primary"></i> @spa.Duration @Localizer["Minutes"]</li>
+                        <ul class="list-unstyled small text-muted mb-4">
+                            <li class="mb-1"><i class="bi bi-cash-coin text-success me-1"></i> @spa.Price.ToString("F2") @Localizer["Currency"]</li>
+                            <li><i class="bi bi-stopwatch text-primary me-1"></i> @spa.Duration @Localizer["Minutes"]</li>
                         </ul>
 
                         <div class="mt-auto d-flex gap-2">
-                            <a asp-action="Edit" asp-route-id="@spa.Id" class="btn btn-outline-warning btn-sm">
+                            <a asp-action="Edit" asp-route-id="@spa.Id" class="btn btn-outline-neon btn-sm flex-grow-1">
                                 <i class="bi bi-pencil-square"></i> @Localizer["BtnEdit"]
                             </a>
-                            <a asp-action="Delete" asp-route-id="@spa.Id" class="btn btn-outline-danger btn-sm">
+                            <a asp-action="Delete" asp-route-id="@spa.Id" class="btn btn-outline-danger btn-sm flex-grow-1">
                                 <i class="bi bi-trash3"></i> @Localizer["BtnDelete"]
                             </a>
                         </div>
@@ -119,47 +119,53 @@ else
     </div>
 }
 
+@if (ViewBag.TotalPages > 1)
+{
+    <nav aria-label="Page navigation" class="mt-5 mb-4">
+        <ul class="pagination sc-pagination justify-content-center gap-2">
+            
+            <li class="page-item @(ViewBag.CurrentPage == 1 ? "disabled" : "")">
+                <a class="page-link rounded-pill px-3 shadow-sm bg-dark text-light border-secondary"
+                       asp-action="All"
+                       asp-route-searchQuery="@ViewBag.SearchQuery"
+                       asp-route-sortBy="@ViewBag.SortBy"
+                       asp-route-page="@(ViewBag.CurrentPage - 1)">
+                    <i class="bi bi-chevron-left small me-1"></i> @Localizer["Previous"]
+                </a>
+            </li>
+
+            @for (int i = 1; i <= ViewBag.TotalPages; i++)
+            {
+                <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
+                    <a class="page-link rounded-circle shadow-sm d-flex align-items-center justify-content-center"
+                           style="width: 40px; height: 40px;"
+                           asp-action="All"
+                           asp-route-searchQuery="@ViewBag.SearchQuery"
+                           asp-route-sortBy="@ViewBag.SortBy"
+                           asp-route-page="@i">
+                        @i
+                    </a>
+                </li>
+            }
+
+            <li class="page-item @(ViewBag.CurrentPage == ViewBag.TotalPages ? "disabled" : "")">
+                <a class="page-link rounded-pill px-3 shadow-sm bg-dark text-light border-secondary"
+                       asp-action="All"
+                       asp-route-searchQuery="@ViewBag.SearchQuery"
+                       asp-route-sortBy="@ViewBag.SortBy"
+                       asp-route-page="@(ViewBag.CurrentPage + 1)">
+                    @Localizer["Next"] <i class="bi bi-chevron-right small ms-1"></i>
+                </a>
+            </li>
+            
+        </ul>
+    </nav>
+}
+
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
     <style>
-        .spa-card {
-            transition: transform .15s ease, box-shadow .15s ease;
-            border-radius: 1rem;
-            background: #121212;
-        }
-
-            .spa-card:hover {
-                transform: translateY(-3px);
-                box-shadow: 0 .75rem 1.5rem rgba(0,255,200,.25);
-            }
-
-        .spa-cover {
-            background-size: cover;
-            background-position: center;
-            border-top-left-radius: 1rem;
-            border-top-right-radius: 1rem;
-        }
-
-        .spa-cover--placeholder {
-            background: linear-gradient(135deg, #43e97b, #38f9d7);
-        }
-
-        .text-neon {
-            color: #00ffc8;
-        }
-
-        .btn-neon {
-            border: 1px solid #00ffc8;
-            color: #00ffc8;
-            background: transparent;
-        }
-
-            .btn-neon:hover {
-                background: #00ffc8;
-                color: #121212;
-            }
-
         .clamp-3 {
             display: -webkit-box;
             -webkit-line-clamp: 3;

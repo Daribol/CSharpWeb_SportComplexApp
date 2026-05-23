@@ -138,6 +138,12 @@
   <data name="MsgTrainerCannotRegister" xml:space="preserve">
     <value>Trainers cannot register</value>
   </data>
+  <data name="Next" xml:space="preserve">
+    <value>Next</value>
+  </data>
+  <data name="Previous" xml:space="preserve">
+    <value>Previous</value>
+  </data>
   <data name="SearchName" xml:space="preserve">
     <value>Search Name</value>
   </data>

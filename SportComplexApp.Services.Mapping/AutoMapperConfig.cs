@@ -25,31 +25,28 @@ namespace SportComplexApp.Services.Mapping
 
             var types = assemblies.SelectMany(a => a.GetExportedTypes()).ToList();
 
-            var config = new MapperConfigurationExpression();
-            config.CreateProfile(
-                "ReflectionProfile",
-                configuration =>
+            var configuration = new MapperConfiguration(cfg =>
+            {
+                // IMapFrom<>
+                foreach (var map in GetFromMaps(types))
                 {
-                    // IMapFrom<>
-                    foreach (var map in GetFromMaps(types))
-                    {
-                        configuration.CreateMap(map.Source, map.Destination);
-                    }
+                    cfg.CreateMap(map.Source, map.Destination);
+                }
 
-                    // IMapTo<>
-                    foreach (var map in GetToMaps(types))
-                    {
-                        configuration.CreateMap(map.Source, map.Destination);
-                    }
+                // IMapTo<>
+                foreach (var map in GetToMaps(types))
+                {
+                    cfg.CreateMap(map.Source, map.Destination);
+                }
 
-                    // IHaveCustomMappings
-                    foreach (var map in GetCustomMappings(types))
-                    {
-                        map.CreateMapping(configuration);
-                    }
-                });
+                // IHaveCustomMappings
+                foreach (var map in GetCustomMappings(types))
+                {
+                    map.CreateMapping(cfg);
+                }
+            }, Microsoft.Extensions.Logging.Abstractions.NullLoggerFactory.Instance);
 
-            MapperInstance = new Mapper(new MapperConfiguration(config));
+            MapperInstance = configuration.CreateMapper();
         }
 
         private static IEnumerable<TypesMap> GetFromMaps(IEnumerable<Type> types)

@@ -8,9 +8,10 @@ namespace SportComplexApp.Web.ViewModels.Report
 {
     public class SportReportViewModel
     {
+        public string ClientName { get; set; } = null!;
         public string SportName { get; set; } = null!;
-        public int TotalReservations { get; set; }
-        public int TotalPeople { get; set; }
-        public decimal TotalRevenue { get; set; }
+        public string Date { get; set; } = null!;
+        public decimal Price { get; set; }
+        public bool IsSportDeleted { get; set; }
     }
 }

@@ -172,7 +172,7 @@
     <value>Add Sport</value>
   </data>
   <data name="Currency" xml:space="preserve">
-    <value>BGN</value>
+    <value>€</value>
   </data>
   <data name="Minutes" xml:space="preserve">
     <value>min</value>
@@ -182,5 +182,11 @@
   </data>
   <data name="BtnDelete" xml:space="preserve">
     <value>Delete</value>
+  </data>
+  <data name="Next" xml:space="preserve">
+    <value>Next</value>
+  </data>
+  <data name="Previous" xml:space="preserve">
+    <value>Previous</value>
   </data>
 </root>

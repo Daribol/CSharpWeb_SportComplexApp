@@ -157,12 +157,24 @@
     <value>min</value>
   </data>
   <data name="Currency" xml:space="preserve">
-    <value>BGN</value>
-  </data>
-  <data name="ConfirmCancel" xml:space="preserve">
-    <value>Are you sure you want to cancel this reservation?</value>
+    <value>€</value>
   </data>
   <data name="BtnCancel" xml:space="preserve">
     <value>Cancel</value>
+  </data>
+  <data name="CancelTitle" xml:space="preserve">
+    <value>Confirm Cancellation</value>
+  </data>
+  <data name="ConfirmCancelMsg" xml:space="preserve">
+    <value>Are you sure you want to cancel this reservation?</value>
+  </data>
+  <data name="BtnClose" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="BtnConfirmCancel" xml:space="preserve">
+    <value>Yes, cancel</value>
+  </data>
+  <data name="BtnCancelTitle" xml:space="preserve">
+    <value>Cancel reservation</value>
   </data>
 </root>

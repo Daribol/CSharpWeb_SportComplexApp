@@ -130,7 +130,7 @@
     <value>Треньори</value>
   </data>
   <data name="Currency" xml:space="preserve">
-    <value>лв.</value>
+    <value>€</value>
   </data>
   <data name="Heading" xml:space="preserve">
     <value>Всички Спортове</value>
@@ -153,8 +153,14 @@
   <data name="Minutes" xml:space="preserve">
     <value>мин</value>
   </data>
+  <data name="Next" xml:space="preserve">
+    <value>Напред</value>
+  </data>
   <data name="NoSportsMsg" xml:space="preserve">
     <value>Не са намерени спортове.</value>
+  </data>
+  <data name="Previous" xml:space="preserve">
+    <value>Назад</value>
   </data>
   <data name="SearchName" xml:space="preserve">
     <value>Търсене по Име</value>

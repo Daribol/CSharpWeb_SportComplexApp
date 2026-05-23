@@ -14,5 +14,6 @@ namespace SportComplexApp.Web.ViewModels.Trainer
         public DateTime ReservationDate { get; set; }
         public int Duration { get; set; }
         public int NumberOfPeople { get; set; }
+        public string FacilityName { get; set; } = null!;
     }
 }

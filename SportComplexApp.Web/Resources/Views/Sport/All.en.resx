@@ -130,7 +130,7 @@
     <value>Trainers</value>
   </data>
   <data name="Currency" xml:space="preserve">
-    <value>BGN</value>
+    <value>€</value>
   </data>
   <data name="Heading" xml:space="preserve">
     <value>All Sports</value>
@@ -153,8 +153,14 @@
   <data name="Minutes" xml:space="preserve">
     <value>min</value>
   </data>
+  <data name="Next" xml:space="preserve">
+    <value>Next</value>
+  </data>
   <data name="NoSportsMsg" xml:space="preserve">
     <value>No sports found.</value>
+  </data>
+  <data name="Previous" xml:space="preserve">
+    <value>Previous</value>
   </data>
   <data name="SearchName" xml:space="preserve">
     <value>Search by Sport Name</value>

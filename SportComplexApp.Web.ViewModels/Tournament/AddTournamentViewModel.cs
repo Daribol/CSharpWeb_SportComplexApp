@@ -28,6 +28,7 @@ namespace SportComplexApp.Web.ViewModels.Tournament
 
         [Display(Name = "LabelSport")]
         public int SportId { get; set; }
+        public string? ImageUrl { get; set; }
 
         public IEnumerable<SelectListItem> Sports { get; set; } = new List<SelectListItem>();
     }

@@ -153,11 +153,17 @@
   <data name="LabelSortBy" xml:space="preserve">
     <value>Сортиране</value>
   </data>
+  <data name="Next" xml:space="preserve">
+    <value>Напред</value>
+  </data>
   <data name="PlaceholderSearch" xml:space="preserve">
     <value>напр. Лятна Купа...</value>
   </data>
   <data name="PlaceholderSport" xml:space="preserve">
     <value>напр. Тенис...</value>
+  </data>
+  <data name="Previous" xml:space="preserve">
+    <value>Назад</value>
   </data>
   <data name="SortDateAsc" xml:space="preserve">
     <value>Дата (Най-ранни)</value>

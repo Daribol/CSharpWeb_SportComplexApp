@@ -123,6 +123,9 @@
   <data name="BtnBack" xml:space="preserve">
     <value>Назад към Треньорите</value>
   </data>
+  <data name="BtnViewDetails" xml:space="preserve">
+    <value>Виж Детайли</value>
+  </data>
   <data name="NoBioMsg" xml:space="preserve">
     <value>Този треньор все още не е предоставил биография.</value>
   </data>
@@ -131,5 +134,8 @@
   </data>
   <data name="Title" xml:space="preserve">
     <value>Детайли за Треньора</value>
+  </data>
+  <data name="TrainerSchedule" xml:space="preserve">
+    <value>График на Треньора</value>
   </data>
 </root>

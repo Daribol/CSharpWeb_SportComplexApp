@@ -24,10 +24,28 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
             this.sharedLocalizer = sharedLocalizer;
         }
 
-        public async Task<IActionResult> All()
+        [HttpGet]
+        public async Task<IActionResult> All(int page = 1)
         {
+            int pageSize = 6;
+
             var facilities = await facilityService.GetAllFacilitiesWithSportsAsync();
-            return View(facilities);
+
+            int totalItems = facilities.Count();
+            int totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+
+            if (page < 1) page = 1;
+            if (page > totalPages && totalPages > 0) page = totalPages;
+
+            var paginatedFacilities = facilities
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            ViewBag.CurrentPage = page;
+            ViewBag.TotalPages = totalPages;
+
+            return View(paginatedFacilities);
         }
 
         [HttpGet]
@@ -79,6 +97,7 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
             try
             {
                 await facilityService.EditAsync(id, model);
+                TempData["SuccessMessage"] = sharedLocalizer[FacilityUpdated].Value;
                 return RedirectToAction(nameof(All));
             }
             catch (DbUpdateConcurrencyException)

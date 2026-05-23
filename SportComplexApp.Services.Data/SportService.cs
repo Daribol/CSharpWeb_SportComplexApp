@@ -118,6 +118,7 @@ namespace SportComplexApp.Services
                 SportId = sport.Id,
                 SportName = sport.Name,
                 FacilityName = sport.Facility.Name,
+                FacilityImageUrl = sport.Facility.ImageUrl,
                 ReservationDateTime = now.AddDays(1),
                 Duration = sport.Duration,
                 MinDuration = sport.Duration,
@@ -129,7 +130,8 @@ namespace SportComplexApp.Services
                     .Select(st => new TrainerDropdownViewModel
                     {
                         Id = st.TrainerId,
-                        FullName = st.Trainer.Name + " " + st.Trainer.LastName
+                        FullName = st.Trainer.Name + " " + st.Trainer.LastName,
+                        ImageUrl = st.Trainer.ImageUrl,
                     })
                     .ToListAsync()
             };
@@ -170,10 +172,14 @@ namespace SportComplexApp.Services
 
             var startTime = model.ReservationDateTime;
             var endTime = startTime.AddMinutes(model.Duration);
+            var startDate = startTime.Date;
 
             bool isHired = await context.Reservations
                 .AnyAsync(r =>
                     r.ClientId == userId &&
+                    r.ReservationDateTime.Year == startTime.Year &&
+                    r.ReservationDateTime.Month == startTime.Month &&
+                    r.ReservationDateTime.Day == startTime.Day &&
                     r.ReservationDateTime < endTime &&
                     r.ReservationDateTime.AddMinutes(r.Duration) > startTime);
 
@@ -187,6 +193,9 @@ namespace SportComplexApp.Services
                 bool trainerBusy = await context.Reservations
                     .AnyAsync(r =>
                         r.TrainerId == model.TrainerId &&
+                        r.ReservationDateTime.Year == startTime.Year &&
+                        r.ReservationDateTime.Month == startTime.Month &&
+                        r.ReservationDateTime.Day == startTime.Day &&
                         r.ReservationDateTime < endTime &&
                         r.ReservationDateTime.AddMinutes(r.Duration) > startTime);
 
@@ -205,6 +214,9 @@ namespace SportComplexApp.Services
             {
                 bool selfBusy = await context.Reservations.AnyAsync(r =>
                     r.TrainerId == currentTrainerId.Value &&
+                    r.ReservationDateTime.Year == startTime.Year &&
+                    r.ReservationDateTime.Month == startTime.Month &&
+                    r.ReservationDateTime.Day == startTime.Day &&
                     r.ReservationDateTime < endTime &&
                     r.ReservationDateTime.AddMinutes(r.Duration) > startTime);
 
@@ -216,6 +228,9 @@ namespace SportComplexApp.Services
                 .Include(sr => sr.SpaService)
                 .AnyAsync(sr =>
                     sr.ClientId == userId &&
+                    sr.ReservationDateTime.Year == startTime.Year &&
+                    sr.ReservationDateTime.Month == startTime.Month &&
+                    sr.ReservationDateTime.Day == startTime.Day &&
                     sr.ReservationDateTime < endTime &&
                     sr.ReservationDateTime.AddMinutes(sr.SpaService.Duration) > startTime);
 
@@ -243,21 +258,27 @@ namespace SportComplexApp.Services
         public async Task<IEnumerable<SportReservationViewModel>> GetUserReservationsAsync(string userId)
         {
             return await context.Reservations
-                .Where(r => r.ClientId == userId)
-                .Include(r => r.Sport).ThenInclude(s => s.Facility)
-                .Include(r => r.Trainer)
-                .Select(r => new SportReservationViewModel
-                {
-                    Id = r.Id,
-                    SportName = r.Sport.Name,
-                    FacilityName = r.Sport.Facility.Name,
-                    Duration = r.Duration,
-                    ReservationDateTime = r.ReservationDateTime,
-                    NumberOfPeople = r.NumberOfPeople,
-                    TrainerName = r.Trainer != null ? $"{r.Trainer.Name} {r.Trainer.LastName}" : "No Trainer",
-                    TotalPrice = Math.Round(r.Sport.Price * ((decimal)r.Duration/r.Sport.Duration) * r.NumberOfPeople, 2)
-                })
-                .ToListAsync();
+         .Where(r => r.ClientId == userId)
+
+         .Where(r => r.ReservationDateTime >= DateTime.Now)
+
+         .Include(r => r.Sport).ThenInclude(s => s.Facility)
+         .Include(r => r.Trainer)
+
+         .OrderBy(r => r.ReservationDateTime)
+
+         .Select(r => new SportReservationViewModel
+         {
+             Id = r.Id,
+             SportName = r.Sport.Name,
+             FacilityName = r.Sport.Facility.Name,
+             Duration = r.Duration,
+             ReservationDateTime = r.ReservationDateTime,
+             NumberOfPeople = r.NumberOfPeople,
+             TrainerName = r.Trainer != null ? $"{r.Trainer.Name} {r.Trainer.LastName}" : "No Trainer",
+             TotalPrice = Math.Round(r.Sport.Price * ((decimal)r.Duration / r.Sport.Duration) * r.NumberOfPeople, 2)
+         })
+         .ToListAsync();
         }
 
         public async Task<bool> ReservationExistsAsync(int reservationId, string userId)
@@ -279,18 +300,7 @@ namespace SportComplexApp.Services
 
         public async Task DeleteExpiredReservationsAsync(string userId)
         {
-            var now = time.GetLocalNow().DateTime;
-
-            var expired = await context.Reservations
-                .Where(r => r.ClientId == userId &&
-                            r.ReservationDateTime.AddMinutes(r.Duration) <= now)
-                .ToListAsync();
-
-            if (expired.Any())
-            {
-                context.Reservations.RemoveRange(expired);
-                await context.SaveChangesAsync();
-            }
+            await Task.CompletedTask;
         }
 
 
@@ -402,6 +412,7 @@ namespace SportComplexApp.Services
         public async Task<IEnumerable<SelectListItem>> GetFacilitiesSelectListAsync()
         {
             return await context.Facilities
+                .Where(f => !f.IsDeleted)
                 .Select(f => new SelectListItem
                 {
                     Value = f.Id.ToString(),
@@ -423,21 +434,35 @@ namespace SportComplexApp.Services
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<SportReportViewModel>> GetSportReservationsReportAsync()
+        public async Task<IEnumerable<SportReportViewModel>> GetSportReservationsReportAsync(DateTime? startDate = null, DateTime? endDate = null)
         {
-            var report = await context.Reservations
-                .GroupBy(r => new { r.Sport.Name, r.Sport.Price })
-                .Select(g => new SportReportViewModel
-                {
-                    SportName = g.Key.Name,
-                    TotalReservations = g.Count(),
-                    TotalPeople = g.Sum(r => r.NumberOfPeople),
-                    TotalRevenue = g.Sum(r => r.NumberOfPeople * g.Key.Price)
-                })
-                .OrderByDescending(r => r.TotalRevenue)
-                .ToListAsync();
+            var query = context.Reservations
+        .IgnoreQueryFilters()
+        .Where(r => r.ReservationDateTime < DateTime.Now)
+        .Include(r => r.Sport)
+        .Include(r => r.Client)
+        .AsQueryable();
 
-            return report;
+            if (startDate.HasValue)
+            {
+                query = query.Where(r => r.ReservationDateTime.Date >= startDate.Value.Date);
+            }
+            if (endDate.HasValue)
+            {
+                query = query.Where(r => r.ReservationDateTime.Date <= endDate.Value.Date);
+            }
+
+            return await query
+                .OrderByDescending(r => r.ReservationDateTime)
+                .Select(r => new SportReportViewModel
+                {
+                    ClientName = r.Client != null ? $"{r.Client.FirstName} {r.Client.LastName}" : "Изтрит профил",
+                    SportName = r.Sport != null ? r.Sport.Name : "Изтрит спорт",
+                    Date = r.ReservationDateTime.ToString("dd.MM.yyyy HH:mm"),
+                    Price = r.Sport != null ? (r.Sport.Price * r.NumberOfPeople) : 0m,
+                    IsSportDeleted = r.Sport == null
+                })
+                .ToListAsync();
         }
     }
 }

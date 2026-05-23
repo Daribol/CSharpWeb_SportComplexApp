@@ -25,68 +25,88 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> SportReservations()
+        public async Task<IActionResult> SportReservations(DateTime? startDate, DateTime? endDate)
         {
-            var reportData = await sportService.GetSportReservationsReportAsync();
+            ViewData["StartDate"] = startDate?.ToString("yyyy-MM-dd");
+            ViewData["EndDate"] = endDate?.ToString("yyyy-MM-dd");
+
+            var reportData = await sportService.GetSportReservationsReportAsync(startDate, endDate);
             return View(reportData);
         }
 
         [HttpGet]
-        public async Task<IActionResult> ExportSportReservationsCsv()
+        public async Task<IActionResult> ExportSportReservationsCsv(DateTime? startDate, DateTime? endDate)
         {
-            var reportData = await sportService.GetSportReservationsReportAsync();
+            var reportData = await sportService.GetSportReservationsReportAsync(startDate, endDate);
 
             var builder = new StringBuilder();
 
-            builder.AppendLine($"{sharedLocalizer["CsvSportName"]},{sharedLocalizer["CsvTotalReservations"]},{sharedLocalizer["CsvTotalVisitors"]},{sharedLocalizer["CsvTotalRevenue"]}");
+            builder.AppendLine($"{sharedLocalizer["CsvClientName"]},{sharedLocalizer["CsvSportName"]},{sharedLocalizer["CsvDate"]},{sharedLocalizer["CsvPrice"]}");
 
             foreach (var item in reportData)
             {
-                var safeSportName = item.SportName.Replace(",", "");
+                var safeClientName = item.ClientName?.Replace(",", " ") ?? "";
+                var safeSportName = item.SportName?.Replace(",", " ") ?? "";
 
-                builder.AppendLine($"{safeSportName},{item.TotalReservations},{item.TotalPeople},{item.TotalRevenue:F2}");
+                if (item.IsSportDeleted)
+                {
+                    safeSportName += " (Deleted)";
+                }
+
+                builder.AppendLine($"{safeClientName},{safeSportName},{item.Date},{item.Price:F2}");
             }
 
-            builder.AppendLine($"{sharedLocalizer["CsvTotalRow"]},{reportData.Sum(x => x.TotalReservations)},{reportData.Sum(x => x.TotalPeople)},{reportData.Sum(x => x.TotalRevenue):F2}");
-
-            var fileBytes = Encoding.UTF8.GetBytes(builder.ToString());
-
-            var bom = Encoding.UTF8.GetPreamble();
-            var completeFile = bom.Concat(fileBytes).ToArray();
-
-            return File(completeFile, "text/csv", "SportReservationsReport.csv");
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> SpaReservations()
-        {
-            var reportData = await spaService.GetSpaReservationsReportAsync();
-            return View(reportData);
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> ExportSpaReservationsCsv()
-        {
-            var reportData = await spaService.GetSpaReservationsReportAsync();
-
-            var builder = new StringBuilder();
-
-            builder.AppendLine($"{sharedLocalizer["CsvSpaServiceName"]},{sharedLocalizer["CsvTotalReservations"]},{sharedLocalizer["CsvTotalRevenue"]}");
-
-            foreach (var item in reportData)
-            {
-                var safeSpaName = item.SpaServiceName.Replace(",", "");
-
-                builder.AppendLine($"{safeSpaName},{item.TotalReservations},{item.TotalRevenue:F2}");
-            }
-
-            builder.AppendLine($"{sharedLocalizer["CsvTotalRow"]},{reportData.Sum(x => x.TotalReservations)},{reportData.Sum(x => x.TotalRevenue):F2}");
+            builder.AppendLine($",,{sharedLocalizer["CsvTotalRow"]},{reportData.Sum(x => x.Price):F2}");
 
             var fileBytes = Encoding.UTF8.GetBytes(builder.ToString());
             var bom = Encoding.UTF8.GetPreamble();
             var completeFile = bom.Concat(fileBytes).ToArray();
 
-            return File(completeFile, "text/csv", "SpaReservationsReport.csv");
+            var fileName = $"SportReservations_{DateTime.Now:yyyy-MM-dd}.csv";
+
+            return File(completeFile, "text/csv", fileName);
+        }
+        [HttpGet]
+        public async Task<IActionResult> SpaReservations(DateTime? startDate, DateTime? endDate)
+        {
+            ViewData["StartDate"] = startDate?.ToString("yyyy-MM-dd");
+            ViewData["EndDate"] = endDate?.ToString("yyyy-MM-dd");
+
+            var reportData = await spaService.GetSpaReservationsReportAsync(startDate, endDate);
+            return View(reportData);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ExportSpaReservationsCsv(DateTime? startDate, DateTime? endDate)
+        {
+            var reportData = await spaService.GetSpaReservationsReportAsync(startDate, endDate);
+
+            var builder = new StringBuilder();
+
+            builder.AppendLine($"{sharedLocalizer["CsvClientName"]},{sharedLocalizer["CsvServiceName"]},{sharedLocalizer["CsvDate"]},{sharedLocalizer["CsvPrice"]}");
+
+            foreach (var item in reportData)
+            {
+                var safeClientName = item.ClientName?.Replace(",", " ") ?? "";
+                var safeServiceName = item.ServiceName?.Replace(",", " ") ?? "";
+
+                if (item.IsServiceDeleted)
+                {
+                    safeServiceName += " (Deleted)";
+                }
+
+                builder.AppendLine($"{safeClientName},{safeServiceName},{item.Date},{item.Price:F2}");
+            }
+
+            builder.AppendLine($",,{sharedLocalizer["CsvTotalRow"]},{reportData.Sum(x => x.Price):F2}");
+
+            var fileBytes = Encoding.UTF8.GetBytes(builder.ToString());
+            var bom = Encoding.UTF8.GetPreamble();
+            var completeFile = bom.Concat(fileBytes).ToArray();
+
+            var fileName = $"SpaReservations_{DateTime.Now:yyyy-MM-dd}.csv";
+
+            return File(completeFile, "text/csv", fileName);
         }
     }
 }

@@ -148,7 +148,7 @@
     <value>Име</value>
   </data>
   <data name="LabelPrice" xml:space="preserve">
-    <value>Цена (лв.)</value>
+    <value>Цена (€)</value>
   </data>
   <data name="PlaceholderDuration" xml:space="preserve">
     <value>напр. 60</value>

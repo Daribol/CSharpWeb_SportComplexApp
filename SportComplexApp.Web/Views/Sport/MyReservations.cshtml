@@ -59,13 +59,13 @@
                             <td>@(reservation.TrainerName ?? SharedLocalizer["NoTrainerAssigned"].Value)</td>
                             <td>@reservation.TotalPrice.ToString("F2") @Localizer["Currency"]</td>
                             <td class="text-center">
-                                <form asp-action="Cancel" method="post" asp-route-id="@reservation.Id"
-                                      onsubmit="return confirm('@Localizer["ConfirmCancel"]');"
-                                      class="d-inline">
-                                    <button type="submit" class="btn btn-outline-neon btn-sm">
-                                        <i class="bi bi-x-circle"></i> @Localizer["BtnCancel"]
-                                    </button>
-                                </form>
+                                <button type="button" 
+                                    class="btn btn-outline-danger btn-sm rounded-pill shadow-sm" 
+                                    title="@Localizer["BtnCancelTitle"]"
+                                    data-bs-toggle="modal" 
+                                    data-bs-target="#clientCancelModal" 
+                                    data-reservation-id="@reservation.Id"> <i class="bi bi-x-circle me-1"></i> @Localizer["BtnCancelTitle"]
+                                </button>
                             </td>
                         </tr>
                     }
@@ -73,6 +73,40 @@
             </table>
         </div>
     }
+</div>
+
+<div class="modal fade" id="clientCancelModal" tabindex="-1" aria-labelledby="clientCancelModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-dark border-secondary border-opacity-50 shadow-lg" style="border-radius: 1rem;">
+            
+            <div class="modal-header border-secondary border-opacity-25">
+                <h5 class="modal-title fw-bold text-danger" id="clientCancelModalLabel">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i> @Localizer["CancelTitle"]
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            
+            <div class="modal-body text-light fs-5 py-4">
+                @Localizer["ConfirmCancelMsg"]
+            </div>
+            
+            <div class="modal-footer border-secondary border-opacity-25">
+                <button type="button" class="btn btn-outline-light rounded-pill px-4" data-bs-dismiss="modal">
+                    @Localizer["BtnClose"]
+                </button>
+                
+                <form asp-action="Cancel" asp-controller="Sport" method="post" class="m-0 p-0">
+    
+                    <input type="hidden" name="id" id="clientModalReservationIdInput" value="" />
+    
+                    <button type="submit" class="btn btn-danger rounded-pill px-4 shadow">
+                        <i class="bi bi-trash3-fill me-1"></i> @Localizer["BtnConfirmCancel"]
+                    </button>
+                </form>
+            </div>
+            
+        </div>
+    </div>
 </div>
 
 @section Scripts {
@@ -89,4 +123,17 @@
         .btn-outline-neon { border: 1px solid #00ffc8; color: #00ffc8; background: transparent; font-weight: 600; }
         .btn-outline-neon:hover { background: #00ffc8; color: #000; box-shadow: 0 0 10px #00ffc8; }
     </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var cancelModal = document.getElementById('clientCancelModal');
+            if(cancelModal) {
+                cancelModal.addEventListener('show.bs.modal', function (event) {
+                    var button = event.relatedTarget;
+                    var resId = button.getAttribute('data-reservation-id');
+                    var hiddenInput = document.getElementById('clientModalReservationIdInput');
+                    hiddenInput.value = resId;
+                });
+            }
+        });
+    </script>
 }

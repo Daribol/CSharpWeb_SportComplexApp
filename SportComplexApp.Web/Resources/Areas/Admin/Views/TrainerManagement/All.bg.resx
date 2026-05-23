@@ -153,11 +153,17 @@
   <data name="LabelSortBy" xml:space="preserve">
     <value>Сортиране</value>
   </data>
+  <data name="Next" xml:space="preserve">
+    <value>Напред</value>
+  </data>
   <data name="NoSpecialization" xml:space="preserve">
     <value>Няма специалност</value>
   </data>
   <data name="PlaceholderSearch" xml:space="preserve">
     <value>напр. Иван...</value>
+  </data>
+  <data name="Previous" xml:space="preserve">
+    <value>Назад</value>
   </data>
   <data name="SortDefault" xml:space="preserve">
     <value>-- По подразбиране --</value>

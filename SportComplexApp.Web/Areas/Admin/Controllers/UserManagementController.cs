@@ -6,6 +6,7 @@ using SportComplexApp.Common;
 using SportComplexApp.Data.Models;
 using SportComplexApp.Services.Data.Contracts;
 using SportComplexApp.Web.Controllers;
+using SportComplexApp.Web.ViewModels.Admin;
 using static SportComplexApp.Common.ErrorMessages.Users;
 using static SportComplexApp.Common.SuccessfulValidationMessages.Users;
 
@@ -26,10 +27,28 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
             this.sharedLocalizer = sharedLocalizer;
         }
 
-        public async Task<IActionResult> Index()
+        [HttpGet]
+        public async Task<IActionResult> Index(int page = 1)
         {
+            int pageSize = 10;
+
             var allUsers = await userService.GetAllUsersAsync();
-            return View(allUsers);
+
+            int totalItems = allUsers.Count();
+            int totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+
+            if (page < 1) page = 1;
+            if (page > totalPages && totalPages > 0) page = totalPages;
+
+            var paginatedUsers = allUsers
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            ViewBag.CurrentPage = page;
+            ViewBag.TotalPages = totalPages;
+
+            return View(paginatedUsers);
         }
 
         [HttpPost]
@@ -101,23 +120,51 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        [HttpPost]
-        public async Task<IActionResult> DeleteUser(string userId)
+        [HttpGet]
+        public async Task<IActionResult> DeleteUser(string id)
         {
-            if (string.IsNullOrEmpty(userId))
+            if (string.IsNullOrEmpty(id))
             {
                 TempData["ErrorMessage"] = sharedLocalizer[UserIdOrRoleCannotBeEmpty].Value;
                 return RedirectToAction(nameof(Index));
             }
 
-            bool userExists = await userService.UserExistsByIdAsync(userId);
+            bool userExists = await userService.UserExistsByIdAsync(id);
 
             if (!userExists)
             {
                 return NotFound();
             }
 
-            bool deleteResult = await userService.DeleteUserAsync(userId);
+            string? userEmail = await userService.GetUserEmailByIdAsync(id);
+
+            var model = new DeleteUserViewModel
+            {
+                Id = id,
+                Email = userEmail ?? "Unknown email"
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteUserConfirmed(DeleteUserViewModel model)
+        {
+            if (string.IsNullOrEmpty(model.Id))
+            {
+                TempData["ErrorMessage"] = sharedLocalizer[UserIdOrRoleCannotBeEmpty].Value;
+                return RedirectToAction(nameof(Index));
+            }
+
+            bool userExists = await userService.UserExistsByIdAsync(model.Id);
+
+            if (!userExists)
+            {
+                return NotFound();
+            }
+
+            bool deleteResult = await userService.DeleteUserAsync(model.Id);
 
             if (!deleteResult)
             {

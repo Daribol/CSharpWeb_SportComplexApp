@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Back" xml:space="preserve">
+    <value>Previous</value>
+  </data>
   <data name="BtnBook" xml:space="preserve">
     <value>Book a Sport</value>
   </data>
@@ -137,6 +140,9 @@
   </data>
   <data name="Heading" xml:space="preserve">
     <value>Meet Our Trainers</value>
+  </data>
+  <data name="Next" xml:space="preserve">
+    <value>Next</value>
   </data>
   <data name="NoReservationsAvailable" xml:space="preserve">
     <value>No booked sessions</value>

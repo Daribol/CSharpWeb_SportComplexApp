@@ -27,12 +27,12 @@
                     <div class="card card-dark hover h-100 border-0">
                         @if (!string.IsNullOrWhiteSpace(trainer.ImageUrl))
                         {
-                            <div class="cover ratio ratio-16x9" style="background-image:url('@trainer.ImageUrl');"></div>
+                            <img src="@trainer.ImageUrl" class="card-img-top trainer-img" alt="@trainer.Name">
                         }
                         else
                         {
-                            <div class="cover cover--placeholder ratio ratio-16x9 d-flex align-items-center justify-content-center">
-                                <i class="bi bi-person-bounding-box display-6 text-muted"></i>
+                            <div class="trainer-img bg-dark d-flex align-items-center justify-content-center">
+                                <i class="bi bi-person-bounding-box display-4 text-muted"></i>
                             </div>
                         }
 
@@ -72,4 +72,13 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+
+    <style>
+        .trainer-img {
+            width: 100% !important;
+            height: 300px !important;
+            object-fit: cover !important;
+            object-position: center top !important;
+        }
+    </style>
 }

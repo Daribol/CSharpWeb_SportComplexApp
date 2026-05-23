@@ -122,7 +122,7 @@ namespace SportComplexApp.Services.Data
                     TimeSlot = $"{r.RawDateTime:HH\\:mm} - {r.RawDateTime.AddMinutes(r.Duration):HH\\:mm}",
                     Status = "Upcoming"
                 }).ToList()
-            });
+            }).ToList();
 
             return finalTrainers;
         }
@@ -177,14 +177,13 @@ namespace SportComplexApp.Services.Data
         {
             return await context.Reservations
                 .Where(r => r.TrainerId == trainerId)
-                .Include(r => r.Client)
-                .Include(r => r.Sport)
                 .OrderBy(r => r.ReservationDateTime)
                 .Select(r => new TrainerReservationViewModel
                 {
                     Id = r.Id,
                     ClientName = r.Client.FirstName + " " + r.Client.LastName,
                     SportName = r.Sport.Name,
+                    FacilityName = r.Sport.Facility.Name,
                     ReservationDate = r.ReservationDateTime,
                     Duration = r.Duration,
                     NumberOfPeople = r.NumberOfPeople

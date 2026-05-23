@@ -261,11 +261,20 @@
   <data name="ReservationTooSoon" xml:space="preserve">
     <value>You can only make a reservation at least 1 hour in advance.</value>
   </data>
+  <data name="RoleAdmin" xml:space="preserve">
+    <value>Admin</value>
+  </data>
   <data name="RoleAssigned" xml:space="preserve">
     <value>Role successfully assigned to user.</value>
   </data>
+  <data name="RoleClient" xml:space="preserve">
+    <value>Client</value>
+  </data>
   <data name="RoleRemoved" xml:space="preserve">
     <value>Role successfully removed from user.</value>
+  </data>
+  <data name="RoleTrainer" xml:space="preserve">
+    <value>Trainer</value>
   </data>
   <data name="SpaReservationCreated" xml:space="preserve">
     <value>Spa reservation successfully created.</value>

@@ -47,7 +47,6 @@
                 
                 var durationDays = Math.Max(1, (t.EndDate.Date - t.StartDate.Date).Days + 1);
 
-                // Ако имаш ImageUrl в модела, ще го хване. Иначе ще покаже placeholder.
                 var imgProp = t.GetType().GetProperty("ImageUrl");
                 var imageUrl = imgProp?.GetValue(t)?.ToString();
 

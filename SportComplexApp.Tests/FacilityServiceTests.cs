@@ -1,407 +1,293 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
+using Moq;
+using NUnit.Framework;
+using SportComplexApp.Common;
 using SportComplexApp.Data;
 using SportComplexApp.Data.Models;
 using SportComplexApp.Services.Data;
 using SportComplexApp.Web.ViewModels.Facility;
 
-namespace SportComplexApp.Tests;
-
-[TestFixture]
-public class FacilityServiceTests
+namespace SportComplexApp.Tests
 {
-    private SportComplexDbContext _context = null!;
-    private FacilityService _service = null!;
-
-    [SetUp]
-    public void Setup()
+    [TestFixture]
+    public class FacilityServiceTests
     {
-        var options = new DbContextOptionsBuilder<SportComplexDbContext>()
-            .UseInMemoryDatabase(databaseName: $"FacilityDb_{Guid.NewGuid()}")
-            .Options;
+        private SportComplexDbContext _context = null!;
+        private FacilityService _service = null!;
+        private Mock<IStringLocalizer<SharedResource>> _mockLocalizer = null!;
 
-        _context = new SportComplexDbContext(options);
-        SeedData(_context);
-        _service = new FacilityService(_context);
-    }
-
-    private void SeedData(SportComplexDbContext context)
-    {
-        context.Facilities.AddRange(
-            new Facility { Id = 1, Name = "Main Arena", IsDeleted = false, Sports = new List<Sport>() },
-            new Facility { Id = 2, Name = "Training Hall", IsDeleted = false, Sports = new List<Sport>() },
-            new Facility { Id = 3, Name = "Old Stadium", IsDeleted = true, Sports = new List<Sport>() },
-            new Facility { Id = 4, Name = "Community Center", IsDeleted = false, Sports = new List<Sport>() }
-        );
-        context.Sports.AddRange(
-            new Sport { Id = 101, Name = "Football", IsDeleted = false, FacilityId = 1},
-            new Sport { Id = 102, Name = "Tennis", IsDeleted = true, FacilityId =  1},
-            new Sport { Id = 103, Name = "Basketball", IsDeleted = false, FacilityId = 3 },
-            new Sport { Id = 104, Name = "Swimming", IsDeleted = false, FacilityId = 4 },
-            new Sport { Id = 105, Name = "Volleyball", IsDeleted = false, FacilityId = 4 }
-
-        );
-        context.SaveChanges();
-    }
-
-    [Test]
-    public async Task GetAllAsync_Returns_Only_NotDeleted_Facilities()
-    {
-        // Act
-        var result = (await _service.GetAllAsync()).ToList();
-
-        // Assert
-        Assert.That(result.Select(r => r.Id), Is.EquivalentTo(new[] { 1, 2, 4 }));
-        Assert.That(result.Any(r => r.Id == 3), Is.False); // Deleted
-    }
-
-    [Test]
-    public async Task GetAllAsync_SportCount_Excludes_Deleted_Sports()
-    {
-        // Act
-        var result = (await _service.GetAllAsync()).ToList();
-
-        var f1 = result.Single(r => r.Id == 1);
-        var f2 = result.Single(r => r.Id == 2);
-        var f4 = result.Single(r => r.Id == 4);
-
-        // Assert
-        Assert.That(f1.SportCount, Is.EqualTo(1)); // Football only
-        Assert.That(f2.SportCount, Is.EqualTo(0)); // No sports
-        Assert.That(f4.SportCount, Is.EqualTo(2)); // Swimming + Volleyball
-    }
-
-    [Test]
-    public async Task GetAllAsync_Maps_Id_And_Name_Correctly()
-    {
-        // Act
-        var result = (await _service.GetAllAsync()).OrderBy(r => r.Id).ToList();
-
-        // Assert
-        Assert.That(result[0].Id, Is.EqualTo(1));
-        Assert.That(result[0].Name, Is.EqualTo("Main Arena"));
-        Assert.That(result[1].Id, Is.EqualTo(2));
-        Assert.That(result[1].Name, Is.EqualTo("Training Hall"));
-        Assert.That(result[2].Id, Is.EqualTo(4));
-        Assert.That(result[2].Name, Is.EqualTo("Community Center"));
-    }
-
-    [Test]
-    public async Task GetAllAsync_Deleted_Facility_Is_Excluded_Even_If_Has_Active_Sports()
-    {
-        // Act
-        var result = (await _service.GetAllAsync()).ToList();
-
-        // Assert
-        Assert.That(result.Any(r => r.Id == 3), Is.False); // 3 has Basketball but is deleted
-    }
-
-    [Test]
-    public async Task GetAllAsync_Returns_Empty_When_AllFacilitiesDeleted()
-    {
-        // Arrange
-        foreach (var facility in _context.Facilities)
+        [SetUp]
+        public void Setup()
         {
-            facility.IsDeleted = true;
+            var databaseName = $"FacilityDb_{Guid.NewGuid()}";
+            var options = new DbContextOptionsBuilder<SportComplexDbContext>()
+                .UseInMemoryDatabase(databaseName: databaseName)
+                .Options;
+
+            _context = new TestDbContext(options);
+            _context.Database.EnsureDeleted();
+            _context.Database.EnsureCreated();
+
+            SeedData(_context);
+
+            _mockLocalizer = new Mock<IStringLocalizer<SharedResource>>();
+            _mockLocalizer.Setup(l => l[It.IsAny<string>()])
+                          .Returns((string key) => new LocalizedString(key, key));
+
+            _service = new FacilityService(_context, _mockLocalizer.Object);
         }
-        await _context.SaveChangesAsync();
 
-        // Act
-        var result = (await _service.GetAllAsync()).ToList();
-
-        // Assert
-        Assert.That(result, Is.Empty);
-    }
-
-    [Test]
-    public async Task AddAsync_AddsNewFacility_WithGivenName_AndIsDeletedFalse()
-    {
-        // Arrange
-        var model = new AddFacilityViewModel
+        [TearDown]
+        public void TearDown()
         {
-            Name = "New Sports Hall"
-        };
+            _context?.Dispose();
+        }
 
-        // Act
-        await _service.AddAsync(model);
+        private void SeedData(SportComplexDbContext context)
+        {
+            if (context.Facilities.Any()) return;
 
-        var facilities = await _context.Facilities
-            .Where(f => f.Name == "New Sports Hall")
-            .ToListAsync();
+            context.Facilities.AddRange(
+                new Facility { Id = 1, Name = "Main Arena", ImageUrl = "img1.jpg", IsDeleted = false },
+                new Facility { Id = 2, Name = "Training Hall", ImageUrl = "img2.jpg", IsDeleted = false },
+                new Facility { Id = 3, Name = "Old Stadium", ImageUrl = "img3.jpg", IsDeleted = true },
+                new Facility { Id = 4, Name = "Community Center", ImageUrl = "img4.jpg", IsDeleted = false }
+            );
 
-        // Assert
-        Assert.That(facilities.Count, Is.EqualTo(1));
-        Assert.That(facilities[0].Name, Is.EqualTo("New Sports Hall"));
-        Assert.IsFalse(facilities[0].IsDeleted);
-    }
+            context.Sports.AddRange(
+                new Sport { Id = 101, Name = "Football", IsDeleted = false, FacilityId = 1 },
+                new Sport { Id = 102, Name = "Basketball", IsDeleted = true, FacilityId = 4 }
+            );
 
-    [Test]
-    public async Task AddAsync_Increases_Total_Facility_Count()
-    {
-        // Arrange
-        var initialCount = await _context.Facilities.CountAsync();
-        var model = new AddFacilityViewModel { Name = "Extra Court" };
+            context.SaveChanges();
+        }
 
-        // Act
-        await _service.AddAsync(model);
-        var newCount = await _context.Facilities.CountAsync();
+        [Test]
+        public async Task GetAllFacilitiesWithSportsAsync_ReturnsOnlyActiveFacilities_AndActiveSports()
+        {
+            _context.Facilities.RemoveRange(_context.Facilities);
+            _context.Sports.RemoveRange(_context.Sports);
+            await _context.SaveChangesAsync();
 
-        // Assert
-        Assert.That(newCount, Is.EqualTo(initialCount + 1));
-    }
+            var activeArena = new Facility { Name = "Active Arena", ImageUrl = "img1.jpg", IsDeleted = false };
+            var activeHall = new Facility { Name = "Active Hall", ImageUrl = "img2.jpg", IsDeleted = false };
+            var deletedStadium = new Facility { Name = "Deleted Stadium", ImageUrl = "img3.jpg", IsDeleted = true };
 
-    [Test]
-    public async Task AddAsync_DoesNotAddSports_ByDefault()
-    {
-        // Arrange
-        var model = new AddFacilityViewModel { Name = "Empty Facility" };
+            activeArena.Sports.Add(new Sport { Name = "Active Football", IsDeleted = false });
+            activeArena.Sports.Add(new Sport { Name = "Deleted Tennis", IsDeleted = true });
 
-        // Act
-        await _service.AddAsync(model);
+            _context.Facilities.AddRange(activeArena, activeHall, deletedStadium);
+            await _context.SaveChangesAsync();
 
-        var addedFacility = await _context.Facilities
-            .FirstOrDefaultAsync(f => f.Name == "Empty Facility");
+            var result = await _service.GetAllFacilitiesWithSportsAsync();
 
-        // Assert
-        Assert.IsNotNull(addedFacility);
-        Assert.That(_context.Sports.All(s => s.FacilityId != addedFacility!.Id), Is.True);
-    }
+            Assert.That(result.Count(), Is.EqualTo(2));
 
-    [Test]
-    public async Task ExistsAsync_ReturnsTrue_WhenFacilityWithNameExists_AndIsNotDeleted()
-    {
-        // Act
-        var exists = await _service.ExistsAsync("Main Arena");
+            Assert.IsFalse(result.Any(f => f.Name == "Deleted Stadium"));
 
-        // Assert
-        Assert.IsTrue(exists);
-    }
+            var arenaFromResult = result.FirstOrDefault(f => f.Name == "Active Arena");
+            Assert.IsNotNull(arenaFromResult);
 
-    [Test]
-    public async Task ExistsAsync_ReturnsFalse_WhenFacilityNameDoesNotExist()
-    {
-        // Act
-        var exists = await _service.ExistsAsync("Non Existing Facility");
+            Assert.That(arenaFromResult!.Sports.Count, Is.EqualTo(1));
+            Assert.That(arenaFromResult.Sports.First().SportName, Is.EqualTo("Active Football"));
 
-        // Assert
-        Assert.IsFalse(exists);
-    }
+            var hallFromResult = result.FirstOrDefault(f => f.Name == "Active Hall");
+            Assert.IsNotNull(hallFromResult);
+            Assert.That(hallFromResult!.Sports.Count, Is.EqualTo(0));
+        }
 
-    [Test]
-    public async Task ExistsAsync_ReturnsFalse_WhenFacilityWithNameIsDeleted()
-    {
-        // Act
-        var exists = await _service.ExistsAsync("Old Stadium");
+        [Test]
+        public async Task AddAsync_AddsNewFacilityToDatabase()
+        {
+            var model = new AddFacilityViewModel { Name = "New Gym", ImageUrl = "new.jpg" };
 
-        // Assert
-        Assert.IsFalse(exists);
-    }
+            await _service.AddAsync(model);
 
-    [Test]
-    public async Task ExistsAsync_NameMatch_IsCaseSensitive_ByDefault()
-    {
-        // Act
-        var existsLower = await _service.ExistsAsync("main arena");
+            var dbFacility = await _context.Facilities.FirstOrDefaultAsync(f => f.Name == "New Gym");
+            Assert.IsNotNull(dbFacility);
+            Assert.That(dbFacility!.ImageUrl, Is.EqualTo("new.jpg"));
+            Assert.IsFalse(dbFacility.IsDeleted);
+        }
 
-        // Assert
-        Assert.IsFalse(existsLower);
-    }
+        [Test]
+        public async Task ExistsAsync_ReturnsTrue_WhenFacilityExistsAndNotDeleted()
+        {
+            string facilityName = "Test Arena Exists";
+            var facility = new Facility
+            {
+                Name = facilityName,
+                ImageUrl = "exists.jpg",
+                IsDeleted = false
+            };
+            _context.Facilities.Add(facility);
+            await _context.SaveChangesAsync();
 
-    [Test]
-    public async Task GetFacilityForEditAsync_ReturnsModel_WhenFacilityExists_AndNotDeleted()
-    {
-        // Act
-        var vm = await _service.GetFacilityForEditAsync(1);
+            var exists = await _service.ExistsAsync(facilityName);
 
-        // Assert
-        Assert.IsNotNull(vm);
-        Assert.That(vm!.Name, Is.EqualTo("Main Arena"));
-    }
+            Assert.IsTrue(exists);
+        }
 
-    [Test]
-    public async Task GetFacilityForEditAsync_ReturnsNull_WhenFacilityIsDeleted()
-    {
-        // Act
-        var vm = await _service.GetFacilityForEditAsync(3);
+        [Test]
+        public async Task ExistsAsync_ReturnsFalse_WhenFacilityIsDeletedOrNotFound()
+        {
+            string deletedName = "Deleted Arena";
+            var deletedFacility = new Facility
+            {
+                Name = deletedName,
+                ImageUrl = "deleted.jpg",
+                IsDeleted = true
+            };
+            _context.Facilities.Add(deletedFacility);
+            await _context.SaveChangesAsync();
 
-        // Assert
-        Assert.IsNull(vm);
-    }
+            Assert.IsFalse(await _service.ExistsAsync(deletedName));
 
-    [Test]
-    public async Task GetFacilityForEditAsync_ReturnsNull_WhenFacilityDoesNotExist()
-    {
-        // Act
-        var vm = await _service.GetFacilityForEditAsync(999);
+            Assert.IsFalse(await _service.ExistsAsync("Ghost Hall"));
+        }
 
-        // Assert
-        Assert.IsNull(vm);
-    }
+        [Test]
+        public async Task GetFacilityForEditAsync_ReturnsModel_WhenFacilityIsValid()
+        {
+            var facility = new Facility { Name = "Edit Me Arena", ImageUrl = "edit.jpg", IsDeleted = false };
+            _context.Facilities.Add(facility);
+            await _context.SaveChangesAsync();
 
-    [Test]
-    public async Task GetFacilityForEditAsync_MapsOnly_Name_Field_AsExpected()
-    {
-        // Act
-        var vm = await _service.GetFacilityForEditAsync(4);
+            var model = await _service.GetFacilityForEditAsync(facility.Id);
 
-        // Assert
-        Assert.IsNotNull(vm);
-        Assert.That(vm!.Name, Is.EqualTo("Community Center"));
-    }
+            Assert.IsNotNull(model);
+            Assert.That(model!.Name, Is.EqualTo("Edit Me Arena"));
+            Assert.That(model.ImageUrl, Is.EqualTo("edit.jpg"));
+        }
 
-    [Test]
-    public async Task EditAsync_UpdatesName_WhenFacilityExistsAndNotDeleted()
-    {
-        // Arrange
-        var model = new AddFacilityViewModel { Name = "Updated Arena" };
+        [Test]
+        public async Task GetFacilityForEditAsync_ReturnsNull_WhenFacilityIsDeletedOrNotFound()
+        {
+            var deletedFacility = new Facility { Name = "Deleted Edit", ImageUrl = "del.jpg", IsDeleted = true };
+            _context.Facilities.Add(deletedFacility);
+            await _context.SaveChangesAsync();
 
-        // Act
-        await _service.EditAsync(1, model);
+            Assert.IsNull(await _service.GetFacilityForEditAsync(deletedFacility.Id));
+            Assert.IsNull(await _service.GetFacilityForEditAsync(9999));
+        }
 
-        var updated = await _context.Facilities.FindAsync(1);
+        [Test]
+        public async Task EditAsync_UpdatesFacilityProperties_WhenFacilityIsValid()
+        {
+            var model = new AddFacilityViewModel { Name = "Updated Arena", ImageUrl = "updated.jpg" };
 
-        // Assert
-        Assert.That(updated!.Name, Is.EqualTo("Updated Arena"));
-    }
+            await _service.EditAsync(1, model);
 
-    [Test]
-    public async Task EditAsync_DoesNothing_WhenFacilityIsDeleted()
-    {
-        // Arrange
-        var model = new AddFacilityViewModel { Name = "Should Not Update" };
+            var dbFacility = await _context.Facilities.FindAsync(1);
+            Assert.That(dbFacility!.Name, Is.EqualTo("Updated Arena"));
+            Assert.That(dbFacility.ImageUrl, Is.EqualTo("updated.jpg"));
+        }
 
-        // Act
-        await _service.EditAsync(3, model);
+        [Test]
+        public async Task EditAsync_DoesNothing_WhenFacilityIsDeleted()
+        {
+            var deletedFacility = new Facility
+            {
+                Name = "Old Stadium",
+                ImageUrl = "old.jpg",
+                IsDeleted = true
+            };
+            _context.Facilities.Add(deletedFacility);
+            await _context.SaveChangesAsync();
 
-        var unchanged = await _context.Facilities.FindAsync(3);
+            var model = new AddFacilityViewModel { Name = "Hacked Name", ImageUrl = "hacked.jpg" };
 
-        // Assert
-        Assert.That(unchanged!.Name, Is.EqualTo("Old Stadium"));
-    }
+            await _service.EditAsync(deletedFacility.Id, model);
 
-    [Test]
-    public async Task EditAsync_DoesNothing_WhenFacilityDoesNotExist()
-    {
-        // Arrange
-        var model = new AddFacilityViewModel { Name = "Non Existing" };
+            var dbFacility = await _context.Facilities.FindAsync(deletedFacility.Id);
+            Assert.IsNotNull(dbFacility);
+            Assert.That(dbFacility!.Name, Is.EqualTo("Old Stadium"));
+        }
 
-        // Act
-        await _service.EditAsync(999, model);
+        [Test]
+        public async Task EditAsync_DoesNothing_WhenFacilityNotFound()
+        {
+            var model = new AddFacilityViewModel { Name = "Hacked Name", ImageUrl = "hacked.jpg" };
 
-        // Assert
-        Assert.That(await _context.Facilities.CountAsync(f => f.Name == "Non Existing"), Is.EqualTo(0));
-    }
+            await _service.EditAsync(999, model);
 
-    [Test]
-    public async Task EditAsync_PersistsChangeInDatabase()
-    {
-        // Arrange
-        var model = new AddFacilityViewModel { Name = "Persisted Name" };
+            var dbFacility = await _context.Facilities.FindAsync(999);
+            Assert.IsNull(dbFacility);
+        }
 
-        // Act
-        await _service.EditAsync(4, model);
+        [Test]
+        public async Task GetFacilityForDeleteAsync_ReturnsModel_WhenFacilityIsValid()
+        {
+            var facility = new Facility { Name = "Target Delete Arena", ImageUrl = "target.jpg", IsDeleted = false };
+            _context.Facilities.Add(facility);
+            await _context.SaveChangesAsync();
 
-        // Assert
-        var persisted = await _context.Facilities.FindAsync(4);
-        Assert.That(persisted!.Name, Is.EqualTo("Persisted Name"));
-    }
+            var model = await _service.GetFacilityForDeleteAsync(facility.Id);
 
-    [Test]
-    public async Task GetFacilityForDeleteAsync_ReturnsModel_WhenFacilityExistsAndNotDeleted()
-    {
-        // Act
-        var vm = await _service.GetFacilityForDeleteAsync(1);
+            Assert.IsNotNull(model);
+            Assert.That(model!.Id, Is.EqualTo(facility.Id));
+            Assert.That(model.Name, Is.EqualTo("Target Delete Arena"));
+        }
 
-        // Assert
-        Assert.IsNotNull(vm);
-        Assert.That(vm!.Id, Is.EqualTo(1));
-        Assert.That(vm.Name, Is.EqualTo("Main Arena"));
-    }
+        [Test]
+        public async Task GetFacilityForDeleteAsync_ReturnsNull_WhenFacilityIsDeletedOrNotFound()
+        {
+            var deletedFacility = new Facility { Name = "Deleted Target", ImageUrl = "del.jpg", IsDeleted = true };
+            _context.Facilities.Add(deletedFacility);
+            await _context.SaveChangesAsync();
 
-    [Test]
-    public async Task GetFacilityForDeleteAsync_CorrectlyMaps_Id_And_Name()
-    {
-        // Act
-        var vm = await _service.GetFacilityForDeleteAsync(4);
+            Assert.IsNull(await _service.GetFacilityForDeleteAsync(deletedFacility.Id));
+            Assert.IsNull(await _service.GetFacilityForDeleteAsync(9999));
+        }
 
-        // Assert
-        Assert.IsNotNull(vm);
-        Assert.That(vm!.Id, Is.EqualTo(4));
-        Assert.That(vm.Name, Is.EqualTo("Community Center"));
-    }
+        [Test]
+        public void DeleteAsync_ThrowsInvalidOperationException_WhenFacilityNotFoundOrDeleted()
+        {
+            Assert.ThrowsAsync<InvalidOperationException>(async () => await _service.DeleteAsync(99));
+            Assert.ThrowsAsync<InvalidOperationException>(async () => await _service.DeleteAsync(3));
+        }
 
-    [Test]
-    public async Task DeleteAsync_SoftDeletes_WhenFacilityHasNoSports()
-    {
-        // Act
-        await _service.DeleteAsync(2);
+        [Test]
+        public void DeleteAsync_ThrowsInvalidOperationException_WhenFacilityHasSports()
+        {
+            Assert.ThrowsAsync<InvalidOperationException>(async () => await _service.DeleteAsync(1));
+        }
 
-        // Assert
-        var f2 = await _context.Facilities.FindAsync(2);
-        Assert.IsNotNull(f2);
-        Assert.IsTrue(f2!.IsDeleted);
-    }
-    [Test]
-    public void DeleteAsync_Throws_WhenFacilityHasAnySports_Facility1()
-    {
-        // Arrange
+        [Test]
+        public async Task DeleteAsync_SetsIsDeletedToTrue_WhenFacilityCanBeDeleted()
+        {
+            var emptyFacility = new Facility
+            {
+                Name = "Safe Delete Hall",
+                ImageUrl = "safe.jpg",
+                IsDeleted = false
+            };
+            _context.Facilities.Add(emptyFacility);
+            await _context.SaveChangesAsync();
 
-        // Act + Assert
-        Assert.ThrowsAsync<InvalidOperationException>(() => _service.DeleteAsync(1));
+            await _service.DeleteAsync(emptyFacility.Id);
 
-        var f1 = _context.Facilities.Find(1);
-        Assert.IsFalse(f1!.IsDeleted);
-    }
+            var dbFacility = await _context.Facilities.FindAsync(emptyFacility.Id);
+            Assert.IsNotNull(dbFacility);
+            Assert.IsTrue(dbFacility!.IsDeleted);
+        }
 
-    [Test]
-    public async Task GetFacilityForDeleteAsync_ReturnsNull_WhenFacilityIsDeleted()
-    {
-        // Act
-        var vm = await _service.GetFacilityForDeleteAsync(3);
+        public class TestDbContext : SportComplexDbContext
+        {
+            public TestDbContext(DbContextOptions<SportComplexDbContext> options) : base(options) { }
 
-        // Assert
-        Assert.IsNull(vm);
-    }
+            protected override void OnModelCreating(ModelBuilder modelBuilder)
+            {
+                modelBuilder.Ignore<Microsoft.AspNetCore.Identity.IdentityUserLogin<string>>();
+                modelBuilder.Ignore<Microsoft.AspNetCore.Identity.IdentityUserRole<string>>();
+                modelBuilder.Ignore<Microsoft.AspNetCore.Identity.IdentityUserClaim<string>>();
+                modelBuilder.Ignore<Microsoft.AspNetCore.Identity.IdentityUserToken<string>>();
+                modelBuilder.Ignore<Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>>();
+                modelBuilder.Ignore<Microsoft.AspNetCore.Identity.IdentityRole>();
+                modelBuilder.Ignore<Microsoft.AspNetCore.Identity.IdentityUser>();
 
-    [Test]
-    public void DeleteAsync_Throws_WhenFacilityHasAnySports_Facility4()
-    {
-        // Arrange
-
-        // Act + Assert
-        Assert.ThrowsAsync<InvalidOperationException>(() => _service.DeleteAsync(4));
-        var f4 = _context.Facilities.Find(4);
-        Assert.IsFalse(f4!.IsDeleted);
-    }
-
-    [Test]
-    public void DeleteAsync_CurrentImplementation_ThrowsNullReference_WhenFacilityNotFound()
-    {
-        // Act + Assert
-        Assert.ThrowsAsync<NullReferenceException>(() => _service.DeleteAsync(3));
-        Assert.ThrowsAsync<NullReferenceException>(() => _service.DeleteAsync(999));
-    }
-
-    [Test]
-    public async Task DeleteAsync_DoesNotAffect_OtherFacilities()
-    {
-        // Arrange
-        var before1 = await _context.Facilities.FindAsync(1);
-        var before4 = await _context.Facilities.FindAsync(4);
-
-        // Act
-        await _service.DeleteAsync(2);
-
-        // Assert
-        var after1 = await _context.Facilities.FindAsync(1);
-        var after4 = await _context.Facilities.FindAsync(4);
-
-        Assert.IsFalse(after1!.IsDeleted);
-        Assert.IsFalse(after4!.IsDeleted);
-    }
-
-    [TearDown]
-    public void TearDown()
-    {
-        _context.Dispose();
+                modelBuilder.ApplyConfigurationsFromAssembly(typeof(SportComplexDbContext).Assembly);
+            }
+        }
     }
 }

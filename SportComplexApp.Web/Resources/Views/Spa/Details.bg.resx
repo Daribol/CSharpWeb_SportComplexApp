@@ -124,7 +124,7 @@
     <value>Резервирай</value>
   </data>
   <data name="Currency" xml:space="preserve">
-    <value>лв.</value>
+    <value>€</value>
   </data>
   <data name="DurationLabel" xml:space="preserve">
     <value>Времетраене:</value>

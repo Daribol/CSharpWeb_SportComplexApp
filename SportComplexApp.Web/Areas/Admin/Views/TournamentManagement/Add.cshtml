@@ -74,6 +74,15 @@
             </div>
 
             <div class="mt-3">
+                <label asp-for="ImageUrl" class="form-label text-light">@Localizer["LabelImageUrl"]</label>
+                <div class="input-group neon-input">
+                    <span class="input-group-text neon-icon"><i class="bi bi-image"></i></span>
+                    <input asp-for="ImageUrl" class="form-control" placeholder="https://..." />
+                </div>
+                <span asp-validation-for="ImageUrl" class="text-danger small"></span>
+            </div>
+
+            <div class="mt-3">
                 <label asp-for="Description" class="form-label text-light">@Localizer["LabelDescription"]</label>
                 <textarea asp-for="Description" class="form-control" rows="4" placeholder="@Localizer["PlaceholderDescription"]"></textarea>
                 <span asp-validation-for="Description" class="text-danger small"></span>

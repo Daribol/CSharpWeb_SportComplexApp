@@ -46,32 +46,58 @@ namespace SportComplexApp.Web.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> Browse(string? q = null, int? sportId = null, string? sortBy = null)
+        public async Task<IActionResult> Browse(string? q = null, int? sportId = null, string? sortBy = null, int page = 1)
         {
-            var model = await trainerService.GetAllPublicAsync(q, sportId, sortBy);
+            int pageSize = 6;
+
+            var allTrainers = await trainerService.GetAllPublicAsync(q, sportId, sortBy);
+
+            int totalItems = allTrainers.Count();
+            int totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+
+            if (page < 1) page = 1;
+            if (page > totalPages && totalPages > 0) page = totalPages;
+
+            var paginatedTrainers = allTrainers
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
             ViewBag.Sports = await sportService.GetAllAsSelectListAsync();
             ViewBag.Query = q;
             ViewBag.SelectedSportId = sportId;
             ViewBag.SortBy = sortBy;
-            return View(model);
+
+            ViewBag.CurrentPage = page;
+            ViewBag.TotalPages = totalPages;
+
+            return View(paginatedTrainers);
         }
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> Details(int id, int? sportId = null)
+        public async Task<IActionResult> Details(int id, int? month, int? year)
         {
             var trainer = await trainerService.GetTrainerDetailsAsync(id);
-            if (trainer == null)
-            {
-                return NotFound();
-            }
+            if (trainer == null) return NotFound();
 
-            ViewBag.SportId = sportId;
+            int targetMonth = month ?? DateTime.Now.Month;
+            int targetYear = year ?? DateTime.Now.Year;
+
+            var allReservations = await trainerService.GetReservationsForTrainerAsync(id);
+            var monthReservations = allReservations
+                .Where(r => r.ReservationDate.Month == targetMonth && r.ReservationDate.Year == targetYear)
+                .ToList();
+
+            trainer.CurrentMonth = targetMonth;
+            trainer.CurrentYear = targetYear;
+            trainer.Reservations = monthReservations;
+
             return View(trainer);
         }
 
         [Authorize(Roles = "Trainer")]
-        public async Task<IActionResult> Reservations()
+        public async Task<IActionResult> Reservations(int? month, int? year)
         {
             var user = await userManager.GetUserAsync(User);
             var trainerId = await trainerService.GetTrainerIdByUserId(user.Id);
@@ -81,8 +107,19 @@ namespace SportComplexApp.Web.Controllers
                 return NotFound();
             }
 
-            var reservations = await trainerService.GetReservationsForTrainerAsync(trainerId.Value);
-            return View(reservations);
+            int targetMonth = month ?? DateTime.Now.Month;
+            int targetYear = year ?? DateTime.Now.Year;
+
+            var allReservations = await trainerService.GetReservationsForTrainerAsync(trainerId.Value);
+
+            var monthReservations = allReservations
+                .Where(r => r.ReservationDate.Month == targetMonth && r.ReservationDate.Year == targetYear)
+                .ToList();
+
+            ViewBag.CurrentMonth = targetMonth;
+            ViewBag.CurrentYear = targetYear;
+
+            return View(monthReservations);
         }
 
         [Authorize(Roles = "Trainer")]
@@ -111,6 +148,47 @@ namespace SportComplexApp.Web.Controllers
 
             TempData["SuccessMessage"] = sharedLocalizer[SuccessfulValidationMessages.Reservation.ReservationDeleted].Value;
             return RedirectToAction(nameof(Reservations));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetCalendarPartial(int id, int month, int year)
+        {
+            var trainer = await trainerService.GetTrainerDetailsAsync(id);
+            if (trainer == null) return NotFound();
+
+            var allReservations = await trainerService.GetReservationsForTrainerAsync(id);
+
+            trainer.CurrentMonth = month;
+            trainer.CurrentYear = year;
+            trainer.Reservations = allReservations
+                .Where(r => r.ReservationDate.Month == month && r.ReservationDate.Year == year)
+                .ToList();
+
+            return PartialView("_TrainerCalendarPartial", trainer);
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Trainer")]
+        public async Task<IActionResult> GetReservationsPartial(int month, int year)
+        {
+            var user = await userManager.GetUserAsync(User);
+            var trainerId = await trainerService.GetTrainerIdByUserId(user.Id);
+
+            if (trainerId == null)
+            {
+                return NotFound();
+            }
+
+            var allReservations = await trainerService.GetReservationsForTrainerAsync(trainerId.Value);
+
+            var monthReservations = allReservations
+                .Where(r => r.ReservationDate.Month == month && r.ReservationDate.Year == year)
+                .ToList();
+
+            ViewBag.CurrentMonth = month;
+            ViewBag.CurrentYear = year;
+
+            return PartialView("_TrainerReservationsCalendarPartial", monthReservations);
         }
     }
 }

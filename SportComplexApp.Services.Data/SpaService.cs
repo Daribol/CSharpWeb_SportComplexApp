@@ -242,9 +242,13 @@ namespace SportComplexApp.Services.Data
 
         public async Task<IEnumerable<MySpaReservationViewModel>> GetUserReservationsAsync(string userId)
         {
+            var now = time.GetLocalNow().DateTime;
+
             return await context.SpaReservations
                 .Where(r => r.ClientId == userId)
+                .Where(r => r.ReservationDateTime >= now)
                 .Include(r => r.SpaService)
+                .OrderBy(r => r.ReservationDateTime)
                 .Select(r => new MySpaReservationViewModel
                 {
                     Id = r.Id,
@@ -294,18 +298,7 @@ namespace SportComplexApp.Services.Data
 
         public async Task DeleteExpiredSpaReservationsAsync(string userId)
         {
-            var now = time.GetLocalNow().DateTime;
-
-            var expiredSpaReservations = await context.SpaReservations
-                .Where(r => r.ClientId == userId &&
-                            r.ReservationDateTime <= now)
-                .ToListAsync();
-
-            if (expiredSpaReservations.Any())
-            {
-                context.SpaReservations.RemoveRange(expiredSpaReservations);
-                await context.SaveChangesAsync();
-            }
+            await Task.CompletedTask;
         }
 
 
@@ -403,20 +396,39 @@ namespace SportComplexApp.Services.Data
             return await query.CountAsync();
         }
 
-        public async Task<IEnumerable<SpaReportViewModel>> GetSpaReservationsReportAsync()
+        public async Task<IEnumerable<SpaReportViewModel>> GetSpaReservationsReportAsync(DateTime? startDate, DateTime? endDate)
         {
-            var report = await context.SpaReservations
-                .GroupBy(r => new { r.SpaService.Name, r.SpaService.Price })
-                .Select(g => new SpaReportViewModel
-                {
-                    SpaServiceName = g.Key.Name,
-                    TotalReservations = g.Count(),
-                    TotalRevenue = g.Count() * g.Key.Price
-                })
-                .OrderByDescending(r => r.TotalRevenue)
-                .ToListAsync();
+            var query = context.SpaReservations
+                .IgnoreQueryFilters()
+                .Where(r => r.ReservationDateTime < DateTime.Now)
+                .Include(r => r.SpaService)
+                .Include(r => r.Client)
+                .AsQueryable();
 
-            return report;
+            if (startDate.HasValue)
+            {
+                query = query.Where(r => r.ReservationDateTime.Date >= startDate.Value.Date);
+            }
+            if (endDate.HasValue)
+            {
+                query = query.Where(r => r.ReservationDateTime.Date <= endDate.Value.Date);
+            }
+
+            return await query
+                .OrderByDescending(r => r.ReservationDateTime)
+                .Select(r => new SpaReportViewModel
+                {
+                    ClientName = r.Client != null ? $"{r.Client.FirstName} {r.Client.LastName}" : "Изтрит профил",
+
+                    ServiceName = r.SpaService != null ? r.SpaService.Name : "Изтрита услуга",
+
+                    Date = r.ReservationDateTime.ToString("dd.MM.yyyy HH:mm"),
+
+                    Price = r.SpaService != null ? (r.SpaService.Price * r.NumberOfPeople) : 0m,
+
+                    IsServiceDeleted = r.SpaService == null
+                })
+                .ToListAsync();
+            }
         }
-    }
 }

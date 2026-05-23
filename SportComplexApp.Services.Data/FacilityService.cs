@@ -23,17 +23,21 @@ namespace SportComplexApp.Services.Data
         public async Task<IEnumerable<FacilityMasterViewModel>> GetAllFacilitiesWithSportsAsync()
         {
             var facilities = await context.Facilities
+                .Where(f => !f.IsDeleted)
                 .Select(f => new FacilityMasterViewModel
                 {
                     Id = f.Id,
                     Name = f.Name,
+                    ImageUrl = f.ImageUrl,
 
-                    Sports = f.Sports.Select(s => new FacilitySportDetailViewModel
-                    {
-                        Id = s.Id,
-                        SportName = s.Name
-                    })
-                    .ToList()
+                    Sports = f.Sports
+                        .Where(s => !s.IsDeleted)
+                        .Select(s => new FacilitySportDetailViewModel
+                        {
+                            Id = s.Id,
+                            SportName = s.Name,
+                        })
+                        .ToList()
                 })
                 .ToListAsync();
 
@@ -45,6 +49,7 @@ namespace SportComplexApp.Services.Data
             var facility = new Facility
             {
                 Name = model.Name,
+                ImageUrl = model.ImageUrl,
                 IsDeleted = false
             };
 
@@ -68,7 +73,9 @@ namespace SportComplexApp.Services.Data
 
             return new AddFacilityViewModel
             {
-                Name = facility.Name
+                Id = facility.Id,
+                Name = facility.Name,
+                ImageUrl = facility.ImageUrl,
             };
         }
 
@@ -81,6 +88,7 @@ namespace SportComplexApp.Services.Data
             if (facility != null)
             {
                 facility.Name = model.Name;
+                facility.ImageUrl = model.ImageUrl;
                 await context.SaveChangesAsync();
             }
         }
@@ -106,7 +114,7 @@ namespace SportComplexApp.Services.Data
                 .Include(f => f.Sports)
                 .FirstOrDefaultAsync(f => f.Id == id && !f.IsDeleted);
 
-            if (facility.Sports.Any())
+            if (facility == null)
             {
                 throw new InvalidOperationException(_sharedLocalizer[ErrorMessages.Facility.FacilityNotFound]);
             }

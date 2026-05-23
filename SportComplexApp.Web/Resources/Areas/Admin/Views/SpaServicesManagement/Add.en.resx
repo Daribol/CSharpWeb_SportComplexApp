@@ -145,7 +145,7 @@
     <value>Service name</value>
   </data>
   <data name="LabelPrice" xml:space="preserve">
-    <value>Price (BGN)</value>
+    <value>Price (€)</value>
   </data>
   <data name="PlaceholderDesc" xml:space="preserve">
     <value>Relaxing full-body massage…</value>

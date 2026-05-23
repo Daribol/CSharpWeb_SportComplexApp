@@ -21,10 +21,31 @@ namespace SportComplexApp.Web.Controllers
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> All(string? searchQuery = null, string? sport = null, string? sortBy = null)
+        public async Task<IActionResult> All(string? searchQuery = null, string? sport = null, string? sortBy = null, int page = 1)
         {
+            int pageSize = 6;
+
             var tournaments = await tournamentService.GetAllAsync(searchQuery, sport, sortBy);
-            return View(tournaments);
+
+            int totalItems = tournaments.Count();
+            int totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+
+            if (page < 1) page = 1;
+            if (page > totalPages && totalPages > 0) page = totalPages;
+
+            var paginatedTournaments = tournaments
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            ViewBag.SearchQuery = searchQuery;
+            ViewBag.Sport = sport;
+            ViewBag.SortBy = sortBy;
+
+            ViewBag.CurrentPage = page;
+            ViewBag.TotalPages = totalPages;
+
+            return View(paginatedTournaments);
         }
 
         [HttpPost]
@@ -65,7 +86,7 @@ namespace SportComplexApp.Web.Controllers
                 await tournamentService.RegisterAsync(id, userId);
                 TempData["SuccessMessage"] = sharedLocalizer[SuccessfulValidationMessages.Tournament.TournamentRegistered].Value;
             }
-            
+
             return RedirectToAction(nameof(MyTournaments));
         }
 
@@ -79,7 +100,7 @@ namespace SportComplexApp.Web.Controllers
 
             if (success)
             {
-                TempData["SuccessMessage"] = sharedLocalizer[SuccessfulValidationMessages.Tournament.TournamentUnregistered];
+                TempData["SuccessMessage"] = sharedLocalizer[SuccessfulValidationMessages.Tournament.TournamentUnregistered].Value;
             }
             else
             {

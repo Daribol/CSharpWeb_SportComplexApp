@@ -11,5 +11,6 @@ namespace SportComplexApp.Web.ViewModels.Sport
         public int Id { get; set; }
 
         public string FullName { get; set; } = null!;
+        public string? ImageUrl { get; set; }
     }
 }

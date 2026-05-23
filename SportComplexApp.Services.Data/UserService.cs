@@ -35,17 +35,30 @@ namespace SportComplexApp.Services.Data
             {
                 var roles = await userManager.GetRolesAsync(user);
 
+                var rolesList = roles.ToList();
+
+                if (!rolesList.Contains("Client"))
+                {
+                    rolesList.Add("Client");
+                }
+
                 userViewModels.Add(new AllUsersViewModel
                 {
                     Id = user.Id,
                     Email = user.Email,
                     FirstName = user.FirstName,
                     LastName = user.LastName,
-                    Roles = roles
+                    Roles = rolesList
                 });
             }
 
             return userViewModels;
+        }
+
+        public async Task<string?> GetUserEmailByIdAsync(string userId)
+        {
+            var user = await userManager.FindByIdAsync(userId);
+            return user?.Email;
         }
 
         public async Task<bool> UserExistsByIdAsync(string userId)
@@ -142,6 +155,14 @@ namespace SportComplexApp.Services.Data
             var relatedTournamentRegistrations = context.TournamentRegistrations
                 .Where(tr => tr.ClientId == userId);
             context.TournamentRegistrations.RemoveRange(relatedTournamentRegistrations);
+
+            var trainerProfile = context.Trainers
+                .FirstOrDefault(t => t.ClientId == userId);
+
+            if (trainerProfile != null)
+            {
+                context.Trainers.Remove(trainerProfile);
+            }
 
             await context.SaveChangesAsync();
 

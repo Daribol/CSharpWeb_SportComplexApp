@@ -21,9 +21,10 @@ namespace SportComplexApp.Web.Controllers
 
         [HttpGet]
         [AllowAnonymous]
+        [HttpGet]
         public async Task<IActionResult> All(string? searchQuery = null, int? minDuration = null, int? maxDuration = null, string? sortBy = null, int page = 1)
         {
-            const int spaPerPage = 9;
+            const int spaPerPage = 6;
             const int maxPages = 3;
 
             var viewModel = await spaService.GetAllSpaServicesPaginationAsync(
@@ -31,15 +32,15 @@ namespace SportComplexApp.Web.Controllers
 
             if (page > viewModel.TotalPages && viewModel.TotalPages > 0)
             {
-                return RedirectToAction(nameof(All), new
-                {
-                    searchQuery,
-                    minDuration,
-                    maxDuration,
-                    sortBy,
-                    page = viewModel.TotalPages
-                });
+                return RedirectToAction(nameof(All), new { searchQuery, minDuration, maxDuration, sortBy, page = viewModel.TotalPages });
             }
+
+            ViewBag.SearchQuery = searchQuery;
+            ViewBag.MinDuration = minDuration;
+            ViewBag.MaxDuration = maxDuration;
+            ViewBag.SortBy = sortBy;
+            ViewBag.CurrentPage = page;
+            ViewBag.TotalPages = viewModel.TotalPages;
 
             return View(viewModel);
         }

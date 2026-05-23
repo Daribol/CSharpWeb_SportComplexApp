@@ -75,7 +75,8 @@ namespace SportComplexApp.Data
                 {
                     modelBuilder.Entity(entityType.ClrType)
                         .Property("LastModified_22180008")
-                        .IsConcurrencyToken();
+                        .IsConcurrencyToken()
+                        .HasDefaultValueSql("GETDATE()");
                 }
             }
 

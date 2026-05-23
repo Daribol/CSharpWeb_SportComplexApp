@@ -50,8 +50,6 @@ namespace SportComplexApp.Services.Data
             };
 
             return await query
-                .Where(t => !t.IsDeleted)
-                .Include(t => t.Sport)
                 .Select(t => new TournamentViewModel
                 {
                     Id = t.Id,
@@ -59,7 +57,8 @@ namespace SportComplexApp.Services.Data
                     Sport = t.Sport.Name,
                     StartDate = t.StartDate,
                     EndDate = t.EndDate,
-                    Description = t.Description
+                    Description = t.Description,
+                    ImageUrl = t.ImageUrl
                 })
                 .AsNoTracking()
                 .ToListAsync();
@@ -167,6 +166,7 @@ namespace SportComplexApp.Services.Data
                 StartDate = model.StartDate,
                 EndDate = model.EndDate,
                 SportId = model.SportId,
+                ImageUrl = model.ImageUrl,
                 IsDeleted = false,
             };
 
@@ -194,7 +194,8 @@ namespace SportComplexApp.Services.Data
                 Description = tournament.Description,
                 StartDate = tournament.StartDate,
                 EndDate = tournament.EndDate,
-                SportId = tournament.SportId
+                SportId = tournament.SportId,
+                ImageUrl = tournament.ImageUrl,
             };
         }
 
@@ -210,6 +211,7 @@ namespace SportComplexApp.Services.Data
             tournament.StartDate = model.StartDate;
             tournament.EndDate = model.EndDate;
             tournament.SportId = model.SportId;
+            tournament.ImageUrl = model.ImageUrl;
 
             await context.SaveChangesAsync();
         }

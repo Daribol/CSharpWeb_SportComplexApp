@@ -25,17 +25,33 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> All(string? searchQuery = null, int? minDuration = null, int? maxDuration = null, string? sortBy = null)
+        public async Task<IActionResult> All(string? searchQuery = null, int? minDuration = null, int? maxDuration = null, string? sortBy = null, int page = 1)
         {
+            int pageSize = 8;
+
             var sports = await this.sportService
                 .GetAllSportsAsync(searchQuery, minDuration, maxDuration, sortBy);
+
+            int totalItems = sports.Count();
+            int totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+
+            if (page < 1) page = 1;
+            if (page > totalPages && totalPages > 0) page = totalPages;
+
+            var paginatedSports = sports
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
 
             ViewBag.SearchQuery = searchQuery;
             ViewBag.MinDuration = minDuration;
             ViewBag.MaxDuration = maxDuration;
             ViewBag.SortBy = sortBy;
 
-            return View(sports);
+            ViewBag.CurrentPage = page;
+            ViewBag.TotalPages = totalPages;
+
+            return View(paginatedSports);
         }
 
         [HttpGet]

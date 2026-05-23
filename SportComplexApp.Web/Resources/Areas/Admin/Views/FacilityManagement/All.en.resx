@@ -144,6 +144,9 @@
   <data name="ManageFacilitiesHeader" xml:space="preserve">
     <value>Facility Management</value>
   </data>
+  <data name="Next" xml:space="preserve">
+    <value>Next</value>
+  </data>
   <data name="NoFacilitiesDesc" xml:space="preserve">
     <value>Add your first facility to get started.</value>
   </data>
@@ -152,6 +155,9 @@
   </data>
   <data name="NoSportsAvailable" xml:space="preserve">
     <value>No sports added to this facility.</value>
+  </data>
+  <data name="Previous" xml:space="preserve">
+    <value>Previous</value>
   </data>
   <data name="SportsInHeader" xml:space="preserve">
     <value>Sports in</value>

@@ -25,10 +25,30 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> All(string? query = null, string? sortBy = null)
+        public async Task<IActionResult> All(string? query = null, string? sortBy = null, int page = 1)
         {
+            int pageSize = 8;
+
             var trainers = await trainerService.GetAllAsync(query, sortBy);
-            return View(trainers);
+
+            int totalItems = trainers.Count();
+            int totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+
+            if (page < 1) page = 1;
+            if (page > totalPages && totalPages > 0) page = totalPages;
+
+            var paginatedTrainers = trainers
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToList();
+
+            ViewBag.Query = query;
+            ViewBag.SortBy = sortBy;
+
+            ViewBag.CurrentPage = page;
+            ViewBag.TotalPages = totalPages;
+
+            return View(paginatedTrainers);
         }
 
         [HttpGet]
@@ -45,7 +65,7 @@ namespace SportComplexApp.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> Add(AddTrainerViewModel model)
         {
-            if(model.SelectedSportIds == null || !model.SelectedSportIds.Any())
+            if (model.SelectedSportIds == null || !model.SelectedSportIds.Any())
             {
                 ModelState.AddModelError(nameof(model.SelectedSportIds), sharedLocalizer[MustSelectAtLeastOneSport]);
             }

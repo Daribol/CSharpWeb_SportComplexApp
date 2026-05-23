@@ -138,6 +138,12 @@
   <data name="MsgTrainerCannotRegister" xml:space="preserve">
     <value>Треньорите нямат право да се записват</value>
   </data>
+  <data name="Next" xml:space="preserve">
+    <value>Напред</value>
+  </data>
+  <data name="Previous" xml:space="preserve">
+    <value>Назад</value>
+  </data>
   <data name="SearchName" xml:space="preserve">
     <value>Търсене по Име</value>
   </data>

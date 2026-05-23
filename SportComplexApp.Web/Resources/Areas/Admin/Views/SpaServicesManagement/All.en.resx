@@ -133,7 +133,7 @@
     <value>Filter</value>
   </data>
   <data name="Currency" xml:space="preserve">
-    <value>BGN</value>
+    <value>€</value>
   </data>
   <data name="Heading" xml:space="preserve">
     <value>Manage Spa Services</value>
@@ -147,6 +147,9 @@
   <data name="Minutes" xml:space="preserve">
     <value>min</value>
   </data>
+  <data name="Next" xml:space="preserve">
+    <value>Next</value>
+  </data>
   <data name="NoSpaDesc" xml:space="preserve">
     <value>Add your first spa service to get started.</value>
   </data>
@@ -155,6 +158,9 @@
   </data>
   <data name="PlaceholderSearch" xml:space="preserve">
     <value>E.g. Hot Stone Massage...</value>
+  </data>
+  <data name="Previous" xml:space="preserve">
+    <value>Previous</value>
   </data>
   <data name="SortDefault" xml:space="preserve">
     <value>-- Default --</value>
