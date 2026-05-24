@@ -78,8 +78,7 @@ app.UseRequestLocalization();
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
-    DatabaseSeeder.SeedRoles(services);
-    DatabaseSeeder.SeedUsers(services);
+    await DatabaseSeeder.SeedAllAsync(services);
 }
 
 AutoMapperConfig.RegisterMappings(typeof(ErrorViewModel).Assembly);

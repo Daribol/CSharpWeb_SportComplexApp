@@ -37,20 +37,8 @@ public class SportSeeding : IEntityTypeConfiguration<Sport>
             new Sport
             {
                 Id = 3,
-                Name = "Swimming (individual)",
-                FacilityId = 3,
-                Price = 20.00m,
-                ImageUrl = "https://images.unsplash.com/photo-1600965962102-9d260a71890d?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8c3dpbW1pbmd8ZW58MHwwfDB8fHwy",
-                Duration = 45,
-                MinPeople = 1,
-                MaxPeople = 1,
-                IsDeleted = false
-            },
-            new Sport
-            {
-                Id = 4,
                 Name = "Yoga (group session)",
-                FacilityId = 4,
+                FacilityId = 3,
                 Price = 10.00m,
                 ImageUrl = "https://images.unsplash.com/photo-1588286840104-8957b019727f?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8eW9nYXxlbnwwfDB8MHx8fDI%3D",
                 Duration = 60,
@@ -60,9 +48,9 @@ public class SportSeeding : IEntityTypeConfiguration<Sport>
             },
             new Sport
             {
-                Id = 5,
+                Id = 4,
                 Name = "CrossFit (group session)",
-                FacilityId = 4,
+                FacilityId = 3,
                 Price = 15.00m,
                 ImageUrl = "https://images.unsplash.com/photo-1547226238-e53e98a8e59d?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTc3fHxjcm9zc0ZpdHxlbnwwfDB8MHx8fDI%3D",
                 Duration = 50,
@@ -72,7 +60,7 @@ public class SportSeeding : IEntityTypeConfiguration<Sport>
             },
             new Sport
             {
-                Id = 6,
+                Id = 5,
                 Name = "Table tennis",
                 FacilityId = 1,
                 Price = 10.00m,

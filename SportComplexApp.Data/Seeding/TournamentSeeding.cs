@@ -38,6 +38,17 @@ public class TournamentSeeding : IEntityTypeConfiguration<Tournament>
                 EndDate = new DateTime(2025, 11, 1),
                 SportId = 3,
                 IsDeleted = false
-            });
+            },
+            new Tournament
+            {
+                Id = 4,
+                Name = "Winter Grand Slam 2026",
+                Description = "The biggest upcoming tennis event of the year. Register now!",
+                StartDate = new DateTime(2026, 12, 10),
+                EndDate = new DateTime(2026, 12, 17),
+                SportId = 2,
+                IsDeleted = false
+            }
+            );
     }
 }

@@ -12,8 +12,8 @@ using SportComplexApp.Data;
 namespace SportComplexApp.Data.Migrations
 {
     [DbContext(typeof(SportComplexDbContext))]
-    [Migration("20260523200908_InitilaDb")]
-    partial class InitilaDb
+    [Migration("20260524124400_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -313,6 +313,7 @@ namespace SportComplexApp.Data.Migrations
                         new
                         {
                             Id = 1,
+                            ImageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSASkhPWQ1zqXLUUBYFlMhZn4yMaeMu8yVjZg&s",
                             IsDeleted = false,
                             LastModified_22180008 = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Indoor Arena"
@@ -320,6 +321,7 @@ namespace SportComplexApp.Data.Migrations
                         new
                         {
                             Id = 2,
+                            ImageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSwhAHcH2_eq_owatwVzZDK2JyB4QcdFPya9g&s",
                             IsDeleted = false,
                             LastModified_22180008 = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Tennis Center"
@@ -327,13 +329,7 @@ namespace SportComplexApp.Data.Migrations
                         new
                         {
                             Id = 3,
-                            IsDeleted = false,
-                            LastModified_22180008 = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            Name = "Aquatics & Spa"
-                        },
-                        new
-                        {
-                            Id = 4,
+                            ImageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQpZB-L2ZhjG6LXt6ByYv4vOYWu3lGvTvKNOQ&s",
                             IsDeleted = false,
                             LastModified_22180008 = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Name = "Fitness Studio"
@@ -633,21 +629,8 @@ namespace SportComplexApp.Data.Migrations
                         new
                         {
                             Id = 3,
-                            Duration = 45,
-                            FacilityId = 3,
-                            ImageUrl = "https://images.unsplash.com/photo-1600965962102-9d260a71890d?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8c3dpbW1pbmd8ZW58MHwwfDB8fHwy",
-                            IsDeleted = false,
-                            LastModified_22180008 = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            MaxPeople = 1,
-                            MinPeople = 1,
-                            Name = "Swimming (individual)",
-                            Price = 20.00m
-                        },
-                        new
-                        {
-                            Id = 4,
                             Duration = 60,
-                            FacilityId = 4,
+                            FacilityId = 3,
                             ImageUrl = "https://images.unsplash.com/photo-1588286840104-8957b019727f?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8eW9nYXxlbnwwfDB8MHx8fDI%3D",
                             IsDeleted = false,
                             LastModified_22180008 = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -658,9 +641,9 @@ namespace SportComplexApp.Data.Migrations
                         },
                         new
                         {
-                            Id = 5,
+                            Id = 4,
                             Duration = 50,
-                            FacilityId = 4,
+                            FacilityId = 3,
                             ImageUrl = "https://images.unsplash.com/photo-1547226238-e53e98a8e59d?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTc3fHxjcm9zc0ZpdHxlbnwwfDB8MHx8fDI%3D",
                             IsDeleted = false,
                             LastModified_22180008 = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
@@ -671,7 +654,7 @@ namespace SportComplexApp.Data.Migrations
                         },
                         new
                         {
-                            Id = 6,
+                            Id = 5,
                             Duration = 60,
                             FacilityId = 1,
                             ImageUrl = "https://images.unsplash.com/photo-1659303388053-6078a001ea21?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MzV8fHRhYmxlJTIwdGVubmlzfGVufDB8MHwwfHx8Mg%3D%3D",
@@ -719,30 +702,24 @@ namespace SportComplexApp.Data.Migrations
                         new
                         {
                             SportId = 2,
-                            TrainerId = 5,
-                            LastModified_22180008 = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
-                        },
-                        new
-                        {
-                            SportId = 3,
                             TrainerId = 4,
                             LastModified_22180008 = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
-                            SportId = 4,
+                            SportId = 3,
                             TrainerId = 2,
                             LastModified_22180008 = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
-                            SportId = 5,
+                            SportId = 4,
                             TrainerId = 3,
                             LastModified_22180008 = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         },
                         new
                         {
-                            SportId = 4,
+                            SportId = 3,
                             TrainerId = 3,
                             LastModified_22180008 = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         });
@@ -831,6 +808,17 @@ namespace SportComplexApp.Data.Migrations
                             Name = "Swim Sprint Challenge",
                             SportId = 3,
                             StartDate = new DateTime(2025, 11, 1, 0, 0, 0, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Description = "The biggest upcoming tennis event of the year. Register now!",
+                            EndDate = new DateTime(2026, 12, 17, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsDeleted = false,
+                            LastModified_22180008 = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "Winter Grand Slam 2026",
+                            SportId = 2,
+                            StartDate = new DateTime(2026, 12, 10, 0, 0, 0, 0, DateTimeKind.Unspecified)
                         });
                 });
 
@@ -952,16 +940,6 @@ namespace SportComplexApp.Data.Migrations
                         new
                         {
                             Id = 4,
-                            Bio = "Swimming coach—technique and endurance for all levels.",
-                            ImageUrl = "https://images.unsplash.com/photo-1512217649539-75b22b15525c?w=500&h=500&fit=crop",
-                            IsDeleted = false,
-                            LastModified_22180008 = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            LastName = "Mollov",
-                            Name = "Nikolai"
-                        },
-                        new
-                        {
-                            Id = 5,
                             Bio = "Tennis training: technique, tactics, and matchplay.",
                             ImageUrl = "/images/grisho.jpg",
                             IsDeleted = false,

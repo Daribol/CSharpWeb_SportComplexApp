@@ -17,26 +17,21 @@ public class SportTrainerSeeding : IEntityTypeConfiguration<SportTrainer>
             new SportTrainer
             {
                 SportId = 2, // Tennis
-                TrainerId = 5 // Grigor Dimitrov
+                TrainerId = 4 // Grigor Dimitrov
             },
             new SportTrainer
             {
-                SportId = 3, // Swimming
-                TrainerId = 4 // Nikolai Mollov
-            },
-            new SportTrainer
-            {
-                SportId = 4, // Yoga
+                SportId = 3, // Yoga
                 TrainerId = 2 // Vili Markovska
             },
             new SportTrainer
             {
-                SportId = 5, // CrossFit
+                SportId = 4, // CrossFit
                 TrainerId = 3 // Kostadin Lefterov
             },
             new SportTrainer
             {
-                SportId = 4, // Yoga
+                SportId = 3, // Yoga
                 TrainerId = 3 // Kostadin Lefterov
             }
         );

@@ -86,108 +86,110 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-lg navbar-dark sc-navbar fixed-top shadow-sm">
-            <div class="container-fluid">
-                @if (User.IsInRole("Admin"))
-                {
-                    <a class="navbar-brand fw-bold" asp-area="Admin" asp-controller="Home" asp-action="Index">SportComplex</a>
-                }
-                else
-                {
-                    <a class="navbar-brand fw-bold" asp-area="" asp-controller="Home" asp-action="Index">SportComplex</a>
-                }
+    <nav class="navbar navbar-expand-lg navbar-dark sc-navbar fixed-top shadow-sm">
+        <div class="container-fluid align-items-center">
+            
+            @if (User.IsInRole("Admin"))
+            {
+                <a class="navbar-brand fw-bold m-0" asp-area="Admin" asp-controller="Home" asp-action="Index">SportComplex</a>
+            }
+            else
+            {
+                <a class="navbar-brand fw-bold m-0" asp-area="" asp-controller="Home" asp-action="Index">SportComplex</a>
+            }
+            
+            <div class="d-flex align-items-center gap-2 gap-md-3 ms-auto order-lg-last">
                 
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapseArea" aria-controls="navbarCollapseArea" aria-expanded="false" aria-label="Toggle navigation">
+                <form asp-area="" asp-controller="Language" asp-action="SetLanguage" method="post" class="m-0" id="languageForm">
+                    <input type="hidden" name="returnUrl" value="@(Context.Request.Path + Context.Request.QueryString)" />
+                    <select name="culture" onchange="document.getElementById('languageForm').submit();" class="form-select form-select-sm bg-dark text-light border-neon px-2 py-1" style="width: auto; font-size: 0.85rem;">
+                        <option value="en" selected="@(currentCulture == "en")">EN</option>
+                        <option value="bg" selected="@(currentCulture == "bg")">BG</option>
+                    </select>
+                </form>
+                
+                <partial name="_LoginPartial" />
+
+                <button class="navbar-toggler border-0 px-1 text-light ms-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapseArea" aria-controls="navbarCollapseArea" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
+            </div>
 
-                <div class="navbar-collapse collapse d-lg-inline-flex justify-content-between" id="navbarCollapseArea">
-                    <ul class="navbar-nav flex-grow-1">
+            <div class="navbar-collapse collapse mt-3 mt-lg-0" id="navbarCollapseArea">
+                <ul class="navbar-nav me-auto ms-lg-4 mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">@Localizer["NavHome"]</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Trainer" asp-action="Browse">@Localizer["NavTrainers"]</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Sport" asp-action="All">@Localizer["NavSports"]</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Spa" asp-action="All">@Localizer["NavSpa"]</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Tournament" asp-action="All">@Localizer["NavTournaments"]</a>
+                    </li>
+                    
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="reservationsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            @Localizer["NavMyReservations"]
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="reservationsDropdown">
+                            <li><a class="dropdown-item" asp-area="" asp-controller="Sport" asp-action="MyReservations">@Localizer["NavMySports"]</a></li>
+                            <li><a class="dropdown-item" asp-area="" asp-controller="Spa" asp-action="MyReservations">@Localizer["NavMySpa"]</a></li>
+                            <li><a class="dropdown-item" asp-area="" asp-controller="Tournament" asp-action="MyTournaments">@Localizer["NavMyTournaments"]</a></li>
+                        </ul>
+                    </li>
+                    
+                    @if (User.IsInRole("Trainer"))
+                    {
                         <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">@Localizer["NavHome"]</a>
+                            <a class="nav-link" asp-area="" asp-controller="Trainer" asp-action="Reservations">@Localizer["NavTrainerDashboard"]</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Trainer" asp-action="Browse">@Localizer["NavTrainers"]</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Sport" asp-action="All">@Localizer["NavSports"]</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Spa" asp-action="All">@Localizer["NavSpa"]</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Tournament" asp-action="All">@Localizer["NavTournaments"]</a>
-                        </li>
-                        
+                    }
+                    
+                    @if (User.IsInRole("Admin"))
+                    {
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="reservationsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                @Localizer["NavMyReservations"]
+                            <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                @Localizer["NavAdmin"]
                             </a>
-                            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="reservationsDropdown">
-                                <li><a class="dropdown-item" asp-area="" asp-controller="Sport" asp-action="MyReservations">@Localizer["NavMySports"]</a></li>
-                                <li><a class="dropdown-item" asp-area="" asp-controller="Spa" asp-action="MyReservations">@Localizer["NavMySpa"]</a></li>
-                                <li><a class="dropdown-item" asp-area="" asp-controller="Tournament" asp-action="MyTournaments">@Localizer["NavMyTournaments"]</a></li>
+                            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="adminDropdown">
+                                <li><a class="dropdown-item" asp-area="Admin" asp-controller="SportManagement" asp-action="All">@Localizer["NavAdminSports"]</a></li>
+                                <li><a class="dropdown-item" asp-area="Admin" asp-controller="SpaServicesManagement" asp-action="All">@Localizer["NavAdminSpa"]</a></li>
+                                <li><a class="dropdown-item" asp-area="Admin" asp-controller="TournamentManagement" asp-action="All">@Localizer["NavAdminTournaments"]</a></li>
+                                <li><a class="dropdown-item" asp-area="Admin" asp-controller="UserManagement" asp-action="Index">@Localizer["NavAdminUsers"]</a></li>
+                                <li><a class="dropdown-item" asp-area="Admin" asp-controller="TrainerManagement" asp-action="All">@Localizer["NavAdminTrainers"]</a></li>
+                                <li><a class="dropdown-item" asp-area="Admin" asp-controller="FacilityManagement" asp-action="All">@Localizer["NavAdminFacilities"]</a></li>
                             </ul>
                         </li>
                         
-                        @if (User.IsInRole("Trainer"))
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link" asp-area="" asp-controller="Trainer" asp-action="Reservations">@Localizer["NavTrainerDashboard"]</a>
-                            </li>
-                        }
-                        
-                        @if (User.IsInRole("Admin"))
-                        {
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    @Localizer["NavAdmin"]
-                                </a>
-                                <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="adminDropdown">
-                                    <li><a class="dropdown-item" asp-area="Admin" asp-controller="SportManagement" asp-action="All">@Localizer["NavAdminSports"]</a></li>
-                                    <li><a class="dropdown-item" asp-area="Admin" asp-controller="SpaServicesManagement" asp-action="All">@Localizer["NavAdminSpa"]</a></li>
-                                    <li><a class="dropdown-item" asp-area="Admin" asp-controller="TournamentManagement" asp-action="All">@Localizer["NavAdminTournaments"]</a></li>
-                                    <li><a class="dropdown-item" asp-area="Admin" asp-controller="UserManagement" asp-action="Index">@Localizer["NavAdminUsers"]</a></li>
-                                    <li><a class="dropdown-item" asp-area="Admin" asp-controller="TrainerManagement" asp-action="All">@Localizer["NavAdminTrainers"]</a></li>
-                                    <li><a class="dropdown-item" asp-area="Admin" asp-controller="FacilityManagement" asp-action="All">@Localizer["NavAdminFacilities"]</a></li>
-                                </ul>
-                            </li>
-                            
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle fw-bold" href="#" id="reportsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color: #00ffc8 !important;">
-                                    <i class="bi bi-graph-up-arrow me-1"></i> @Localizer["NavReports"]
-                                </a>
-                                <ul class="dropdown-menu dropdown-menu-dark border-secondary shadow" aria-labelledby="reportsDropdown">
-                                    <li>
-                                        <a class="dropdown-item" asp-area="Admin" asp-controller="Report" asp-action="SportReservations">
-                                            <i class="bi bi-activity me-2 text-info"></i>@Localizer["NavReportSports"]
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" asp-area="Admin" asp-controller="Report" asp-action="SpaReservations">
-                                            <i class="bi bi-flower3 me-2 text-warning"></i>@Localizer["NavReportSpa"]
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-                        }
-                    </ul>
-                    
-                    <div class="mobile-user-actions d-lg-flex align-items-center gap-3 ms-lg-auto">
-                        <form asp-area="" asp-controller="Language" asp-action="SetLanguage" method="post" class="m-0" id="languageForm">
-                            <input type="hidden" name="returnUrl" value="@(Context.Request.Path + Context.Request.QueryString)" />
-                            <select name="culture" onchange="document.getElementById('languageForm').submit();" class="form-select form-select-sm bg-dark text-light border-neon" style="width: auto; min-width: 100px;">
-                                <option value="en" selected="@(currentCulture == "en")">🇬🇧 EN</option>
-                                <option value="bg" selected="@(currentCulture == "bg")">🇧🇬 BG</option>
-                            </select>
-                        </form>
-                        
-                        <partial name="_LoginPartial" />
-                    </div>
-                </div>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle fw-bold" href="#" id="reportsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color: #00ffc8 !important;">
+                                <i class="bi bi-graph-up-arrow me-1"></i> @Localizer["NavReports"]
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-dark border-secondary shadow" aria-labelledby="reportsDropdown">
+                                <li>
+                                    <a class="dropdown-item" asp-area="Admin" asp-controller="Report" asp-action="SportReservations">
+                                        <i class="bi bi-activity me-2 text-info"></i>@Localizer["NavReportSports"]
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" asp-area="Admin" asp-controller="Report" asp-action="SpaReservations">
+                                        <i class="bi bi-flower3 me-2 text-warning"></i>@Localizer["NavReportSpa"]
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    }
+                </ul>
             </div>
-        </nav>
-    </header>
+        </div>
+    </nav>
+</header>
 
     <main role="main" class="pb-3 container">
         @RenderBody()

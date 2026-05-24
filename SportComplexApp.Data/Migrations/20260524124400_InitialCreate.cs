@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace SportComplexApp.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class InitilaDb : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -475,10 +475,9 @@ namespace SportComplexApp.Data.Migrations
                 columns: new[] { "Id", "ImageUrl", "IsDeleted", "Name" },
                 values: new object[,]
                 {
-                    { 1, null, false, "Indoor Arena" },
-                    { 2, null, false, "Tennis Center" },
-                    { 3, null, false, "Aquatics & Spa" },
-                    { 4, null, false, "Fitness Studio" }
+                    { 1, "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSASkhPWQ1zqXLUUBYFlMhZn4yMaeMu8yVjZg&s", false, "Indoor Arena" },
+                    { 2, "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSwhAHcH2_eq_owatwVzZDK2JyB4QcdFPya9g&s", false, "Tennis Center" },
+                    { 3, "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQpZB-L2ZhjG6LXt6ByYv4vOYWu3lGvTvKNOQ&s", false, "Fitness Studio" }
                 });
 
             migrationBuilder.InsertData(
@@ -501,8 +500,7 @@ namespace SportComplexApp.Data.Migrations
                     { 1, "Certified basketball coach with 8+ years of experience.", null, "/images/kiril_raikov.jpg", false, "Raikov", "Kiril" },
                     { 2, "Yoga & Pilates instructor focused on mobility and mindfulness.", null, "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=500&h=500&fit=crop", false, "Markovska", "Vili" },
                     { 3, "CrossFit coach, competition-level conditioning specialist.", null, "/images/koceto.jpg", false, "Lefterov", "Kostadin" },
-                    { 4, "Swimming coach—technique and endurance for all levels.", null, "https://images.unsplash.com/photo-1512217649539-75b22b15525c?w=500&h=500&fit=crop", false, "Mollov", "Nikolai" },
-                    { 5, "Tennis training: technique, tactics, and matchplay.", null, "/images/grisho.jpg", false, "Dimitrov", "Grigor" }
+                    { 4, "Tennis training: technique, tactics, and matchplay.", null, "/images/grisho.jpg", false, "Dimitrov", "Grigor" }
                 });
 
             migrationBuilder.InsertData(
@@ -513,10 +511,9 @@ namespace SportComplexApp.Data.Migrations
                 {
                     { 1, 60, 1, "https://images.unsplash.com/photo-1519766304817-4f37bda74a26?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fGJhc2tldGJhbGx8ZW58MHwwfDB8fHwy", false, 10, 2, "Basketball", 30.00m },
                     { 2, 60, 2, "https://images.unsplash.com/flagged/photo-1576972405668-2d020a01cbfa?q=80&w=1174&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", false, 4, 2, "Tennis", 25.00m },
-                    { 3, 45, 3, "https://images.unsplash.com/photo-1600965962102-9d260a71890d?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8c3dpbW1pbmd8ZW58MHwwfDB8fHwy", false, 1, 1, "Swimming (individual)", 20.00m },
-                    { 4, 60, 4, "https://images.unsplash.com/photo-1588286840104-8957b019727f?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8eW9nYXxlbnwwfDB8MHx8fDI%3D", false, 20, 4, "Yoga (group session)", 10.00m },
-                    { 5, 50, 4, "https://images.unsplash.com/photo-1547226238-e53e98a8e59d?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTc3fHxjcm9zc0ZpdHxlbnwwfDB8MHx8fDI%3D", false, 16, 4, "CrossFit (group session)", 15.00m },
-                    { 6, 60, 1, "https://images.unsplash.com/photo-1659303388053-6078a001ea21?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MzV8fHRhYmxlJTIwdGVubmlzfGVufDB8MHwwfHx8Mg%3D%3D", false, 4, 2, "Table tennis", 10.00m }
+                    { 3, 60, 3, "https://images.unsplash.com/photo-1588286840104-8957b019727f?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8eW9nYXxlbnwwfDB8MHx8fDI%3D", false, 20, 4, "Yoga (group session)", 10.00m },
+                    { 4, 50, 3, "https://images.unsplash.com/photo-1547226238-e53e98a8e59d?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTc3fHxjcm9zc0ZpdHxlbnwwfDB8MHx8fDI%3D", false, 16, 4, "CrossFit (group session)", 15.00m },
+                    { 5, 60, 1, "https://images.unsplash.com/photo-1659303388053-6078a001ea21?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MzV8fHRhYmxlJTIwdGVubmlzfGVufDB8MHwwfHx8Mg%3D%3D", false, 4, 2, "Table tennis", 10.00m }
                 });
 
             migrationBuilder.InsertData(
@@ -526,11 +523,10 @@ namespace SportComplexApp.Data.Migrations
                 values: new object[,]
                 {
                     { 1, 1 },
-                    { 2, 5 },
-                    { 3, 4 },
-                    { 4, 2 },
-                    { 4, 3 },
-                    { 5, 3 }
+                    { 2, 4 },
+                    { 3, 2 },
+                    { 3, 3 },
+                    { 4, 3 }
                 });
 
             migrationBuilder.InsertData(
@@ -541,7 +537,8 @@ namespace SportComplexApp.Data.Migrations
                 {
                     { 1, "Amateur tennis tournament with group stages and knockouts.", new DateTime(2025, 9, 14, 0, 0, 0, 0, DateTimeKind.Unspecified), null, false, "City Cup – Tennis", 2, new DateTime(2025, 9, 12, 0, 0, 0, 0, DateTimeKind.Unspecified) },
                     { 2, "Fast-paced 3-on-3 format, open for mixed teams.", new DateTime(2025, 10, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), null, false, "Basket 3-on-3 Open", 1, new DateTime(2025, 10, 4, 0, 0, 0, 0, DateTimeKind.Unspecified) },
-                    { 3, "Sprint races across age groups.", new DateTime(2025, 11, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, false, "Swim Sprint Challenge", 3, new DateTime(2025, 11, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) }
+                    { 3, "Sprint races across age groups.", new DateTime(2025, 11, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, false, "Swim Sprint Challenge", 3, new DateTime(2025, 11, 1, 0, 0, 0, 0, DateTimeKind.Unspecified) },
+                    { 4, "The biggest upcoming tennis event of the year. Register now!", new DateTime(2026, 12, 17, 0, 0, 0, 0, DateTimeKind.Unspecified), null, false, "Winter Grand Slam 2026", 2, new DateTime(2026, 12, 10, 0, 0, 0, 0, DateTimeKind.Unspecified) }
                 });
 
             migrationBuilder.CreateIndex(

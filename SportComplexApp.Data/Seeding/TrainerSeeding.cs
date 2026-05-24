@@ -41,16 +41,6 @@ public class TrainerSeeding : IEntityTypeConfiguration<Trainer>
             new Trainer
             {
                 Id = 4,
-                Name = "Nikolai",
-                LastName = "Mollov",
-                Bio = "Swimming coach—technique and endurance for all levels.",
-                ImageUrl = "https://images.unsplash.com/photo-1512217649539-75b22b15525c?w=500&h=500&fit=crop",
-                IsDeleted = false,
-                ClientId = null
-            },
-            new Trainer
-            {
-                Id = 5,
                 Name = "Grigor",
                 LastName = "Dimitrov",
                 Bio = "Tennis training: technique, tactics, and matchplay.",

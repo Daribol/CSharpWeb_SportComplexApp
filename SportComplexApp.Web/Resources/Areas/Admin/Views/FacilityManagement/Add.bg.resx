@@ -129,6 +129,9 @@
   <data name="Heading" xml:space="preserve">
     <value>Добави Ново Съоръжение</value>
   </data>
+  <data name="LabelImageUrl" xml:space="preserve">
+    <value>URL на изображение</value>
+  </data>
   <data name="LabelName" xml:space="preserve">
     <value>Име на Съоръжението</value>
   </data>
